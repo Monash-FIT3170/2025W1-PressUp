@@ -20,7 +20,7 @@
 ### Team 3
 | Name | Role |
 | - | - |
-| Dean Mascitti | System Architect |
+| Dean Mascitti | System Architect | dmas0019
 | Kingsley Bishop | RTE |
 | Minh Khoi Nguyen | Product Manager |
 | Emma Keyhoe | Product Manager |
