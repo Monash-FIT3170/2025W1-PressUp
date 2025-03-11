@@ -18,9 +18,9 @@
 | Andrea Jing Ning Ong | RTE |
 
 ### Team 3
-| Name | Role | Email 
-| - | - |
-| Dean Mascitti | System Architect | dmas0019
-| Kingsley Bishop | RTE |
+| Name | Role | Email |
+| - | - | - |
+| Dean Mascitti | System Architect | dmas0019 |
+| Kingsley Bishop | RTE | kbis0003@student.monash.edu |
 | Minh Khoi Nguyen | Product Manager |
-| Emma Keyhoe | Product Manager | ekey0003@student.monash.edu
+| Emma Keyhoe | Product Manager | ekey0003@student.monash.edu |
