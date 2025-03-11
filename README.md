@@ -3,3 +3,4 @@
 
 Team members:
 - Ziheng
+- Jake Zweytzer (Product Manager)
