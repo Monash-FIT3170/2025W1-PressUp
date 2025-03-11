@@ -20,7 +20,7 @@
 ### Team 3
 | Name | Role | Email |
 | - | - | - |
-| Dean Mascitti | System Architect | dmas0019 |
+| Dean Mascitti | System Architect | dmas0019@student.monash.edu |
 | Kingsley Bishop | RTE | kbis0003@student.monash.edu |
 | Minh Khoi Nguyen | Product Manager |
 | Emma Keyhoe | Product Manager | ekey0003@student.monash.edu |
