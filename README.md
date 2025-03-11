@@ -2,10 +2,10 @@
 
 ## Project 1 Teams
 ### Team 1
-| Name | Role |
-| - | - |
+| Name | Role | Email |
+| - | - | - |
 | Hugo Ferguson | Product Owner |
-| Jamie Gatt | System Architect |
+| Jamie Gatt | System Architect | jgat0003@student.monash.edu |
 | Ziheng | Product Manager |
 | Wong Min Yee | RTE |
 
