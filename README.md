@@ -22,5 +22,5 @@
 | - | - | - |
 | Dean Mascitti | System Architect | dmas0019@student.monash.edu |
 | Kingsley Bishop | RTE | kbis0003@student.monash.edu |
-| Minh Khoi Nguyen  | Product Manager |
+| Minh Khoi Nguyen  | Product Manager | mngu0115@student.monash.edu |
 | Emma Keyhoe | Product Manager | ekey0003@student.monash.edu |
