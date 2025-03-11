@@ -12,7 +12,7 @@
 ### Team 2
 | Name | Role |
 | - | - |
-| Jacob Wall | System Architect | 
+| Jacob Wall | System Architect | jwal0073@student.monash.edu | 
 | Connor Saunders | RTE	| csau0007@student.monash.edu |
 | Jake Zweytzer | Product Manager | jzwe0001@student.monash.edu |
 | Andrea Jing Ning Ong | RTE |
