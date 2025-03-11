@@ -7,7 +7,7 @@
 | Hugo Ferguson | Product Owner |
 | Jamie Gatt | System Architect |
 | Ziheng | Product Manager |
-| Wong Min Yee | RTE |
+| Wong Min Yee | RTE | mwon0072@student.monash.edu |
 
 ### Team 2
 | Name | Role |
