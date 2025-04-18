@@ -4,7 +4,7 @@
 ### Team 1
 | Name | Role | Email |
 | - | - | - |
-| Hugo Ferguson | Product Owner | hfer0009@student.monash.edu |
+| Hugo Ferguson | Product Manager | hfer0009@student.monash.edu |
 | Jamie Gatt | System Architect | jgat0003@student.monash.edu |
 | Ziheng | Product Manager | zlia0050@student.monash.edu |
 | Wong Min Yee | RTE | mwon0072@student.monash.edu |
