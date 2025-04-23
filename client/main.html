@@ -1,7 +1,53 @@
 <head>
-  <title>Meteor App</title>
+  <title>PressUp!</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 20;
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background-color: #f4f4f4;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin: 20px 0;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    h1 {
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="react-target"></div>
+  <div class="sidebar">
+    <ul>
+      <li>Home</li>
+      <li>Inventory</li>
+      <li>Menu</li>
+      <li>Scheduling</li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div id="react-target"></div>
+  </div>
 </body>
