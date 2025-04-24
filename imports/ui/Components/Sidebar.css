@@ -82,3 +82,18 @@ body.sidebar-open .hamburger-btn {
   font-size: 64px;
   cursor: pointer;
 }
+
+.sidebar-logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.sidebar-logo img {
+  width: 60px; /* Adjust size as needed */
+  height: auto;
+}
+
+.sidebar-btn.active {
+  background-color: #FCD581;
+}

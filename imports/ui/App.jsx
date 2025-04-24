@@ -15,7 +15,7 @@ export const App = () => {
 
   return (
     <div className='app-container'>
-      <Sidebar changePage={changePage} /> {/* Pass changePage function to Sidebar */}
+      <Sidebar changePage={changePage} currentPage={currentPage} /> {/* Pass changePage function to Sidebar */}
 
       <div className="main-content" style={{ marginLeft: '80px' }}>
         {/* Page title */}
