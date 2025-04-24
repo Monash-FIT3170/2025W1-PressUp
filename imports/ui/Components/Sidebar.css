@@ -1,7 +1,7 @@
 /* Sidebar formatting */
 .sidebar {
-  position: relative;
-  height: 100vh; 
+  position: fixed;
+  height: 900px; 
   width: 300px;
   background-color: #f4f4f4;
   transition: transform 0.3s ease;
@@ -9,11 +9,18 @@
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   z-index: 1000;
+  top: 20px;
+  left: 20px;
 }
 
 /* The translation that occurrs when the close button is toggled (moves left of screen) */
 .sidebar.closed {
-  transform: translateX(-120%);
+  transform: translateX(-110%);
+}
+
+/* Sidebar open state */
+.sidebar.open {
+  transform: translateX(0%); /* Sidebar stays in place when open */
 }
 
 /* Gives us padding for the x button and logo on the sidebar */
@@ -37,11 +44,21 @@
 /* Hamburger button formatting */
 .hamburger-btn {
   position: fixed;
-  top: 15px;
-  left: 15px;
+  top: 36px;
+  left: 36px;
   background: transparent;
   border: none;
-  font-size: 28px;
+  font-size: 40px;
   cursor: pointer;
   z-index: 1100;
 }
+
+/* When sidebar is open, content shifts */
+body.sidebar-open div.main-content {
+  transform: translateX(300px); 
+}
+
+/* Hide hamburger button when sidebar is open */
+body.sidebar-open .hamburger-btn {
+  display: none;  
+} 
