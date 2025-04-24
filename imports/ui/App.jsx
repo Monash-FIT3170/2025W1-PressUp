@@ -4,6 +4,7 @@ import { Info } from './Info.jsx';
 import { Sidebar } from './Components/Sidebar.jsx';
 import { MenuItemPopUp } from './Components/MenuItemPopUp.jsx'
 import './AppStyle.css';
+import { Card } from './Components/Card.jsx';
 
 
 export const App = () => {
@@ -41,6 +42,23 @@ export const App = () => {
             Here is the Menu Page!
             <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
             {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} />}
+            <div className="card-container">
+              <Card 
+                title="Card 1"
+                description="This is the description of the first card."
+                image="https://via.placeholder.com/300"
+              />
+              <Card 
+                title="Card 2"
+                description="This is the description of the second card."
+                image="https://via.placeholder.com/300"
+              />
+              <Card 
+                title="Card 3"
+                description="This is the description of the third card."
+                image="https://via.placeholder.com/300"
+              />
+            </div>
           </div>
           )}
         {currentPage === 'scheduling' && <div>Scheduling Page Content!</div>}

@@ -18,3 +18,10 @@ body {
     font-weight: 540;
     font-size: 28px;
   }
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 20px;
+}
