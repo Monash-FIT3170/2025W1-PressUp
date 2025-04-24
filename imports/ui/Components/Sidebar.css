@@ -1,7 +1,7 @@
 /* Sidebar formatting */
 .sidebar {
   position: fixed;
-  height: 900px; 
+  height: 900px;
   width: 300px;
   background-color: #f4f4f4;
   transition: transform 0.3s ease;
@@ -13,7 +13,7 @@
   left: 20px;
 }
 
-/* The translation that occurrs when the close button is toggled (moves left of screen) */
+/* The translation that occurs when the close button is toggled (moves left of screen) */
 .sidebar.closed {
   transform: translateX(-110%);
 }
@@ -30,17 +30,6 @@
   margin: 0;
 }
 
-/* Close button formatting */
-.close-btn { 
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  background: transparent;
-  border: none;
-  font-size: 64px;
-  cursor: pointer;
-}
-
 /* Hamburger button formatting */
 .hamburger-btn {
   position: fixed;
@@ -55,10 +44,41 @@
 
 /* When sidebar is open, content shifts */
 body.sidebar-open div.main-content {
-  transform: translateX(300px); 
+  transform: translateX(300px);
 }
 
 /* Hide hamburger button when sidebar is open */
 body.sidebar-open .hamburger-btn {
-  display: none;  
-} 
+  display: none;
+}
+
+/* Sidebar Button Styling for navigation buttons */
+.sidebar .sidebar-btn {
+  background: none;
+  border: none;
+  font-size: 2rem; 
+  font-weight: 500; 
+  color: #000000; 
+  padding: 10px 10px; 
+  text-align: left; 
+  width: 100%;
+  cursor: pointer; 
+  margin: 10px 0;
+  border-radius: 12px;
+}
+
+/* Hover effect for sidebar buttons */
+.sidebar .sidebar-btn:hover {
+  background-color: #FDE9BF; 
+}
+
+/* Close button formatting (excluded from sidebar-btn styles) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: transparent;
+  border: none;
+  font-size: 64px;
+  cursor: pointer;
+}

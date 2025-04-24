@@ -1,0 +1,20 @@
+body {
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    height: 100vh;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-weight: bold;
+    font-size: 48px;
+  }
+  
+  h2 {
+    font-weight: 540;
+    font-size: 28px;
+  }

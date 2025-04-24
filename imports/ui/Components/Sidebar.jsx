@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
-export const Sidebar = () => {
+export const Sidebar = ({ changePage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => setIsOpen(prev => !prev);
@@ -28,10 +28,10 @@ export const Sidebar = () => {
           <>
             <button onClick={toggleSidebar} className="close-btn">×</button>
             <ul className="sidebar-list">
-              <li><h2>Home</h2></li>
-              <li><h2>Inventory</h2></li>
-              <li><h2>Menu</h2></li>
-              <li><h2>Scheduling</h2></li>
+              <li><button className="sidebar-btn" onClick={() => changePage('home')}>Home</button> {/* Home Page */}</li>
+              <li><button className="sidebar-btn" onClick={() => changePage('inventory')}>Inventory</button> {/* Inventory Page */}</li>
+              <li><button className="sidebar-btn" onClick={() => changePage('menu')}>Menu</button> {/* Menu Page */}</li>
+              <li><button className="sidebar-btn" onClick={() => changePage('scheduling')}>Scheduling</button> {/* Scheduling Page */}</li>
             </ul>
           </>
         )}
