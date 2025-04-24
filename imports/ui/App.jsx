@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
 import { Sidebar } from './Components/Sidebar.jsx';
+import { MenuItemPopUp } from './Components/MenuItemPopUp.jsx'
 import './AppStyle.css';
 
 
 export const App = () => {
   const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
+  const [showPopup, setShowPopup] = useState(false); 
 
   // Function to change the current page
   const changePage = (page) => {
@@ -34,7 +36,13 @@ export const App = () => {
 
         {/* Additional content for other pages can be added below */}
         {currentPage === 'home' && <div>Welcome to the Home Page!</div>}
-        {currentPage === 'menu' && <div>Here is the Menu Page!</div>}
+        {currentPage === 'menu' && (
+          <div>
+            Here is the Menu Page!
+            <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+            {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} />}
+          </div>
+          )}
         {currentPage === 'scheduling' && <div>Scheduling Page Content!</div>}
       </div>
     </div>
