@@ -1,17 +1,47 @@
+/* Sidebar formatting */
 .sidebar {
-    width: 300px;
-    height: 100vh;
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    border-radius: 16px;
-  }
+  position: relative;
+  height: 100vh; 
+  width: 300px;
+  background-color: #f4f4f4;
+  transition: transform 0.3s ease;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  z-index: 1000;
+}
 
+/* The translation that occurrs when the close button is toggled (moves left of screen) */
+.sidebar.closed {
+  transform: translateX(-120%);
+}
+
+/* Gives us padding for the x button and logo on the sidebar */
 .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
+  list-style: none;
+  padding: 60px 10px 10px;
+  margin: 0;
+}
 
-.sidebar li {
-    margin: 20px 0;
-  }
+/* Close button formatting */
+.close-btn { 
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: transparent;
+  border: none;
+  font-size: 64px;
+  cursor: pointer;
+}
+
+/* Hamburger button formatting */
+.hamburger-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 1100;
+}
