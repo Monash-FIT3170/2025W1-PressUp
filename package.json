@@ -10,14 +10,9 @@
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "meteor-node-stubs": "^1.2.5",
-<<<<<<< HEAD
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simpl-schema": "^3.4.6"
-=======
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
->>>>>>> af3b5611fbf407d6763ef5ff0e1e9cdc70d7cbd1
   },
   "meteor": {
     "mainModule": {
