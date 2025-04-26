@@ -4,7 +4,7 @@ import SimpleSchema from 'simpl-schema';
 export const SuppliersCollection = new Mongo.Collection('suppliers');
 
 SuppliersCollection.schema = new SimpleSchema({
-    ab: {type: String},
+    abn: {type: String},
     name: {type: String},
     contactPerson: {type: String},
     email: {type: String},
