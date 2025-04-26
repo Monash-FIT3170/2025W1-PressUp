@@ -6,7 +6,7 @@ Meteor.methods({
   'suppliers.insert'(supplierData) {
 
     try {
-      const supplierId = SuppliersCollection.insert({
+      const supplierId = SuppliersCollection.insertAsync({
         ...supplierData,
         createdAt: new Date(),
         updatedAt: new Date(),
