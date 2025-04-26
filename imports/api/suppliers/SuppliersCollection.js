@@ -10,7 +10,7 @@ SuppliersCollection.schema = new SimpleSchema({
     email: {type: String},
     phone: {type: String},
     address: {type: String},
-    productsSupplied: {Array},
+    productsSupplied: {type: Array},
     'productsSupplied.$': Number, // Each item in the array is a String
     notes: {type: String},
 });
