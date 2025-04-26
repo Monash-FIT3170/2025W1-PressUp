@@ -1,7 +1,6 @@
 import React from 'react';
-import { Hello } from './Hello.jsx';
-import { Info } from './Info.jsx';
 import { Sidebar } from './Components/Sidebar.jsx';
+import { SupplierForm } from './SupplierForm.jsx';
 
 export const App = () => (
   <div className='app-container'>
@@ -12,8 +11,6 @@ export const App = () => (
       <h1>Inventory</h1>
       
        {/* Page content */}
-      <Hello />
-      <Info /> 
       <SupplierForm />
     </div>
   </div>
