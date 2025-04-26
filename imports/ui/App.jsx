@@ -14,6 +14,7 @@ export const App = () => (
        {/* Page content */}
       <Hello />
       <Info /> 
+      <SupplierForm />
     </div>
   </div>
 );
