@@ -3,10 +3,10 @@ import { SuppliersCollection } from './SuppliersCollection.js';
 
 Meteor.methods({
 
-  'suppliers.insert'(supplierData) {
+  async 'suppliers.insert'(supplierData) {
 
     try {
-      const supplierId = SuppliersCollection.insertAsync({
+      const supplierId = await SuppliersCollection.insertAsync({
         ...supplierData,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -22,10 +22,10 @@ Meteor.methods({
     }
   },
 
-  'suppliers.remove'(supplierId) {
+  async 'suppliers.remove'(supplierId) {
 
     try {
-      const result = SuppliersCollection.remove(supplierId);
+      const result = await SuppliersCollection.removeAsync(supplierId);
       console.log(`Supplier removed: ${supplierId}, Removed documents: ${result}`);
     } catch (error) {
       console.error(`Error removing supplier ${supplierId}:`, error);
