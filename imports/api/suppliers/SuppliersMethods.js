@@ -1,12 +1,12 @@
 import { Meteor } from 'meteor/meteor';
-import { Suppliers } from './suppliers.js'; 
+import { SuppliersCollection } from './SuppliersCollection.js'; 
 
 Meteor.methods({
 
   'suppliers.insert'(supplierData) {
 
     try {
-      const supplierId = Suppliers.insert({
+      const supplierId = SuppliersCollection.insert({
         ...supplierData,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -25,7 +25,7 @@ Meteor.methods({
   'suppliers.remove'(supplierId) {
 
     try {
-      const result = Suppliers.remove(supplierId);
+      const result = SuppliersCollection.remove(supplierId);
       console.log(`Supplier removed: ${supplierId}, Removed documents: ${result}`);
     } catch (error) {
       console.error(`Error removing supplier ${supplierId}:`, error);
