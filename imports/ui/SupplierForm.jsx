@@ -18,6 +18,7 @@ export const SupplierForm = () => {
 
         await Meteor.callAsync("suppliers.insert", {
             abn: abn.trim(),
+            active: true,
             name: name.trim(),
             contactPerson: contactPerson.trim(),
             email: email.trim(),
@@ -27,6 +28,7 @@ export const SupplierForm = () => {
             notes: notes,
         });
 
+        
         setAbn("");
         setName("");   
         setContactPerson("");

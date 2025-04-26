@@ -5,6 +5,7 @@ export const SuppliersCollection = new Mongo.Collection('suppliers');
 
 SuppliersCollection.schema = new SimpleSchema({
     abn: {type: String},
+    active: {type: Boolean},
     name: {type: String},
     contactPerson: {type: String},
     email: {type: String},
