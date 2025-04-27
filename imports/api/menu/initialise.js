@@ -15,7 +15,7 @@ Meteor.startup(async () => {
     const validator = {
         $jsonschema: {
             bsonType: 'object',
-            required: ['name', 'price', 'category'],
+            required: ['name', 'price', 'menuCategory'],
             properties: {
                 name: {
 					bsonType: 'string',
@@ -25,9 +25,9 @@ Meteor.startup(async () => {
 					bsonType: 'decimal',
 					description: 'Price of the menu item in dollars etc.'
 				},
-				category: {
+				menuCategory: {
 					bsonType: 'objectId',
-					description: 'An id of a menu item category.'
+					description: 'An id of a menu category.'
 				},
 				ingredients: {
 					bsonType: 'array',

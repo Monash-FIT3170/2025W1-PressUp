@@ -33,7 +33,7 @@ Meteor.startup(async () => {
 	// Create or update the collection.
 	const categories = await createOrUpdateCollection(
 		db,
-		'menu-categories',
+		'menuCategories',
 		validator,
 		{ level: 'strict', action: 'error' }
 	);
