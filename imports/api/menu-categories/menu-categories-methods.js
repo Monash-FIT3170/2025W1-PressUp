@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check }  from 'meteor/check';
-import { MenuCategories } from './menuCategoriesCollection';
+import { MenuCategories } from './menu-categories-collection';
 
 Meteor.methods({
 	/**

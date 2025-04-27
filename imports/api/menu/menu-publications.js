@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { MenuItems } from './menuCollection';
+import { MenuItems } from './menu-collection';
 
 Meteor.publish('menuItems.all', function () {
 	return MenuItems.find({}, {

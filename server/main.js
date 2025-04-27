@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
-import { MenuCategories } from '/imports/api/menu-categories/menuCategoriesCollection';
-import { Menu } from '/imports/api/menu/menuCollection';
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection';
+import { Menu } from '/imports/api/menu/menu-collection';
 
 Meteor.startup(async () => {
 	// Testing menu and categories.

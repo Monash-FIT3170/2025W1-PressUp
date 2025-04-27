@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { MongoInternals } from 'meteor/mongo';
-import { createOrUpdateCollection } from '/imports/api/dbUtils';
+import { createOrUpdateCollection } from '/imports/api/db-utils';
 
 /**
  * Initialise the menu collection.

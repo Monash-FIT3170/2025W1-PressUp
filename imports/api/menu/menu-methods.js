@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check }  from 'meteor/check';
-import { Menu } from './menuCollection';
-import { MenuCategories } from '../menu-categories/menuCategoriesCollection';
+import { Menu } from './menu-collection';
+import { MenuCategories } from '../menu-categories/menu-categories-collection';
 
 Meteor.methods({
 	/**
