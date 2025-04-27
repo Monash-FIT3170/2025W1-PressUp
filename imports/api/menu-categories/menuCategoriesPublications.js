@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { MenuCategories } from '../collection';
+import { MenuCategories } from '../menuCategoriesCollection';
 
 Meteor.publish('menuCategories.all', () => {
 	return MenuCategories.find({}, {

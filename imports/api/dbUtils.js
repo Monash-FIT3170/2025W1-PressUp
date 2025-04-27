@@ -24,6 +24,7 @@ export async function createOrUpdateCollection(
 	// Attempt to apply the validator to the collection.
 	try {
 		await db.command({
+			collMod: collName,
 			validator,
 			validationLevel: level,
 			validationAction: action,
@@ -45,5 +46,5 @@ export async function createOrUpdateCollection(
 	}
 
 	// Return the new or modified collection.
-	return db.collecion(collName)
+	return db.collection(collName)
 }

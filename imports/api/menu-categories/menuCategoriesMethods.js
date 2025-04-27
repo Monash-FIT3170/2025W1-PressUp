@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check }  from 'meteor/check';
-import { MenuCategories } from './collection';
+import { MenuCategories } from './menuCategoriesCollection';
 
 Meteor.methods({
 	/**
@@ -8,14 +8,14 @@ Meteor.methods({
 	 * @param {{ name: string, sortOrder: number }} menuCategory
 	 */
 
-	'menuCategories.insert'({ name, sortOrder }) {
+	async 'menuCategories.insert'({ name, sortOrder }) {
 		check(name, 		String);
-		check(sortOrder, 	Number)
+		check(sortOrder, 	Number);
 
-		return MenuCategories.insert({
+		return await MenuCategories.insertAsync({
 			name,
 			sortOrder: Math.floor(sortOrder)
-		})
+		});
 	},
 
 	/**
@@ -23,12 +23,12 @@ Meteor.methods({
 	 * @param {{ _id: String, name: string, sortOrder: number }} menuCategory
 	 */
 
-	'menuCategories.update'({ _id, name, sortOrder }) {
-		check(_id, 			String)
+	async 'menuCategories.update'({ _id, name, sortOrder }) {
+		check(_id, 			String);
 		check(name,			String);
-		check(sortOrder, 	Number)
+		check(sortOrder, 	Number);
 
-		return MenuCategories.update(
+		return await MenuCategories.updateAsync(
 			{ _id },
 			{
 				$set: {
@@ -36,7 +36,7 @@ Meteor.methods({
 					sortOrder: Math.floor(sortOrder)
 				}
 			}
-		)
+		);
 	},
 
 	/**
@@ -44,9 +44,9 @@ Meteor.methods({
 	 * @param {String} _id
 	 */
 
-	'menuCategories.remove'(_id) {
-		check(_id, String)
+	async 'menuCategories.remove'(_id) {
+		check(_id, String);
 
-		return MenuCategories.remove(_id)
+		return await MenuCategories.removeAsync(_id);
 	}
 })

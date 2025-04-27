@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { MongoInternals } from 'meteor/mongo';
-import { createOrUpdateCollection } from '/imports/schemaUtils';
+import { createOrUpdateCollection } from '/imports/api/dbUtils';
 
 /**
  * Initialise the menu collection.
@@ -13,7 +13,7 @@ Meteor.startup(async () => {
 
     // Define the validator schema.
     const validator = {
-        $jsonschema: {
+        $jsonSchema: {
             bsonType: 'object',
             required: ['name', 'price', 'menuCategory'],
             properties: {

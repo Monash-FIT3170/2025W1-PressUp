@@ -1,14 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { check }  from 'meteor/check';
 import { Menu } from './menuCollection';
-import { MenuCategories } from '../menu-categories/menuCollection';
+import { MenuCategories } from '../menu-categories/menuCategoriesCollection';
 
 Meteor.methods({
 	/**
 	 * Insert a new menu item.
 	 * @param {{ name: string, price: number, menuCategory: string }} menuItem
 	 */
-	'menu.insert'({ name, price, menuCategory }) {
+	async 'menu.insert'(
+		{ name, price, menuCategory, available = true, ingredients = []}
+	) {
 		check(name, 		String);
 		check(price, 		Number);
 		check(menuCategory, String);
@@ -20,12 +22,12 @@ Meteor.methods({
 			);
 		}
 
-		return Menu.insert({
+		return await Menu.insertAsync({
 			name,
 			price,
 			menuCategory,
-			available: true,
-			ingredients: []
+			available,
+			ingredients
 		})
 	},
 
@@ -39,7 +41,7 @@ Meteor.methods({
    * 	available: boolean 
    * }} menuItem
    */
-	'menu.update'({ _id, name, price, menuCategory, available }) {
+	async 'menu.update'({ _id, name, price, menuCategory, available }) {
 		check(_id,          String);
 		check(name,         String);
 		check(price,        Number);
@@ -52,7 +54,7 @@ Meteor.methods({
 			);
 		}
 	
-		return Menu.update(
+		return await Menu.updateAsync(
 			{ _id },
 			{
 				$set: {
@@ -69,9 +71,9 @@ Meteor.methods({
 	 * Remove a menu item by Id.
 	 * @param {string} _id
 	 */
-	'menu.remove'(_id) {
+	async 'menu.remove'(_id) {
 		check(_id, String);
 
-		return Menu.remove(_id);
+		return await Menu.removeAsync(_id);
 	}
 })
