@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check }  from 'meteor/check';
+import { check, Match }  from 'meteor/check';
 import { MenuCategories } from './menu-categories-collection';
 
 Meteor.methods({

@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { check }  from 'meteor/check';
-import { Match } from 'meteor/check';
+import { check, Match }  from 'meteor/check';
 import { Menu } from './menu-collection';
 import { MenuCategories } from '../menu-categories/menu-categories-collection';
 
@@ -35,13 +34,12 @@ Meteor.methods({
 
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(
-			Object.entries(menuCategory).filter(([key, val]) => 
+			Object.entries(menuItem).filter(([key, val]) => 
 				val !== undefined)
 		);
 
 		// Don't update if there required properties missing.
-		if (!'name' in Object.keys(menuItemDoc) || 
-			!'price' in Object.keys(menuItemDoc)) {
+		if (!('name' in menuItemDoc) || !('price' in menuItemDoc)) {
 			throw new Meteor.Error(
 				'required-missing', 'Required fields are missing.'
 			);
