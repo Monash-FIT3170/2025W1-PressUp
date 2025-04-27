@@ -9,8 +9,8 @@ Meteor.methods({
 	 */
 
 	async 'menuCategories.insert'({ name, sortOrder }) {
-		check(name, 		String);
-		check(sortOrder, 	Number);
+		check(name, String);
+		check(sortOrder, Number);
 
 		return await MenuCategories.insertAsync({
 			name,
@@ -23,19 +23,30 @@ Meteor.methods({
 	 * @param {{ _id: String, name: string, sortOrder: number }} menuCategory
 	 */
 
-	async 'menuCategories.update'({ _id, name, sortOrder }) {
+	async 'menuCategories.update'({ _id, menuCategory }) {
 		check(_id, 			String);
-		check(name,			String);
-		check(sortOrder, 	Number);
+
+		// Ensure the menu category object is correct.
+		check(menuCategory, {
+			name: Match.Optional(String),
+			sortOrder: Match.Optional(Number)
+		});
+
+		// Convert to an object with only the keys that were provided.
+		const menuCategoryDoc = Object.fromEntries(
+			Object.entries(menuCategory).filter(([key, val]) => 
+				val !== undefined)
+		);
+
+		// Don't update if there are no properties to update.
+		if (Object.keys(menuCategoryDoc).length === 0) {
+			throw new Meteor.Error(
+				'no-update', 'No fields provided to update.'
+			);
+		}
 
 		return await MenuCategories.updateAsync(
-			{ _id },
-			{
-				$set: {
-					name,
-					sortOrder: Math.floor(sortOrder)
-				}
-			}
+			{ _id }, { $set: menuCategoryDoc }
 		);
 	},
 

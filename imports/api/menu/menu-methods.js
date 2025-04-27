@@ -1,70 +1,96 @@
 import { Meteor } from 'meteor/meteor';
 import { check }  from 'meteor/check';
+import { Match } from 'meteor/check';
 import { Menu } from './menu-collection';
 import { MenuCategories } from '../menu-categories/menu-categories-collection';
 
 Meteor.methods({
 	/**
 	 * Insert a new menu item.
-	 * @param {{ name: string, price: number, menuCategory: string }} menuItem
+	 * @param {{ 
+	 * 		name: string 
+	 *   	price: number, 
+	 *   	menuCategory?: string,
+	 *   	available?: boolean,
+	 *   	ingredients?: string[]
+	 * }} menuItem
 	 */
-	async 'menu.insert'(
-		{ name, price, menuCategory, available = true, ingredients = []}
-	) {
-		check(name, 		String);
-		check(price, 		Number);
-		check(menuCategory, String);
+	async 'menu.insert'({menuItem}) {
+		// Ensure the menu item object is correct.
+		check(menuItem, {
+			name: String,
+			price: Number,
+			menuCategory: Match.Optional(String),
+			available: Match.Optional(Boolean),
+			ingredients: Match.Optional([String]),
+		});
 
-		// Throw error if the category doesn't exist.
-		if (!MenuCategories.findOne(menuCategory)) {
+		// Ensure the menu category exists, otherwise throw an error.
+		if (!MenuCategories.findOne(menuItem.menuCategory)) {
 			throw new Meteor.Error(
-				'invalid-category', 'The specified category does not exist.'
+				'invalid-category',
+				'The specified category does not exist.'
 			);
 		}
 
-		return await Menu.insertAsync({
-			name,
-			price,
-			menuCategory,
-			available,
-			ingredients
-		})
+		// Convert to an object with only the keys that were provided.
+		const menuItemDoc = Object.fromEntries(
+			Object.entries(menuCategory).filter(([key, val]) => 
+				val !== undefined)
+		);
+
+		// Don't update if there required properties missing.
+		if (!'name' in Object.keys(menuItemDoc) || 
+			!'price' in Object.keys(menuItemDoc)) {
+			throw new Meteor.Error(
+				'required-missing', 'Required fields are missing.'
+			);
+		}
+
+		return await Menu.insertAsync(menuItemDoc)
 	},
 
 	/**
-   * Update an existing menu item by Id.
-   * @param {{
-   * 	 _id: string, 
-   * 	name: string, 
-   * 	price: number, 
-   * 	menuCategory: string, 
-   * 	available: boolean 
-   * }} menuItem
-   */
-	async 'menu.update'({ _id, name, price, menuCategory, available }) {
-		check(_id,          String);
-		check(name,         String);
-		check(price,        Number);
-		check(menuCategory, String);
-		check(available,    Boolean);
+	* Update an existing menu item by Id.
+	* @param {{ 
+	* 		name?: string 
+	*   	price?: number, 
+	*   	menuCategory?: string,
+	*   	available?: boolean,
+	*   	ingredients?: string[]
+	* }} menuItem
+    */
+	async 'menu.update'({ _id, menuItem}) {
+		check(_id, String);
+		// Ensure the menu item object is correct.
+		check(menuItem, {
+			name: Match.Optional(String),
+			price: Match.Optional(Number),
+			menuCategory: Match.Optional(String),
+			available: Match.Optional(Boolean),
+			ingredients: Match.Optional([String]),
+		});
 	
-		if (!MenuCategories.findOne(menuCategory)) {
+		// Ensure the menu category exists, otherwise throw an error.
+		if (menuCategory && !MenuCategories.findOne(menuCategory)) {
 			throw new Meteor.Error(
 				'invalid-category', 'The specified category does not exist.'
 			);
 		}
-	
-		return await Menu.updateAsync(
-			{ _id },
-			{
-				$set: {
-					name,
-					price,
-					menuCategory,
-					available
-				}
-			}
+
+		// Convert to an object with only the keys that were provided.
+		const menuItemDoc = Object.fromEntries(
+			Object.entries(menuItem).filter(([key, val]) => val !== undefined)
 		);
+
+		// Don't update if there are no properties to update.
+		if (Object.keys(menuItemDoc).length === 0) {
+			throw new Meteor.Error(
+				'no-update', 'No fields provided to update.'
+			);
+		}
+	
+		return await Menu.updateAsync({ _id }, { menuItemDoc });
 	},
 
 	/**

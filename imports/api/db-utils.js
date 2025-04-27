@@ -1,5 +1,3 @@
-import { MongoInternals } from "meteor/mongo";
-
 /**
  * Apply a schema to a collection using a provided JSON validator.
  * This may create or update a collection using the given name.
