@@ -8,16 +8,37 @@ const MenuItemPopUp = ({ onClose }) => {
   const [menuCategory, setMenuCategory] = useState('');
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name.trim()) {
+      newErrors.name = 'Item name is required';
+    }
+    if (!price || isNaN(price) || parseFloat(price) <= 0) {
+      newErrors.price = 'Please enter a valid price greater than 0';
+    }
+    if (!menuCategory.trim()) {
+      newErrors.menuCategory = 'Menu category is required';
+    }
+    if (ingredients && !Array.isArray(ingredients.split(','))) {
+      newErrors.ingredients = 'Ingredients must be a comma-separated list';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const newMenuItem = {
-      name,
-      price: parseFloat(price),
-      menuCategory,
-      available,
-      ingredients: ingredients.split(',').map((ingredient) => ingredient.trim()),
+    if (validateForm()) {
+      const newMenuItem = {
+        name,
+        price: parseFloat(price),
+        menuCategory,
+        available,
+        ingredients: ingredients.split(',').map((ingredient) => ingredient.trim()),
+      };
     };
 
     Meteor.call('menu.insert', { menuItem: newMenuItem }, (error, result) => {
@@ -48,6 +69,7 @@ const MenuItemPopUp = ({ onClose }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            {errors.name && <span className="error">{errors.name}</span>}
           </div>
 
           <div>
@@ -57,6 +79,7 @@ const MenuItemPopUp = ({ onClose }) => {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
+            {errors.price && <span className="error">{errors.price}</span>}
           </div>
 
           <div>
@@ -66,6 +89,7 @@ const MenuItemPopUp = ({ onClose }) => {
               value={menuCategory}
               onChange={(e) => setMenuCategory(e.target.value)}
             />
+            {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>
 
           <div>
@@ -78,12 +102,13 @@ const MenuItemPopUp = ({ onClose }) => {
           </div>
 
           <div>
-            <label>Ingredients </label>
+            <label>Ingredients</label>
             <input
               type="text"
               value={ingredients}
               onChange={(e) => setIngredients(e.target.value)}
             />
+            {errors.ingredients && <span className="error">{errors.ingredients}</span>}
           </div>
 
           <button type="submit">Add Menu Item</button>
