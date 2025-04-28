@@ -11,6 +11,8 @@ export const App = () => {
   const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
   const [showPopup, setShowPopup] = useState(false); 
   const [menuItems, setMenuItems] = useState([]); 
+  const [categories, setCategories] = useState(['All']);
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
     Meteor.call('menu.getAll', (error, result) => {
@@ -18,12 +20,31 @@ export const App = () => {
         console.error('Error fetching menu items:', error);
       } else {
         setMenuItems(result);
+
+        const uniqueCategories = [...new Set(
+          result
+            .map(item => item.menuCategory)
+            .filter(category => category && category.trim() !== '')
+        )];
+        setCategories(['All', ...uniqueCategories]);
       }
     });
   }, []);
 
   const addMenuItem = (newMenuItem) => {
-    setMenuItems((prevItems) => [...prevItems, newMenuItem]);
+    setMenuItems((prevItems) => {
+      const updatedItems = [...prevItems, newMenuItem];
+
+      // 🛠️ Update categories when new item added
+      const uniqueCategories = [...new Set(
+        updatedItems
+          .map(item => item.menuCategory)
+          .filter(category => category && category.trim() !== '')
+      )];
+      setCategories(['All', ...uniqueCategories]);
+
+      return updatedItems;
+    });
   };
 
   // Function to change the current page
@@ -57,17 +78,38 @@ export const App = () => {
             Here is the Menu Page!
             <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
             {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
+            {/*Filter Bar */}
+            <div className="filter-bar">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+            
             <div className="card-container">
               {menuItems.length === 0 ? (
                 <p>No menu items available.</p>
               ) : (
-                menuItems.map((item) => (
-                  <Card 
-                    key={item.id}
-                    title={item.name}
-                    description={`Price: $${item.price}`}
-                  />
-                ))
+                menuItems
+                  .filter(item => {
+                    if (selectedCategory === 'All') {
+                      return true; // ✅ Show all items when 'All', including items without category
+                    }
+                    // ✅ Only show items where menuCategory matches selectedCategory
+                    return item.menuCategory === selectedCategory;
+                  })
+                  .map(item => (
+                    <Card
+                      key={item.name}
+                      title={item.name}
+                      description={`Price: $${item.price}`}
+                    />
+                  ))
               )}
             </div>
           </div>

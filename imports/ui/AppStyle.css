@@ -25,3 +25,23 @@ body {
   justify-content: left;
   gap: 20px;
 }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* space between bubbles */
+  margin-bottom: 10px;
+  padding-top: 10px;
+}
+
+.filter-bubble {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #FCD58180;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.filter-bubble.active {
+  background-color: #FCD581;
+}
