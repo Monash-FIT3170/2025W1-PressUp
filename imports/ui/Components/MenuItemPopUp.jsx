@@ -3,7 +3,7 @@ import './MenuItemPopUp.css'; // for styling
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 
-const MenuItemPopUp = ({ onClose }) => {
+const MenuItemPopUp = ({ onClose, addMenuItem }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
@@ -53,6 +53,7 @@ const MenuItemPopUp = ({ onClose }) => {
         alert('Failed to add menu item: ' + error.reason);
       } else {
         alert('Menu item added successfully!');
+        addMenuItem(newMenuItem);
         setName('');
         setPrice('');
         setMenuCategory('');

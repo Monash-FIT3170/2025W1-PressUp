@@ -17,10 +17,14 @@ export const App = () => {
       if (error) {
         console.error('Error fetching menu items:', error);
       } else {
-        setMenuItems(result); // Set the menu items to the state
+        setMenuItems(result);
       }
     });
   }, []);
+
+  const addMenuItem = (newMenuItem) => {
+    setMenuItems((prevItems) => [...prevItems, newMenuItem]);
+  };
 
   // Function to change the current page
   const changePage = (page) => {
@@ -52,7 +56,7 @@ export const App = () => {
           <div>
             Here is the Menu Page!
             <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
-            {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} />}
+            {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
             <div className="card-container">
               {menuItems.length === 0 ? (
                 <p>No menu items available.</p>
