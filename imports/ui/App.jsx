@@ -61,8 +61,7 @@ export const App = () => {
                   <Card 
                     key={item.id}
                     title={item.name}
-                    description={`Price: $${item.price} - Category: ${item.menuCategory}`}
-                    image="https://via.placeholder.com/300"  // Replace with actual image URL if available
+                    description={`Price: $${item.price}`}
                   />
                 ))
               )}
