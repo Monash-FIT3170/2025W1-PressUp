@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './MenuItemPopUp.css'; // for styling
 import { Meteor } from 'meteor/meteor';
+import { ConfirmPopup } from './ConfirmPopup.jsx';
 
 const MenuItemPopUp = ({ onClose }) => {
   const [name, setName] = useState('');
@@ -9,6 +10,7 @@ const MenuItemPopUp = ({ onClose }) => {
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState('');
   const [errors, setErrors] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -32,14 +34,19 @@ const MenuItemPopUp = ({ onClose }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
-      const newMenuItem = {
-        name,
-        price: parseFloat(price),
-        menuCategory,
-        available,
-        ingredients: ingredients.split(',').map((ingredient) => ingredient.trim()),
-      };
+      setShowConfirm(true);
+    }
+  };
+
+  const handleConfirm = () => {
+    const newMenuItem = {
+      name,
+      price: parseFloat(price),
+      menuCategory,
+      available,
+      ingredients: ingredients.split(',').map((ingredient) => ingredient.trim()),
     };
+
 
     Meteor.call('menu.insert', { menuItem: newMenuItem }, (error, result) => {
       if (error) {
@@ -53,6 +60,11 @@ const MenuItemPopUp = ({ onClose }) => {
         onClose();  // Close the popup after successful submission
       }
     });
+    setShowConfirm(false);
+  };
+
+  const handleCancel = () => {
+    setShowConfirm(false);
   };
   
   return (
@@ -113,6 +125,15 @@ const MenuItemPopUp = ({ onClose }) => {
 
           <button type="submit">Add Menu Item</button>
         </form>
+
+        {/* Confirmation popup if showConfirm is true */}
+        {showConfirm && (
+          <ConfirmPopup 
+            message="Are you sure you want to add this menu item?" 
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
+          />
+        )}
       </div>
     </div>
   );
