@@ -1,0 +1,22 @@
+/* imports/ui/Components/SearchBar.css */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding: 8px 12px;
+    width: 100%;
+    max-width: 350px;
+  }
+  
+  .search-icon {
+    margin-right: 8px;
+  }
+  
+  .search-input {
+    border: none;
+    background: transparent;
+    flex-grow: 1;
+    font-size: 14px;
+    outline: none;
+  }

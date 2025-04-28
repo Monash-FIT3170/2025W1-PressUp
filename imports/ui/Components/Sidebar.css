@@ -66,6 +66,8 @@ body.sidebar-open .hamburger-btn {
   cursor: pointer; 
   margin: 10px 0;
   border-radius: 12px;
+  display: block;
+  text-decoration: none;
 }
 
 /* Hover effect for sidebar buttons */
@@ -100,4 +102,14 @@ body.sidebar-open .hamburger-btn {
 .sidebar-logo img {
   width: 60px; /* Adjust size as needed */
   height: auto;
+}
+
+/* Additional styling for NavLink components */
+.sidebar-list a {
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar-list li {
+  margin: 0;
 }

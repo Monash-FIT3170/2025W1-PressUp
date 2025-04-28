@@ -1,8 +1,9 @@
-// Sidebar.jsx
+// imports/ui/Components/Sidebar.jsx
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 
-export const Sidebar = ({ changePage, currentPage }) => {
+export const Sidebar = () => {
   // Tracking whether the sidebar is open
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,7 +21,7 @@ export const Sidebar = ({ changePage, currentPage }) => {
 
   return (
     <>
-    {/* Hamburger button to only show when the sidebar is closed */}
+      {/* Hamburger button to only show when the sidebar is closed */}
       {!isOpen && (
         <button onClick={toggleSidebar} className="hamburger-btn">
           ☰
@@ -41,42 +42,51 @@ export const Sidebar = ({ changePage, currentPage }) => {
 
             {/* Navigation list */}
             <ul className="sidebar-list">
-            {/* Home page button*/}
-            <li>
-                <button
-                  className={`sidebar-btn ${currentPage === 'home' ? 'active' : ''}`}
-                  onClick={() => changePage('home')}>
-                    <img src="/images/HomeIcon.png" alt="Logo" style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
+              {/* Home page link */}
+              <li>
+                <NavLink
+                  to="/"
+                  className={({isActive}) => `sidebar-btn ${isActive ? 'active' : ''}`}
+                  end
+                >
+                  <img src="/images/HomeIcon.png" alt="Home" 
+                       style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
                   Home
-                </button>
-            </li>
-            {/* Inventory page button */}
-            <li>
-                <button
-                  className={`sidebar-btn ${currentPage === 'inventory' ? 'active' : ''}`}
-                  onClick={() => changePage('inventory')}>
-                    <img src="/images/InventoryIcon.png" alt="Logo" style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
+                </NavLink>
+              </li>
+              {/* Inventory page link */}
+              <li>
+                <NavLink
+                  to="/inventory"
+                  className={({isActive}) => `sidebar-btn ${isActive ? 'active' : ''}`}
+                >
+                  <img src="/images/InventoryIcon.png" alt="Inventory" 
+                       style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
                   Inventory
-                </button>
-            </li>
-            {/* Menu page button */}
-            <li>
-                <button
-                  className={`sidebar-btn ${currentPage === 'menu' ? 'active' : ''}`}
-                  onClick={() => changePage('menu')}>
-                    <img src="/images/MenuIcon.png" alt="Logo" style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
+                </NavLink>
+              </li>
+              {/* Menu page link */}
+              <li>
+                <NavLink
+                  to="/menu"
+                  className={({isActive}) => `sidebar-btn ${isActive ? 'active' : ''}`}
+                >
+                  <img src="/images/MenuIcon.png" alt="Menu" 
+                       style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
                   Menu
-                </button>
-            </li>
-            {/* Scheduling page button */}
-            <li>
-                <button
-                  className={`sidebar-btn ${currentPage === 'scheduling' ? 'active' : ''}`}
-                  onClick={() => changePage('scheduling')}>
-                    <img src="/images/ScheduleIcon.png" alt="Logo" style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
+                </NavLink>
+              </li>
+              {/* Scheduling page link */}
+              <li>
+                <NavLink
+                  to="/scheduling"
+                  className={({isActive}) => `sidebar-btn ${isActive ? 'active' : ''}`}
+                >
+                  <img src="/images/ScheduleIcon.png" alt="Scheduling" 
+                       style={{ width: '30px', height: '30px', verticalAlign: '-4px', marginRight: '8px'}} />
                   Scheduling
-                </button>
-            </li>
+                </NavLink>
+              </li>
             </ul>
           </>
         )}
