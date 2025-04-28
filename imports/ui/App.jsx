@@ -1,19 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
 import { Sidebar } from './Components/Sidebar.jsx';
+import { MenuItemPopUp } from './Components/MenuItemPopUp.jsx'
+import './AppStyle.css';
+import { Card } from './Components/Card.jsx';
 
-export const App = () => (
-  <div className='app-container'>
-    <Sidebar />
-    
-    <div className="main-content" style={{ marginLeft: '80px' }}>
-       {/* Page title */}
-      <h1>Inventory</h1>
-      
-       {/* Page content */}
-      <Hello />
-      <Info /> 
+
+export const App = () => {
+  const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
+  const [showPopup, setShowPopup] = useState(false); 
+
+  // Function to change the current page
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
+  return (
+    <div className='app-container'>
+      <Sidebar changePage={changePage} currentPage={currentPage} /> {/* Pass changePage function to Sidebar */}
+
+      <div className="main-content" style={{ marginLeft: '80px' }}>
+        {/* Page title */}
+        {currentPage === 'inventory' && <h1>Inventory</h1>}
+        {currentPage === 'home' && <h1>Home</h1>}
+        {currentPage === 'menu' && <h1>Menu</h1>}
+        {currentPage === 'scheduling' && <h1>Scheduling</h1>}
+
+        {/* Page content */}
+        {currentPage === 'inventory' && (
+          <>
+            <Hello />
+            <Info />
+          </>
+        )}
+
+        {/* Additional content for other pages can be added below */}
+        {currentPage === 'home' && <div>Welcome to the Home Page!</div>}
+        {currentPage === 'menu' && (
+          <div>
+            Here is the Menu Page!
+            <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+            {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} />}
+            <div className="card-container">
+              <Card 
+                title="Card 1"
+                description="This is the description of the first card."
+                image="https://via.placeholder.com/300"
+              />
+              <Card 
+                title="Card 2"
+                description="This is the description of the second card."
+                image="https://via.placeholder.com/300"
+              />
+              <Card 
+                title="Card 3"
+                description="This is the description of the third card."
+                image="https://via.placeholder.com/300"
+              />
+            </div>
+          </div>
+          )}
+        {currentPage === 'scheduling' && <div>Scheduling Page Content!</div>}
+      </div>
     </div>
-  </div>
-);
+  );
+};
