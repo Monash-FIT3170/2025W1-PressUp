@@ -1,9 +1,10 @@
-/* Sidebar formatting */
+/* Sidebar.css */
+/* CSS styling for Sidebar.jsx */
 .sidebar {
   position: fixed;
-  height: 900px; 
+  height: 900px;
   width: 300px;
-  background-color: #f4f4f4;
+  background-color: #ffffff;
   transition: transform 0.3s ease;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
@@ -13,7 +14,7 @@
   left: 20px;
 }
 
-/* The translation that occurrs when the close button is toggled (moves left of screen) */
+/* The translation that occurs when the close button is toggled (moves left of screen) */
 .sidebar.closed {
   transform: translateX(-110%);
 }
@@ -30,17 +31,6 @@
   margin: 0;
 }
 
-/* Close button formatting */
-.close-btn { 
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  background: transparent;
-  border: none;
-  font-size: 64px;
-  cursor: pointer;
-}
-
 /* Hamburger button formatting */
 .hamburger-btn {
   position: fixed;
@@ -55,10 +45,59 @@
 
 /* When sidebar is open, content shifts */
 body.sidebar-open div.main-content {
-  transform: translateX(300px); 
+  transform: translateX(300px);
 }
 
 /* Hide hamburger button when sidebar is open */
 body.sidebar-open .hamburger-btn {
-  display: none;  
-} 
+  display: none;
+}
+
+/* Sidebar Button Styling for navigation buttons */
+.sidebar .sidebar-btn {
+  background: none;
+  border: none;
+  font-size: 2rem; 
+  font-weight: 500; 
+  color: #000000; 
+  padding: 10px 10px; 
+  text-align: left; 
+  width: 100%;
+  cursor: pointer; 
+  margin: 10px 0;
+  border-radius: 12px;
+}
+
+/* Hover effect for sidebar buttons */
+.sidebar .sidebar-btn:hover {
+  background-color: #FDE9BF; 
+}
+
+/* Current page of sidebar to be hightlighted */
+.sidebar-btn.active {
+  background-color: #FCD581;
+}
+
+/* Close button formatting (excluded from sidebar-btn styles) */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: transparent;
+  border: none;
+  font-size: 64px;
+  cursor: pointer;
+}
+
+/* Logo formatting to top right of sidebar */
+.sidebar-logo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+/* Logo formatting size */
+.sidebar-logo img {
+  width: 60px; /* Adjust size as needed */
+  height: auto;
+}
