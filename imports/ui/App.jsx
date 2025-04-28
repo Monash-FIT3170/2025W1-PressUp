@@ -35,7 +35,7 @@ export const App = () => {
     setMenuItems((prevItems) => {
       const updatedItems = [...prevItems, newMenuItem];
 
-      // 🛠️ Update categories when new item added
+      // Update categories when new item added
       const uniqueCategories = [...new Set(
         updatedItems
           .map(item => item.menuCategory)
@@ -75,8 +75,8 @@ export const App = () => {
         {currentPage === 'home' && <div>Welcome to the Home Page!</div>}
         {currentPage === 'menu' && (
           <div>
-            Here is the Menu Page!
-            <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+            <div className="header-text">Here is the Menu Page!</div>
+            <button onClick={() => setShowPopup(true)} >Create Menu Item</button>
             {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
             {/*Filter Bar */}
             <div className="filter-bar">
@@ -98,9 +98,8 @@ export const App = () => {
                 menuItems
                   .filter(item => {
                     if (selectedCategory === 'All') {
-                      return true; // ✅ Show all items when 'All', including items without category
+                      return true;
                     }
-                    // ✅ Only show items where menuCategory matches selectedCategory
                     return item.menuCategory === selectedCategory;
                   })
                   .map(item => (

@@ -45,3 +45,9 @@ body {
 .filter-bubble.active {
   background-color: #FCD581;
 }
+
+.header-text {
+  display: inline-block;
+  flex-grow: 1;
+  padding-right: 20px;
+}
