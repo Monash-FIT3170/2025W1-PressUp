@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './MenuItemPopUp.css'; // for styling
-import { Meteor } from 'meteor/meteor'
+import { Meteor } from 'meteor/meteor';
 
 const MenuItemPopUp = ({ onClose }) => {
   const [name, setName] = useState('');
@@ -14,13 +14,13 @@ const MenuItemPopUp = ({ onClose }) => {
 
     const newMenuItem = {
       name,
-      price,
+      price: parseFloat(price),
       menuCategory,
       available,
       ingredients: ingredients.split(',').map((ingredient) => ingredient.trim()),
     };
 
-    Meteor.call('menu.insert', newMenuItem, (error, result) => {
+    Meteor.call('menu.insert', { menuItem: newMenuItem }, (error, result) => {
       if (error) {
         alert('Failed to add menu item: ' + error.reason);
       } else {

@@ -25,12 +25,12 @@ Meteor.methods({
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
-		if (!MenuCategories.findOne(menuItem.menuCategory)) {
-			throw new Meteor.Error(
-				'invalid-category',
-				'The specified category does not exist.'
-			);
-		}
+		// if (!MenuCategories.findOne(menuItem.menuCategory)) {
+		// 	throw new Meteor.Error(
+		// 		'invalid-category',
+		// 		'The specified category does not exist.'
+		// 	);
+		// }
 
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(
@@ -99,5 +99,9 @@ Meteor.methods({
 		check(_id, String);
 
 		return await Menu.removeAsync(_id);
+	},
+
+	async 'menu.getAll'() {
+		return await Menu.find().fetch();
 	}
 })

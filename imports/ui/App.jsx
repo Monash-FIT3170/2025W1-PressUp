@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
 import { Sidebar } from './Components/Sidebar.jsx';
@@ -10,6 +10,17 @@ import { Card } from './Components/Card.jsx';
 export const App = () => {
   const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
   const [showPopup, setShowPopup] = useState(false); 
+  const [menuItems, setMenuItems] = useState([]); 
+
+  useEffect(() => {
+    Meteor.call('menu.getAll', (error, result) => {
+      if (error) {
+        console.error('Error fetching menu items:', error);
+      } else {
+        setMenuItems(result); // Set the menu items to the state
+      }
+    });
+  }, []);
 
   // Function to change the current page
   const changePage = (page) => {
@@ -43,21 +54,18 @@ export const App = () => {
             <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
             {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} />}
             <div className="card-container">
-              <Card 
-                title="Card 1"
-                description="This is the description of the first card."
-                image="https://via.placeholder.com/300"
-              />
-              <Card 
-                title="Card 2"
-                description="This is the description of the second card."
-                image="https://via.placeholder.com/300"
-              />
-              <Card 
-                title="Card 3"
-                description="This is the description of the third card."
-                image="https://via.placeholder.com/300"
-              />
+              {menuItems.length === 0 ? (
+                <p>No menu items available.</p>
+              ) : (
+                menuItems.map((item) => (
+                  <Card 
+                    key={item.id}
+                    title={item.name}
+                    description={`Price: $${item.price} - Category: ${item.menuCategory}`}
+                    image="https://via.placeholder.com/300"  // Replace with actual image URL if available
+                  />
+                ))
+              )}
             </div>
           </div>
           )}
