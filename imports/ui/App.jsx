@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState } from 'react';
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
@@ -6,13 +7,14 @@ import './AppStyle.css';
 
 
 export const App = () => {
-  const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
+  const [currentPage, setCurrentPage] = useState('inventory'); // Default page is set to "Inventory"
 
   // Function to change the current page
   const changePage = (page) => {
     setCurrentPage(page);
   };
 
+  // App container
   return (
     <div className='app-container'>
       <Sidebar changePage={changePage} currentPage={currentPage} /> {/* Pass changePage function to Sidebar */}
@@ -24,7 +26,7 @@ export const App = () => {
         {currentPage === 'menu' && <h1>Menu</h1>}
         {currentPage === 'scheduling' && <h1>Scheduling</h1>}
 
-        {/* Page content */}
+        {/* Page content for inventory */}
         {currentPage === 'inventory' && (
           <>
             <Hello />
@@ -32,7 +34,7 @@ export const App = () => {
           </>
         )}
 
-        {/* Additional content for other pages can be added below */}
+        {/* Page content for other pages to be added below */}
         {currentPage === 'home' && <div>Welcome to the Home Page!</div>}
         {currentPage === 'menu' && <div>Here is the Menu Page!</div>}
         {currentPage === 'scheduling' && <div>Scheduling Page Content!</div>}

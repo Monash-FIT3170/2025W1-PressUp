@@ -1,9 +1,12 @@
+// Sidebar.jsx
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 export const Sidebar = ({ changePage, currentPage }) => {
+  // Tracking whether the sidebar is open
   const [isOpen, setIsOpen] = useState(false);
 
+  // Sidebar toggle
   const toggleSidebar = () => setIsOpen(prev => !prev);
 
   // When sidebar is toggled, update body class
@@ -17,23 +20,28 @@ export const Sidebar = ({ changePage, currentPage }) => {
 
   return (
     <>
+    {/* Hamburger button to only show when the sidebar is closed */}
       {!isOpen && (
         <button onClick={toggleSidebar} className="hamburger-btn">
           ☰
         </button>
       )}
 
+      {/* Sidebar container */}
       <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
         {isOpen && (
           <>
+            {/* Close button on sidebar */}
             <button onClick={toggleSidebar} className="close-btn">×</button>
 
+            {/* Logo on sidebar */}
             <div className="sidebar-logo">
               <img src="/images/PressUpLogo.png" alt="Logo" />
             </div>
 
+            {/* Navigation list */}
             <ul className="sidebar-list">
-            {/* Home Page */}
+            {/* Home page button*/}
             <li>
                 <button
                   className={`sidebar-btn ${currentPage === 'home' ? 'active' : ''}`}
@@ -42,7 +50,7 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   Home
                 </button>
             </li>
-            {/* Inventory Page */}
+            {/* Inventory page button */}
             <li>
                 <button
                   className={`sidebar-btn ${currentPage === 'inventory' ? 'active' : ''}`}
@@ -51,7 +59,7 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   Inventory
                 </button>
             </li>
-            {/* Menu Page */}
+            {/* Menu page button */}
             <li>
                 <button
                   className={`sidebar-btn ${currentPage === 'menu' ? 'active' : ''}`}
@@ -60,7 +68,7 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   Menu
                 </button>
             </li>
-            {/* Scheduling Page */}
+            {/* Scheduling page button */}
             <li>
                 <button
                   className={`sidebar-btn ${currentPage === 'scheduling' ? 'active' : ''}`}

@@ -1,9 +1,10 @@
-/* Sidebar formatting */
+/* Sidebar.css */
+/* CSS styling for Sidebar.jsx */
 .sidebar {
   position: fixed;
   height: 900px;
   width: 300px;
-  background-color: #f4f4f4;
+  background-color: #ffffff;
   transition: transform 0.3s ease;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
@@ -72,6 +73,11 @@ body.sidebar-open .hamburger-btn {
   background-color: #FDE9BF; 
 }
 
+/* Current page of sidebar to be hightlighted */
+.sidebar-btn.active {
+  background-color: #FCD581;
+}
+
 /* Close button formatting (excluded from sidebar-btn styles) */
 .close-btn {
   position: absolute;
@@ -83,17 +89,15 @@ body.sidebar-open .hamburger-btn {
   cursor: pointer;
 }
 
+/* Logo formatting to top right of sidebar */
 .sidebar-logo {
   position: absolute;
   top: 20px;
   right: 20px;
 }
 
+/* Logo formatting size */
 .sidebar-logo img {
   width: 60px; /* Adjust size as needed */
   height: auto;
-}
-
-.sidebar-btn.active {
-  background-color: #FCD581;
 }
