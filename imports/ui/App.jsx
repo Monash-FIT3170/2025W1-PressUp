@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
-import { IngredientSearchBar } from "./Components/IngredientTable/IngredientSearchBar.jsx";
+import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 
 export const App = () => {

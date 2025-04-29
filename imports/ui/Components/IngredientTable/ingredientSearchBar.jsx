@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './IngredientSearchBar.css';
+import './ingredientSearchBar.css';
 
 export const IngredientSearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
