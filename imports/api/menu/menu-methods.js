@@ -112,5 +112,9 @@ Meteor.methods({
 		check(_id, String);
 
 		return await Menu.removeAsync(_id);
+	},
+
+	async 'menu.getAll'() {
+		return await Menu.find().fetch();
 	}
 })
