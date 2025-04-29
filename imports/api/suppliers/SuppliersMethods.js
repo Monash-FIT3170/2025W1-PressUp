@@ -12,7 +12,7 @@ Meteor.methods({
         updatedAt: new Date(),
       });
 
-      console.log(`Supplier added with ID: ${supplierId}`);
+      // console.log(`Supplier added with ID: ${supplierId}`);
       return supplierId;
 
     } catch (error) {
