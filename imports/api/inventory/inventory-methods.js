@@ -13,5 +13,9 @@ Meteor.methods({
     
     async 'inventory.incrementQty'({name,increment}) {
         return await InventoryCollection.updateAsync({name:name},{$inc:{"qty":increment}});
+    },
+
+    async 'inventory.remove'(name) {
+        return await InventoryCollection.removeAsync({name:name});
     }
 });
