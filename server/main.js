@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { LinksCollection } from '/imports/api/links';
+import {InventoryCollection} from '/imports/api/inventory';
 
 async function insertLink({ title, url }) {
   await LinksCollection.insertAsync({ title, url, createdAt: new Date() });
