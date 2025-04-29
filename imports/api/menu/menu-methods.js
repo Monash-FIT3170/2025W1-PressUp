@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { check, Match }  from 'meteor/check';
 import { Menu } from './menu-collection';
 import { MenuCategories } from '../menu-categories/menu-categories-collection';
+import { ObjectId, Decimal128 } from 'mongodb';
 
 Meteor.methods({
 	/**
@@ -24,13 +25,15 @@ Meteor.methods({
 			ingredients: Match.Optional([String]),
 		});
 
-		// Ensure the menu category exists, otherwise throw an error.
-		if (!MenuCategories.findOne(menuItem.menuCategory)) {
-			throw new Meteor.Error(
-				'invalid-category',
-				'The specified category does not exist.'
-			);
-		}
+		// Ensure the menu category exists, otherwise throw an error
+		// Commented this out for now as we don't have any categories yet.
+		// if (!(await MenuCategories.findOneAsync(menuItem.menuCategory))) {
+		// 	throw new Meteor.Error(
+		// 		'invalid-category',
+		// 		'The specified category does not exist.'
+		// 	);
+		// }
+		console.log('Inserting menu item:', menuItem);
 
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(
@@ -45,6 +48,16 @@ Meteor.methods({
 			);
 		}
 
+		if (typeof menuItemDoc.price === 'number') {
+			menuItemDoc.price = Decimal128.fromString(menuItemDoc.price.toString());
+		  }
+
+		if (menuItemDoc.menuCategory) {
+			menuItemDoc.menuCategory = new ObjectId(menuItemDoc.menuCategory);
+		}
+
+		console.log('Final menu item document:', menuItemDoc);
+		
 		return await Menu.insertAsync(menuItemDoc)
 	},
 
