@@ -8,5 +8,6 @@ InventoryCollection.schema = new SimpleSchema({
     qty: {type: Number,defaultValue: 1},
     unit: {type: String,defaultValue: 'unit(s)'},
     price: {type: Number,optional: true},
-    Supplier: {type: String,optional: true},
+    supplier: {type: Array,optional: true},
+    'supplier.$': String,
 })
