@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+// imports/ui/App.jsx
+import React, { useState, useRef } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
+import { IngredientSearchBar } from "./Components/IngredientTable/IngredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 
 export const App = () => {
-  const [currentPage, setCurrentPage] = useState("inventory"); // Default page is set to "Inventory"
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
-
-  // Function to change the current page
-  const changePage = (page) => {
-    setCurrentPage(page);
-  };
-
-  useEffect(() => {
+  
+  // Handle outside clicks for overlays
+  React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (overlayRef.current && !overlayRef.current.contains(event.target)) {
         setOpenOverlay(null);
@@ -20,38 +18,53 @@ export const App = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
-
-  // App container
+  }, []);
+  
   return (
-    <div className="app-container">
-      <Sidebar changePage={changePage} currentPage={currentPage} />
-      {/* Pass changePage function to Sidebar */}
-      <div className="main-content" style={{ marginLeft: "80px" }}>
-        {/* Page title */}
-        {currentPage === "inventory" && <h1>Inventory</h1>}
-        {currentPage === "home" && <h1>Home</h1>}
-        {currentPage === "menu" && <h1>Menu</h1>}
-        {currentPage === "scheduling" && <h1>Scheduling</h1>}
-
-        {/* Page content for inventory */}
-        {currentPage === "inventory" && (
-          <IngredientTable
-            openOverlay={openOverlay}
-            setOpenOverlay={setOpenOverlay}
-            overlayRef={overlayRef}
-          />
-        )}
-
-        {/* Page content for other pages to be added below */}
-        {currentPage === "home" && <div>Welcome to the Home Page!</div>}
-        {currentPage === "menu" && <div>Here is the Menu Page!</div>}
-        {currentPage === "scheduling" && <div>Scheduling Page Content!</div>}
+    <BrowserRouter>
+      <div className="app-container">
+        <Sidebar />
+        <div className="main-content" style={{ marginLeft: "80px" }}>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <h1>Home</h1>
+                <div>Welcome to the Home Page!</div>
+              </>
+            } />
+            <Route path="/inventory" element={
+              <>
+                <div className="page-header">
+                  <div className="title-search-container">
+                    <h1>Inventory</h1>
+                    <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
+                  </div>
+                </div>
+                <IngredientTable 
+                  openOverlay={openOverlay} 
+                  setOpenOverlay={setOpenOverlay} 
+                  overlayRef={overlayRef} 
+                />
+              </>
+            } />
+            <Route path="/menu" element={
+              <>
+                <h1>Menu</h1>
+                <div>Here is the Menu Page!</div>
+              </>
+            } />
+            <Route path="/scheduling" element={
+              <>
+                <h1>Scheduling</h1>
+                <div>Scheduling Page Content!</div>
+              </>
+            } />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 };

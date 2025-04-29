@@ -1,0 +1,39 @@
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-radius: 20px;
+  padding: 8px 12px;
+  width: 100%;
+  max-width: 250px;
+  margin-top: 8px;
+}
+
+.search-icon {
+  margin-right: 8px;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  flex-grow: 1;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Styles for page header layout */
+.page-header {
+  margin-bottom: 20px;
+}
+
+/* Container for title and search bar */
+.title-search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Small gap between title and search */
+}
+
+.title-search-container h1 {
+  margin: 0;
+  white-space: nowrap;
+}
