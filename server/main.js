@@ -1,5 +1,8 @@
 // server/main.js
 import { Meteor } from 'meteor/meteor';
+import {InventoryCollection} from '/imports/api/inventory/inventory-collection';
+import "../imports/api/inventory/inventory-publications";
+import "../imports/api/inventory/inventory-methods";
 import { WebApp } from 'meteor/webapp';
 
 Meteor.startup(() => {
