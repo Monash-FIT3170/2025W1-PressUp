@@ -37,8 +37,12 @@ export const App = () => {
             } />
             <Route path="/inventory" element={
               <>
-                <h1>Inventory</h1>
-                <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
+                <div className="page-header">
+                  <div className="title-search-container">
+                    <h1>Inventory</h1>
+                    <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
+                  </div>
+                </div>
                 <IngredientTable 
                   openOverlay={openOverlay} 
                   setOpenOverlay={setOpenOverlay} 
