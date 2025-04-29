@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
-import { SearchBar } from "./Components/SearchBar.jsx";
+import { IngredientSearchBar } from "./Components/IngredientTable/IngredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 
 export const App = () => {
@@ -38,7 +38,7 @@ export const App = () => {
             <Route path="/inventory" element={
               <>
                 <h1>Inventory</h1>
-                <SearchBar onSearch={(term) => console.log('Searching:', term)} />
+                <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
                 <IngredientTable 
                   openOverlay={openOverlay} 
                   setOpenOverlay={setOpenOverlay} 

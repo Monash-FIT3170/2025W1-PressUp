@@ -1,8 +1,7 @@
-// imports/ui/Components/SearchBar.jsx
 import React, { useState } from 'react';
-import './SearchBar.css';
+import './IngredientSearchBar.css';
 
-export const SearchBar = ({ onSearch }) => {
+export const IngredientSearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleChange = (e) => {
