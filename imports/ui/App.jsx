@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
+import "./AppStyle.css"; // Importing CSS for styling
 
 export const App = () => {
   const [currentPage, setCurrentPage] = useState("inventory"); // Default page is set to "Inventory"
