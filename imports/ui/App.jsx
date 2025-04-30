@@ -1,15 +1,16 @@
 // imports/ui/App.jsx
-import React, { useState, useRef, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
-import { MenuItemPopUp } from './Components/MenuItemPopUp.jsx'
+import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
+import { Card } from "./Components/Card.jsx";
+import { Hello } from './Hello.jsx';
+import { Info } from './Info.jsx';
 import './AppStyle.css';
-import { Card } from './Components/Card.jsx';
 
 export const App = () => {
-  const [currentPage, setCurrentPage] = useState('inventory'); // Default page is "Inventory"
   const [showPopup, setShowPopup] = useState(false); 
   const [menuItems, setMenuItems] = useState([]); 
   const [categories, setCategories] = useState(['All']);
@@ -38,7 +39,6 @@ export const App = () => {
     setMenuItems((prevItems) => {
       const updatedItems = [...prevItems, newMenuItem];
 
-      // Update categories when new item added
       const uniqueCategories = [...new Set(
         updatedItems
           .map(item => item.menuCategory)
@@ -46,24 +46,8 @@ export const App = () => {
       )];
       setCategories(['All', ...uniqueCategories]);
 
-      const handleClickOutside = (event) => {
-        if (overlayRef.current && !overlayRef.current.contains(event.target)) {
-          setOpenOverlay(null);
-        }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-
       return updatedItems;
     });
-  };
-
-  // Function to change the current page
-  const changePage = (page) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -80,23 +64,50 @@ export const App = () => {
             } />
             <Route path="/inventory" element={
               <>
-                <div className="page-header">
-                  <div className="title-search-container">
-                    <h1>Inventory</h1>
-                    <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
-                  </div>
-                </div>
+                <h1>Inventory</h1>
+                <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
                 <IngredientTable 
                   openOverlay={openOverlay} 
                   setOpenOverlay={setOpenOverlay} 
                   overlayRef={overlayRef} 
                 />
+                <Hello />
+                <Info />
               </>
             } />
             <Route path="/menu" element={
               <>
                 <h1>Menu</h1>
-                <div>Here is the Menu Page!</div>
+                <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+                {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
+
+                <div className="filter-bar">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="card-container">
+                  {menuItems.length === 0 ? (
+                    <p>No menu items available.</p>
+                  ) : (
+                    menuItems
+                      .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
+                      .map(item => (
+                        <Card
+                          key={item.name}
+                          title={item.name}
+                          description={`Price: $${item.price}`}
+                        />
+                      ))
+                  )}
+                </div>
               </>
             } />
             <Route path="/scheduling" element={

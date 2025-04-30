@@ -7,10 +7,10 @@ export const Hello = () => {
     setCounter(counter + 1);
   };
 
-  return (
-    <div>
-      <button onClick={increment}>Click Me</button>
-      <p>You've pressed the button {counter} times.</p>
-    </div>
-  );
+  // return (
+  //   <div>
+  //     <button onClick={increment}>Click Me</button>
+  //     <p>You've pressed the button {counter} times.</p>
+  //   // </div>
+  // );
 };
