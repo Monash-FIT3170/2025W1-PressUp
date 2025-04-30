@@ -8,7 +8,7 @@ import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
 import { Card } from "./Components/Card.jsx";
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
-import './AppStyle.css';
+//import './AppStyle.css';
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false); 
