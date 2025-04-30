@@ -1,11 +1,22 @@
 // server/main.js
 import { Meteor } from 'meteor/meteor';
+import { WebApp } from 'meteor/webapp';
+
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection';
+import { Menu } from '/imports/api/menu/menu-collection';
+import '/imports/api/menu/menu-methods';
+
 import {InventoryCollection} from '/imports/api/inventory/inventory-collection';
 import "../imports/api/inventory/inventory-publications";
 import "../imports/api/inventory/inventory-methods";
-import { WebApp } from 'meteor/webapp';
 
-Meteor.startup(() => {
+
+Meteor.startup(async () => {
+	// Testing menu and categories.
+	const nCategories = await MenuCategories.find().countAsync();
+	const nMenuItems = await Menu.find().countAsync();
+	console.log(`Init: ${nCategories} categories, ${nMenuItems} menu items.`);
+
   // Handle client-side routing for direct URL access
   WebApp.connectHandlers.use((req, res, next) => {
     const path = req.url.split('?')[0];
