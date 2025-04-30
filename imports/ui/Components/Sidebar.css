@@ -1,8 +1,8 @@
 /* Sidebar.css */
 /* CSS styling for Sidebar.jsx */
 .sidebar {
-  position: fixed;
-  height: calc(100% - 40px * 2);
+  /* position: fixed; */
+  /* height: calc(100% - 40px * 2); */
   width: 25%;
   background-color: #ffffff;
   transition: transform 0.3s ease;
@@ -17,6 +17,7 @@
   flex-shrink: 0;
   gap: 20px;
   align-self: stretch;
+  flex: 0 0 25%;
 }
 
 /* The translation that occurs when the close button is toggled (moves left of screen) */

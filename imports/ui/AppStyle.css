@@ -6,4 +6,19 @@
   align-items: flex-start;
   gap: 20px;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+.main-content {
+  flex-grow: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  padding-top: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1;
+  align-self: stretch;
+  overflow: auto;
 }

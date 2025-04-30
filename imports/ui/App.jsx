@@ -9,7 +9,7 @@ import "./AppStyle.css"; // Importing CSS for styling
 export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
-  
+
   // Handle outside clicks for overlays
   React.useEffect(() => {
     const handleClickOutside = (event) => {
@@ -23,46 +23,60 @@ export const App = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   return (
     <BrowserRouter>
       <div className="app-container">
         <Sidebar />
-        <div className="main-content" style={{ marginLeft: "80px" }}>
+        <div className="main-content">
           <Routes>
-            <Route path="/" element={
-              <>
-                <h1>Home</h1>
-                <div>Welcome to the Home Page!</div>
-              </>
-            } />
-            <Route path="/inventory" element={
-              <>
-                <div className="page-header">
-                  <div className="title-search-container">
-                    <h1>Inventory</h1>
-                    <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
+            <Route
+              path="/"
+              element={
+                <>
+                  <h1>Home</h1>
+                  <div>Welcome to the Home Page!</div>
+                </>
+              }
+            />
+            <Route
+              path="/inventory"
+              element={
+                <>
+                  <div className="page-header">
+                    <div className="title-search-container">
+                      <h1>Inventory</h1>
+                      <IngredientSearchBar
+                        onSearch={(term) => console.log("Searching:", term)}
+                      />
+                    </div>
                   </div>
-                </div>
-                <IngredientTable 
-                  openOverlay={openOverlay} 
-                  setOpenOverlay={setOpenOverlay} 
-                  overlayRef={overlayRef} 
-                />
-              </>
-            } />
-            <Route path="/menu" element={
-              <>
-                <h1>Menu</h1>
-                <div>Here is the Menu Page!</div>
-              </>
-            } />
-            <Route path="/scheduling" element={
-              <>
-                <h1>Scheduling</h1>
-                <div>Scheduling Page Content!</div>
-              </>
-            } />
+                  <IngredientTable
+                    openOverlay={openOverlay}
+                    setOpenOverlay={setOpenOverlay}
+                    overlayRef={overlayRef}
+                  />
+                </>
+              }
+            />
+            <Route
+              path="/menu"
+              element={
+                <>
+                  <h1>Menu</h1>
+                  <div>Here is the Menu Page!</div>
+                </>
+              }
+            />
+            <Route
+              path="/scheduling"
+              element={
+                <>
+                  <h1>Scheduling</h1>
+                  <div>Scheduling Page Content!</div>
+                </>
+              }
+            />
           </Routes>
         </div>
       </div>
