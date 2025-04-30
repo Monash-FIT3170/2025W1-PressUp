@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SuppliersCollection } from '../api/suppliers/SuppliersCollection';
+import { SuppliersCollection } from '../../../api/suppliers/SuppliersCollection';
 
 export const SupplierForm = () => {
     const [abn, setAbn] = useState('');

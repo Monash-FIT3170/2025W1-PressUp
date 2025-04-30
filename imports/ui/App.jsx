@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sidebar } from './Components/Sidebar.jsx';
-import { SupplierForm } from './SupplierForm.jsx';
+import { SupplierForm } from './Components/SupplierTable/SupplierForm.jsx';
 import { SupplierManager } from './SupplierManager.jsx';
 
 export const App = () => (
@@ -13,7 +13,6 @@ export const App = () => (
       
        {/* Page content */}
       <SupplierForm/>
-      <SupplierManager/>
     </div>
   </div>
 );
