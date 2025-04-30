@@ -1,8 +1,8 @@
-// Sidebar.jsx
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
-export const Sidebar = ({ changePage, currentPage }) => {
+export const Sidebar = () => {
   // Tracking whether the sidebar is open
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,16 +37,18 @@ export const Sidebar = ({ changePage, currentPage }) => {
               </button>
               <img src="/images/PressUpLogo.png" alt="Logo" />
             </div>
+
             <div className="sidebar-content">
-              <button
-                className={`sidebar-btn ${
-                  currentPage === "home" ? "active" : ""
-                }`}
-                onClick={() => changePage("home")}
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+                end
               >
                 <img
                   src="/images/HomeIcon.png"
-                  alt="Logo"
+                  alt="Home"
                   style={{
                     width: "30px",
                     height: "30px",
@@ -55,16 +57,16 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   }}
                 />
                 Home
-              </button>
-              <button
-                className={`sidebar-btn ${
-                  currentPage === "inventory" ? "active" : ""
-                }`}
-                onClick={() => changePage("inventory")}
+              </NavLink>
+              <NavLink
+                to="/inventory"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
               >
                 <img
                   src="/images/InventoryIcon.png"
-                  alt="Logo"
+                  alt="Inventory"
                   style={{
                     width: "30px",
                     height: "30px",
@@ -73,34 +75,16 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   }}
                 />
                 Inventory
-              </button>
-              <button
-                className={`sidebar-btn ${
-                  currentPage === "scheduling" ? "active" : ""
-                }`}
-                onClick={() => changePage("scheduling")}
-              >
-                <img
-                  src="/images/ScheduleIcon.png"
-                  alt="Logo"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Scheduling
-              </button>
-              <button
-                className={`sidebar-btn ${
-                  currentPage === "menu" ? "active" : ""
-                }`}
-                onClick={() => changePage("menu")}
+              </NavLink>
+              <NavLink
+                to="/menu"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
               >
                 <img
                   src="/images/MenuIcon.png"
-                  alt="Logo"
+                  alt="Menu"
                   style={{
                     width: "30px",
                     height: "30px",
@@ -109,7 +93,25 @@ export const Sidebar = ({ changePage, currentPage }) => {
                   }}
                 />
                 Menu
-              </button>
+              </NavLink>
+              <NavLink
+                to="/scheduling"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+              >
+                <img
+                  src="/images/ScheduleIcon.png"
+                  alt="Scheduling"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Scheduling
+              </NavLink>
             </div>
           </>
         )}
