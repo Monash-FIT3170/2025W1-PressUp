@@ -1,44 +1,32 @@
-/* Sidebar formatting */
+/* Sidebar.css */
+/* CSS styling for Sidebar.jsx */
 .sidebar {
   position: fixed;
-  height: 900px; 
-  width: 300px;
-  background-color: #f4f4f4;
+  height: calc(100% - 40px * 2);
+  width: 25%;
+  background-color: #ffffff;
   transition: transform 0.3s ease;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   z-index: 1000;
-  top: 20px;
-  left: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  gap: 20px;
+  align-self: stretch;
 }
 
-/* The translation that occurrs when the close button is toggled (moves left of screen) */
+/* The translation that occurs when the close button is toggled (moves left of screen) */
 .sidebar.closed {
-  transform: translateX(-110%);
+  transform: translateX(-120%);
 }
 
 /* Sidebar open state */
 .sidebar.open {
   transform: translateX(0%); /* Sidebar stays in place when open */
-}
-
-/* Gives us padding for the x button and logo on the sidebar */
-.sidebar ul {
-  list-style: none;
-  padding: 60px 10px 10px;
-  margin: 0;
-}
-
-/* Close button formatting */
-.close-btn { 
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  background: transparent;
-  border: none;
-  font-size: 64px;
-  cursor: pointer;
 }
 
 /* Hamburger button formatting */
@@ -55,10 +43,64 @@
 
 /* When sidebar is open, content shifts */
 body.sidebar-open div.main-content {
-  transform: translateX(300px); 
+  transform: translateX(300px);
 }
 
 /* Hide hamburger button when sidebar is open */
 body.sidebar-open .hamburger-btn {
-  display: none;  
-} 
+  display: none;
+}
+
+/* Sidebar Button Styling for navigation buttons */
+.sidebar .sidebar-btn {
+  border: none;
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #000000;
+  padding: 7.5px 10px;
+  border-radius: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  align-self: stretch;
+  text-decoration: none;
+}
+
+/* Hover effect for sidebar buttons */
+.sidebar .sidebar-btn:hover {
+  background-color: #fde9bf;
+}
+
+/* Current page of sidebar to be hightlighted */
+.sidebar-btn.active {
+  background-color: #fcd581;
+}
+
+/* Close button formatting (excluded from sidebar-btn styles) */
+.close-btn {
+  font-size: 64px;
+}
+
+.sidebar-header {
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+
+.sidebar-header img {
+  width: 60px;
+  height: 60px;
+  aspect-ratio: 1/1;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: stretch;
+}
