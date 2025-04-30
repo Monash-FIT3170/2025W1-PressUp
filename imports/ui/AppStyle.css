@@ -1,23 +1,9 @@
-/* AppStyle.css */
-/* CSS styling for App.jsx */
-body {
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    height: 100vh;
-    overflow: hidden /* Disables page scrolling */
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-weight: bold;
-    font-size: 48px;
-  }
-  
-  h2 {
-    font-weight: 540;
-    font-size: 28px;
-  }
+.app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  align-items: flex-start;
+  gap: 20px;
+  box-sizing: border-box;
+}
