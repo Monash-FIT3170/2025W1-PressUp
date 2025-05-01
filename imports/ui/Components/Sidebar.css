@@ -30,28 +30,6 @@
   transform: translateX(0%); /* Sidebar stays in place when open */
 }
 
-/* Hamburger button formatting */
-.hamburger-btn {
-  position: fixed;
-  top: 36px;
-  left: 36px;
-  background: transparent;
-  border: none;
-  font-size: 40px;
-  cursor: pointer;
-  z-index: 1100;
-}
-
-/* When sidebar is open, content shifts */
-body.sidebar-open div.main-content {
-  transform: translateX(300px);
-}
-
-/* Hide hamburger button when sidebar is open */
-body.sidebar-open .hamburger-btn {
-  display: none;
-}
-
 /* Sidebar Button Styling for navigation buttons */
 .sidebar .sidebar-btn {
   border: none;
@@ -79,11 +57,6 @@ body.sidebar-open .hamburger-btn {
   background-color: #fcd581;
 }
 
-/* Close button formatting (excluded from sidebar-btn styles) */
-.close-btn {
-  font-size: 64px;
-}
-
 .sidebar-header {
   display: flex;
   padding: 10px;
@@ -92,10 +65,14 @@ body.sidebar-open .hamburger-btn {
   align-self: stretch;
 }
 
-.sidebar-header img {
+.close-btn img {
+  width: 40px;
+  height: 40px;
+}
+
+#logo {
   width: 60px;
   height: 60px;
-  aspect-ratio: 1/1;
 }
 
 .sidebar-content {

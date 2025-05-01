@@ -6,31 +6,35 @@ import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSear
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
 import { Card } from "./Components/Card.jsx";
-import { Hello } from './Hello.jsx';
-import { Info } from './Info.jsx';
-import './AppStyle.css';
+import "./AppStyle.css";
+import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
 
 export const App = () => {
-  const [showPopup, setShowPopup] = useState(false); 
-  const [menuItems, setMenuItems] = useState([]); 
-  const [categories, setCategories] = useState(['All']);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showPopup, setShowPopup] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+  const [categories, setCategories] = useState(["All"]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
 
   useEffect(() => {
-    Meteor.call('menu.getAll', (error, result) => {
+    Meteor.call("menu.getAll", (error, result) => {
       if (error) {
-        console.error('Error fetching menu items:', error);
+        console.error("Error fetching menu items:", error);
       } else {
         setMenuItems(result);
 
-        const uniqueCategories = [...new Set(
-          result
-            .map(item => item.menuCategory)
-            .filter(category => category && category.trim() !== '')
-        )];
-        setCategories(['All', ...uniqueCategories]);
+        const uniqueCategories = [
+          ...new Set(
+            result
+              .map((item) => item.menuCategory)
+              .filter((category) => category && category.trim() !== "")
+          ),
+        ];
+        setCategories(["All", ...uniqueCategories]);
       }
     });
   }, []);
@@ -39,12 +43,14 @@ export const App = () => {
     setMenuItems((prevItems) => {
       const updatedItems = [...prevItems, newMenuItem];
 
-      const uniqueCategories = [...new Set(
-        updatedItems
-          .map(item => item.menuCategory)
-          .filter(category => category && category.trim() !== '')
-      )];
-      setCategories(['All', ...uniqueCategories]);
+      const uniqueCategories = [
+        ...new Set(
+          updatedItems
+            .map((item) => item.menuCategory)
+            .filter((category) => category && category.trim() !== "")
+        ),
+      ];
+      setCategories(["All", ...uniqueCategories]);
 
       return updatedItems;
     });
@@ -57,23 +63,49 @@ export const App = () => {
       }
     };
 
+    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
+      setIsSidebarOpen(false);
+    }
+
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isSidebarOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
+        setOpenOverlay(null);
+      }
+    };
+
+    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
+      setIsSidebarOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen]);
+
   return (
     <BrowserRouter>
       <div className="app-container">
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className="main-content">
           <Routes>
             <Route
               path="/"
               element={
                 <>
-                  <h1>Home</h1>
-                  <div>Welcome to the Home Page!</div>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
                 </>
               }
             />
@@ -81,14 +113,15 @@ export const App = () => {
               path="/inventory"
               element={
                 <>
-                  <div className="page-header">
-                    <div className="title-search-container">
-                      <h1>Inventory</h1>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                    searchBar={
                       <IngredientSearchBar
                         onSearch={(term) => console.log("Searching:", term)}
                       />
-                    </div>
-                  </div>
+                    }
+                  />
                   <IngredientTable
                     openOverlay={openOverlay}
                     setOpenOverlay={setOpenOverlay}
@@ -101,7 +134,10 @@ export const App = () => {
               path="/menu"
               element={
                 <>
-                  <h1>Menu</h1>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
                   <button onClick={() => setShowPopup(true)}>
                     Create Menu Item
                   </button>
@@ -152,8 +188,10 @@ export const App = () => {
               path="/scheduling"
               element={
                 <>
-                  <h1>Scheduling</h1>
-                  <div>Scheduling Page Content!</div>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
                 </>
               }
             />

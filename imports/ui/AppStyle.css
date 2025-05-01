@@ -1,27 +1,3 @@
-/* AppStyle.css */
-/* CSS styling for App.jsx */
-body {
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    height: 100vh;
-    overflow: hidden /* Disables page scrolling */
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-weight: bold;
-    font-size: 48px;
-  }
-  
-  h2 {
-    font-weight: 540;
-    font-size: 28px;
-  }
-
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -40,13 +16,13 @@ body {
 .filter-bubble {
   padding: 8px 16px;
   border-radius: 20px;
-  background-color: #FCD58180;
+  background-color: #fcd58180;
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
 .filter-bubble.active {
-  background-color: #FCD581;
+  background-color: #fcd581;
 }
 
 .header-text {
