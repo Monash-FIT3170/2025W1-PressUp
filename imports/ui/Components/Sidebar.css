@@ -1,11 +1,4 @@
-/* Sidebar.css */
-/* CSS styling for Sidebar.jsx */
 .sidebar {
-  position: fixed;
-  height: calc(100% - 40px * 2);
-  width: 25%;
-  background-color: #ffffff;
-  transition: transform 0.3s ease;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
@@ -17,16 +10,24 @@
   flex-shrink: 0;
   gap: 20px;
   align-self: stretch;
+  transition: transform 0.3s var(--ease-out);
+  opacity: 0;
+  pointer-events: none;
+  flex: 0 0 25%;
 }
 
-/* The translation that occurs when the close button is toggled (moves left of screen) */
 .sidebar.closed {
-  transform: translateX(-120%);
+  transform: translateX(-100%);
+  width: 0 !important;
+  padding: 0 !important;
+  pointer-events: none;
+  flex: 0 0 0;
 }
 
-/* Sidebar open state */
 .sidebar.open {
-  transform: translateX(0%); /* Sidebar stays in place when open */
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Sidebar Button Styling for navigation buttons */

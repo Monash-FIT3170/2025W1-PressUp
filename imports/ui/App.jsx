@@ -74,9 +74,27 @@ export const App = () => {
     };
   }, [isSidebarOpen]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
+        setOpenOverlay(null);
+      }
+    };
+
+    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
+      setIsSidebarOpen(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen]);
+
   return (
     <BrowserRouter>
-      <div className="app-container">
+      <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className="main-content">
           <Routes>
