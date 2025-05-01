@@ -94,7 +94,7 @@ export const App = () => {
 
   return (
     <BrowserRouter>
-      <div className="app-container">
+      <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
         <div className="main-content">
           <Routes>
