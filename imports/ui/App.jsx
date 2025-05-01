@@ -6,8 +6,6 @@ import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSear
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
 import { Card } from "./Components/Card.jsx";
-import { Hello } from './Hello.jsx';
-import { Info } from './Info.jsx';
 import './AppStyle.css';
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 
@@ -73,8 +71,7 @@ export const App = () => {
                   overlayRef={overlayRef} 
                 />
                 <SupplierTable/>
-                <Hello />
-                <Info />
+              
               </>
             } />
             <Route path="/menu" element={
