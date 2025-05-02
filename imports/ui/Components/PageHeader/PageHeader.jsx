@@ -1,10 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import "./PageHeader.css";
-
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
+import { capitalizeFirstLetter } from "../../../utils/utils.js";
 
 export const PageHeader = ({ isSidebarOpen, setIsSidebarOpen, searchBar }) => {
   const location = useLocation();
