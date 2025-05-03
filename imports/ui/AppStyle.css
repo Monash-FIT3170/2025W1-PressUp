@@ -1,10 +1,11 @@
 /* AppStyle.css */
 /* CSS styling for App.jsx */
+
 body {
     font-family: 'Inter', sans-serif;
     display: flex;
     height: 100vh;
-    overflow: hidden /* Disables page scrolling */
+    overflow: auto /* Disables page scrolling */
   }
   
   .content {
