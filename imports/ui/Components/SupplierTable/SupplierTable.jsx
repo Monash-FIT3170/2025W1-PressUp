@@ -20,7 +20,7 @@ export const SupplierTable = () => {
 
   const [suppliers, setSuppliers] = useState([
     {
-      name: "John Doe",
+      name: "Coles",
       abn: "24 392 710 462",
       products: ["Beans", "Grinders", "Machines"],
       contact: "Jerry",
@@ -30,21 +30,21 @@ export const SupplierTable = () => {
       notes: ["Ships weekly", "Prefers email"],
     },
     {
-      name: "Alice Smith",
+      name: "Woolworth",
       abn: "24 392 710 462",
       products: ["Milk", "Cups"],
       contact: "Jerry",
-      email: "Jerry@gmail.com",
+      email: "Alice@gmail.com",
       phone: "0427382992",
       address: "5 bonk ave, 3190 melbourne vic",
       notes: ["Pays on time"],
     },
     {
-      name: "Alex Wang",
+      name: "Aldi",
       abn: "24 392 710 462",
       products: ["Coffee Machines"],
-      contact: "Jerry",
-      email: "Jerry@gmail.com",
+      contact: "Alex",
+      email: "Alexy@gmail.com",
       phone: "0427382992",
       address: "5 bonk ave, 3190 melbourne vic",
       notes: ["High-volume orders"],
