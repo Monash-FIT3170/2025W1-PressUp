@@ -7,15 +7,27 @@ import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { capitalizeFirstLetter } from "../../../utils/utils.js";
 
 export const IngredientTable = ({
+  searchTerm = '',
   openOverlay,
   setOpenOverlay,
   overlayRef,
 }) => {
-  const isLoading = useSubscribe("inventory.all");
-  const ingredients = useFind(() => InventoryCollection.find({}), []);
+  const isLoading = useSubscribe("inventory.nameStartsWith", searchTerm);
+  const ingredients = useFind(() => InventoryCollection.find({}), [searchTerm]);
 
   if (isLoading()) {
     return <LoadingIndicator />;
+  }
+
+  if (!ingredients || ingredients.length === 0) {
+    return (
+      <div className="no-results">
+        {searchTerm ? 
+          `No ingredients found matching "${searchTerm}"` : 
+          'No ingredients found'
+        }
+      </div>
+    );
   }
 
   var headers = Object.keys(ingredients[0])
@@ -34,7 +46,7 @@ export const IngredientTable = ({
       </thead>
       <tbody>
         {ingredients.map((ingredient, ingredientIndex) => (
-          <tr key={ingredientIndex}>
+          <tr key={ingredient._id}>
             <td>{ingredient.name}</td>
             <td>
               <div className="number-pill">{ingredient.quantity}</div>

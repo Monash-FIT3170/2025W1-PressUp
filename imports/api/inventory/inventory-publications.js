@@ -13,3 +13,12 @@ Meteor.publish("inventory.nameIncludes", (subString) => {
   }
   return InventoryCollection.find();
 });
+
+Meteor.publish("inventory.nameStartsWith", (prefix) => {
+    if (prefix && prefix.length > 0) {
+      return InventoryCollection.find({
+        name: { $regex: `^${prefix}`, $options: "i" },
+      });
+    }
+    return InventoryCollection.find();
+  });

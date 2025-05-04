@@ -14,11 +14,10 @@ export const App = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     Meteor.call("menu.getAll", (error, result) => {
@@ -74,23 +73,9 @@ export const App = () => {
     };
   }, [isSidebarOpen]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
-        setOpenOverlay(null);
-      }
-    };
-
-    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
-      setIsSidebarOpen(false);
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen]);
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
 
   return (
     <BrowserRouter>
@@ -118,11 +103,12 @@ export const App = () => {
                     setIsSidebarOpen={setIsSidebarOpen}
                     searchBar={
                       <IngredientSearchBar
-                        onSearch={(term) => console.log("Searching:", term)}
+                        onSearch={handleSearch}
                       />
                     }
                   />
                   <IngredientTable
+                    searchTerm={searchTerm}
                     openOverlay={openOverlay}
                     setOpenOverlay={setOpenOverlay}
                     overlayRef={overlayRef}
