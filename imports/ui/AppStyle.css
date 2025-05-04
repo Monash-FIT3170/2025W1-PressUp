@@ -1,5 +1,6 @@
 :root {
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --animate-spin: spin 1s linear infinite;
 }
 
 .card-container {
@@ -56,7 +57,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
   flex: 1;
   align-self: stretch;
