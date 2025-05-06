@@ -55,6 +55,20 @@ export const App = () => {
     });
   };
 
+  const deleteMenuItem = (itemId) => {
+    Meteor.call('menu.remove', itemId, (error) => {
+      if (error) {
+        console.error('Error deleting menu item:', error);
+      } else {
+        setMenuItems((prevItems) => prevItems.filter(item => item._id !== itemId));
+      }
+    });
+  };
+
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (overlayRef.current && !overlayRef.current.contains(event.target)) {
@@ -160,9 +174,10 @@ export const App = () => {
                         )
                         .map((item) => (
                           <Card
-                            key={item.name}
+                            key={item._id}
                             title={item.name}
                             description={`Price: $${item.price}`}
+                            onDelete={() => deleteMenuItem(item._id)}
                           />
                         ))
                     )}
