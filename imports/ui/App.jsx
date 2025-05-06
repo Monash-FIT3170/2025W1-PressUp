@@ -4,15 +4,15 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
-import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
-import { Card } from "./Components/Card.jsx";
+import { MenuControls } from './Components/Menu/MenuControls.jsx';
+import { MenuCards } from './Components/Menu/MenuCards.jsx';
 import { Hello } from './Hello.jsx';
 import { Info } from './Info.jsx';
 //import './AppStyle.css';
 
 export const App = () => {
-  const [showPopup, setShowPopup] = useState(false); 
-  const [menuItems, setMenuItems] = useState([]); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [openOverlay, setOpenOverlay] = useState(null);
@@ -66,10 +66,10 @@ export const App = () => {
               <>
                 <h1>Inventory</h1>
                 <IngredientSearchBar onSearch={(term) => console.log('Searching:', term)} />
-                <IngredientTable 
-                  openOverlay={openOverlay} 
-                  setOpenOverlay={setOpenOverlay} 
-                  overlayRef={overlayRef} 
+                <IngredientTable
+                  openOverlay={openOverlay}
+                  setOpenOverlay={setOpenOverlay}
+                  overlayRef={overlayRef}
                 />
                 <Hello />
                 <Info />
@@ -78,36 +78,18 @@ export const App = () => {
             <Route path="/menu" element={
               <>
                 <h1>Menu</h1>
-                <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
-                {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
-
-                <div className="filter-bar">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="card-container">
-                  {menuItems.length === 0 ? (
-                    <p>No menu items available.</p>
-                  ) : (
-                    menuItems
-                      .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
-                      .map(item => (
-                        <Card
-                          key={item.name}
-                          title={item.name}
-                          description={`Price: $${item.price}`}
-                        />
-                      ))
-                  )}
-                </div>
+                <MenuControls
+                  showPopup={showPopup}
+                  setShowPopup={setShowPopup}
+                  addMenuItem={addMenuItem}
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+                <MenuCards
+                  menuItems={menuItems}
+                  selectedCategory={selectedCategory}
+                />
               </>
             } />
             <Route path="/scheduling" element={
