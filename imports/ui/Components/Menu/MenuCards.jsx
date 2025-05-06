@@ -11,7 +11,7 @@ export const MenuCards = ({ menuItems, selectedCategory }) => {
           .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
           .map(item => (
             <Card
-              key={item.name}
+              key={item._id}
               title={item.name}
               description={`Price: $${item.price}`}
             />

@@ -62,7 +62,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         }
       });
     } else if (mode === 'update') {
-      Meteor.call('menu.update', existingItem._id, itemData, (error, result) => {
+      Meteor.call('menu.update', { _id: existingItem._id, menuItem: itemData }, (error, result) => {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
