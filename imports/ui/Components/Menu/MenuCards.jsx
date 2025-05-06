@@ -26,7 +26,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
           .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
           .map(item => (
             <Card
-              key={item.name}
+              key={item._id}
               title={item.name}
               description={`Price: $${item.price}`}
               onButtonClick={() => handleEditClick(item)}
