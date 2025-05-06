@@ -12,7 +12,7 @@ export const IngredientTable = ({
   setOpenOverlay,
   overlayRef,
 }) => {
-  const isLoading = useSubscribe("inventory.nameStartsWith", searchTerm);
+  const isLoading = useSubscribe("inventory.nameIncludes", searchTerm);
   const ingredients = useFind(() => InventoryCollection.find({}), [searchTerm]);
 
   if (isLoading()) {
