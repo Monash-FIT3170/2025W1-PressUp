@@ -9,6 +9,9 @@ import '/imports/api/menu/menu-methods';
 import {InventoryCollection} from '/imports/api/inventory/inventory-collection';
 import "../imports/api/inventory/inventory-publications";
 import "../imports/api/inventory/inventory-methods";
+import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
+import "../imports/api/suppliers/SuppliersMethods";
+import "../imports/api/suppliers/SuppliersPublications";
 
 
 Meteor.startup(async () => {
