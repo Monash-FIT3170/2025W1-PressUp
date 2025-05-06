@@ -15,6 +15,7 @@ export const App = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [editingItem, setEditingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
 
@@ -34,6 +35,11 @@ export const App = () => {
       }
     });
   }, []);
+
+  const updateMenuItem = (item) => {
+    setEditingItem(item);
+    setShowPopup(true);
+  };
 
   const addMenuItem = (newMenuItem) => {
     setMenuItems((prevItems) => {
@@ -89,6 +95,7 @@ export const App = () => {
                 <MenuCards
                   menuItems={menuItems}
                   selectedCategory={selectedCategory}
+                  updateMenuItem={updateMenuItem}
                 />
               </>
             } />

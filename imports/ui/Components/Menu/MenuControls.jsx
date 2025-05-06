@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
-export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, showPopup, setShowPopup, addMenuItem }) => {
+export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, addMenuItem }) => {
+  const [showPopup, setShowPopup] = useState(false);
+  
   return (
     <>
       <button onClick={() => setShowPopup(true)}>Create Menu Item</button>

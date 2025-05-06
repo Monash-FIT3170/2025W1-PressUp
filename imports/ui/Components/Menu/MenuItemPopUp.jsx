@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MenuItemPopUp.css'; // for styling
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 
-const MenuItemPopUp = ({ onClose, addMenuItem }) => {
+const MenuItemPopUp = ({ onClose, addMenuItem, existingData }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
@@ -11,6 +11,16 @@ const MenuItemPopUp = ({ onClose, addMenuItem }) => {
   const [ingredients, setIngredients] = useState('');
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    if (existingData) {
+      setName(existingData.name || '');
+      setPrice(existingData.price || '');
+      setMenuCategory(existingData.menuCategory || '');
+      setAvailable(existingData.available || true);
+      setIngredients(existingData.ingredients ? existingData.ingredients.join(', ') : '');
+    }
+  }, [existingData]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -48,6 +58,19 @@ const MenuItemPopUp = ({ onClose, addMenuItem }) => {
     };
 
 
+    if (existingData) {
+      // Update existing menu item
+      Meteor.call('menu.update', {_id: existingData._id, menuItem: existingData}, (error, result) => {
+        if (error) {
+          alert('Failed to update menu item: ' + error.reason);
+        } else {
+          alert('Menu item updated successfully!');
+          addMenuItem(newMenuItem);  // Update the menu item in the parent component
+          onClose();  // Close the popup after successful submission
+        }
+      });
+    } else {
+      // Insert new menu item
     Meteor.call('menu.insert', { menuItem: newMenuItem }, (error, result) => {
       if (error) {
         alert('Failed to add menu item: ' + error.reason);
@@ -62,6 +85,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem }) => {
       }
     });
     setShowConfirm(false);
+  };
   };
 
   const handleCancel = () => {
