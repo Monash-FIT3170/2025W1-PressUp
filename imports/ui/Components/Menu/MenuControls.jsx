@@ -1,7 +1,24 @@
 import React from 'react';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
-export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, showPopup, setShowPopup, addMenuItem }) => {
+
+const addMenuItem = (newMenuItem) => {
+  setMenuItems((prevItems) => {
+    const updatedItems = [...prevItems, newMenuItem];
+
+    const uniqueCategories = [...new Set(
+      updatedItems
+        .map(item => item.menuCategory)
+        .filter(category => category && category.trim() !== '')
+    )];
+    setCategories(['All', ...uniqueCategories]);
+
+    return updatedItems;
+  });
+};
+
+
+export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
   return (
     <>
       <button onClick={() => setShowPopup(true)}>Create Menu Item</button>

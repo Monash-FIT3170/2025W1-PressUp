@@ -35,21 +35,6 @@ export const App = () => {
     });
   }, []);
 
-  const addMenuItem = (newMenuItem) => {
-    setMenuItems((prevItems) => {
-      const updatedItems = [...prevItems, newMenuItem];
-
-      const uniqueCategories = [...new Set(
-        updatedItems
-          .map(item => item.menuCategory)
-          .filter(category => category && category.trim() !== '')
-      )];
-      setCategories(['All', ...uniqueCategories]);
-
-      return updatedItems;
-    });
-  };
-
   return (
     <BrowserRouter>
       <div className="app-container">
@@ -81,7 +66,7 @@ export const App = () => {
                 <MenuControls
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
-                  addMenuItem={addMenuItem}
+                  // addMenuItem={addMenuItem}
                   categories={categories}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
