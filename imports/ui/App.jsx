@@ -19,6 +19,7 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showSuppliersView, setShowSuppliersView] = useState(false);
 
   useEffect(() => {
     Meteor.call("menu.getAll", (error, result) => {
@@ -99,27 +100,39 @@ export const App = () => {
               path="/inventory"
               element={
                 <>
+                  {/* always show header */}
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={
-                      <IngredientSearchBar
-                        onSearch={handleSearch}
-                      />
-                    }
+                    searchBar={<IngredientSearchBar onSearch={handleSearch} />}
                   />
-                  <IngredientTable
-                    searchTerm={searchTerm}
-                    openOverlay={openOverlay}
-                    setOpenOverlay={setOpenOverlay}
-                    overlayRef={overlayRef}
-                  />
-                  <SupplierTable
-                  searchTerm = {searchTerm}
-                  openOverlay={openOverlay}
-                  setOpenOverlay={setOpenOverlay}
-                  overlayRef={overlayRef}
-                  />
+
+                  {/* toggle button under the header */}
+                  <button
+                    className="toggle-view-btn"
+                    onClick={() => setShowSuppliersView((v) => !v)}
+                  >
+                    {showSuppliersView
+                      ? "← Back to Ingredients"
+                      : "View Suppliers →"}
+                  </button>
+
+                  {/* conditional view */}
+                  {showSuppliersView ? (
+                    <SupplierTable
+                      searchTerm={searchTerm}
+                      openOverlay={openOverlay}
+                      setOpenOverlay={setOpenOverlay}
+                      overlayRef={overlayRef}
+                    />
+                  ) : (
+                    <IngredientTable
+                      searchTerm={searchTerm}
+                      openOverlay={openOverlay}
+                      setOpenOverlay={setOpenOverlay}
+                      overlayRef={overlayRef}
+                    />
+                  )}
                 </>
               }
             />
