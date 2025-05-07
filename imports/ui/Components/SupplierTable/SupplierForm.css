@@ -22,7 +22,6 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow: hidden;
   }
   
   .supplier-form-header {
@@ -43,7 +42,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow: hidden;
     padding-left: 1dvh;
   }
   
@@ -54,8 +52,9 @@
     outline: 2px solid #e2e8f0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     overflow: hidden;
+    align-items: center;
   }
   
   .supplier-form-input label {
@@ -63,12 +62,19 @@
     font-size: 14px;
     font-weight: 400;
     font-family: 'Inter', sans-serif;
+    align-items: center;  /* Centers the label vertically */
+
   }
   
   .supplier-form-input input {
     width: 100%;
     outline: none;
+    border: none;
+    border-radius: 6px;
+    background-color: rgb(239, 239, 239);
+    text-indent: 5px;
   }
+
   
   .supplier-form-input img {
     width: 20px;
@@ -106,5 +112,17 @@
     font-size: 18px;
     font-weight: 500;
     font-family: 'Inter', sans-serif;
+  }
+
+  .supplier-form-button.cancel:hover {
+    background-color: #f59e0b;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .supplier-form-button.done:hover {
+    background-color: white;
+    border: 1px solid #f59e0b;
+    cursor: pointer;
   }
   
