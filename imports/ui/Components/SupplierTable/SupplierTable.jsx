@@ -193,17 +193,8 @@ export const SupplierTable = () => {
       </div>
       <div className="supplier-form-input-container">
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
-          <label>Name</label>
-          <input
-            name="name"
-            placeholder="Name"
-            value={newSupplier.name}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="ABN field"></div>
+            <img src="/images/Credit card.svg" alt="ABN" className="w-5 h-5" />
           <label>ABN</label>
           <input
             name="abn"
@@ -213,7 +204,8 @@ export const SupplierTable = () => {
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Products field"></div>
+            <img src="/images/Package.svg" alt="ABN" className="w-5 h-5" />
           <label>Products</label>
           <input
             name="products"
@@ -223,7 +215,8 @@ export const SupplierTable = () => {
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Contact field"></div>
+            <img src="/images/icon.svg" alt="ABN" className="w-5 h-5" />
           <label>Contact</label>
           <input
             name="contact"
@@ -233,7 +226,8 @@ export const SupplierTable = () => {
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Mail field"></div>
+            <img src="/images/Mail.svg" alt="ABN" className="w-5 h-5" />
           <label>Email</label>
           <input
             name="email"
@@ -243,17 +237,20 @@ export const SupplierTable = () => {
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Phone field"></div>
+            <img src="/images/Phone.svg" alt="ABN" className="w-5 h-5" />
           <label>Phone</label>
           <input
             name="phone"
             placeholder="Phone"
+          
             value={newSupplier.phone}
             onChange={handleInputChange}
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Home field"></div>
+            <img src="/images/Home.svg" alt="ABN" className="w-5 h-5" />
           <label>Address</label>
           <input
             name="address"
@@ -263,7 +260,8 @@ export const SupplierTable = () => {
           />
         </div>
         <div className="supplier-form-input">
-          <div className="icon-placeholder"></div>
+          <div className="Notes field"></div>
+            <img src="/images/File text.svg" alt="ABN" className="w-5 h-5" />
           <label>Notes</label>
           <input
             name="notes"
