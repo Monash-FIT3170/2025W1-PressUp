@@ -16,7 +16,13 @@ export const SupplierTable = ({
 }) => {
   const [openDropdowns, setOpenDropdowns] = useState({});
   const [showAddModal, setShowAddModal] = useState(false);
-  
+  // Add the toggleDropdown function
+    const toggleDropdown = (key) => {
+        setOpenDropdowns((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+        };
   const isLoading = useSubscribe("suppliers.nameIncludes", searchTerm);
   const suppliers = useFind(() => SuppliersCollection.find({}), [searchTerm]);
 
@@ -53,9 +59,7 @@ export const SupplierTable = ({
     
     <div className="supplier-table-wrapper">
     <button
-      className="add-supplier-btn"
-      onClick={() => setShowAddModal(true)}
-    >
+      className="add-supplier-btn" onClick={() => setShowAddModal(true)}>
       +
     </button>
   
@@ -74,8 +78,9 @@ export const SupplierTable = ({
   
           return (
             <tr key={index}>
+              <td>{supplier.name}</td>
+
               <td>{supplier.abn}</td>
-  
               {/* Products */}
               <td>
                 <div

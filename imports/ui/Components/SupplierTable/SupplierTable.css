@@ -89,3 +89,24 @@ button:focus {
 .supplier-table-wrapper{
   width: 100%
 }
+
+.add-supplier-btn {
+  width: 40px;             /* same as your  w-10 */
+  height: 40px;            /* same as your  h-10 */
+  background-color: #fff;  /* white background */
+  border: 1px solid #ddd;  /* light border */
+  border-radius: 50%;      /* make it a perfect circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;       /* size of the “+” */
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color .2s, box-shadow .2s;
+}
+
+.add-supplier-btn:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
