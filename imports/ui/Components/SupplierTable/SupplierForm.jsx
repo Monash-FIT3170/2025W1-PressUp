@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './SupplierForm.css';
 
 export const SupplierForm = ({ onClose }) => {
+  const [name, setName] = useState('');
   const [abn, setAbn] = useState('');
   const [products, setProducts] = useState('');
   const [contact, setContact] = useState('');
@@ -16,6 +17,7 @@ export const SupplierForm = ({ onClose }) => {
     if (!abn) return;
 
     await Meteor.callAsync("suppliers.insert", {
+      name: name.trim(),
       abn: abn.trim(),
       products: products.split(',').map(item => item.trim()),
       contact: contact.trim(),
@@ -26,6 +28,7 @@ export const SupplierForm = ({ onClose }) => {
     });
 
     // reset all fields
+    setName('')
     setAbn('');
     setProducts('');
     setContact('');
@@ -42,6 +45,18 @@ export const SupplierForm = ({ onClose }) => {
           <div className="title">Add New Supplier</div>
         </div>
         <div className="supplier-form-input-container">
+          {/* Name */}
+          <div className="supplier-form-input">
+            <div className="Name field"></div>
+            <img src="/images/User.svg" alt="Name" className="w-5 h-5" />
+            <label>Name</label>
+            <input
+              name="name"
+              placeholder="Name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+          </div>
           {/* ABN */}
           <div className="supplier-form-input">
             <div className="ABN field"></div>
