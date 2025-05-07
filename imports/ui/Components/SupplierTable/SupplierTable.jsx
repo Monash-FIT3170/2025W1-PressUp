@@ -24,13 +24,22 @@ export const SupplierTable = ({
      return <LoadingIndicator />;
    }
 
-  if (!suppliers || suppliers.length === 0) {
+   if (!suppliers || suppliers.length === 0) {
     return (
       <div className="no-results">
-        {searchTerm ? 
-          `No Suppliers found matching "${searchTerm}"` : 
-          'No Suppliers found'
-        }
+        {searchTerm ? (
+          <>No Suppliers found matching "{searchTerm}"</>
+        ) : (
+          <>
+            <div className="supplier-table-wrapper">
+                <button className="add-supplier-btn" onClick={() => setShowAddModal(true)}>
+                    +
+                </button>
+                {showAddModal && (<SupplierForm onClose={() => setShowAddModal(false)} />)}
+            </div>
+            No Suppliers found
+          </>
+        )}
       </div>
     );
   }

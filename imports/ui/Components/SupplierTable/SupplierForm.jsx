@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './SupplierForm.css';
 
-export const SupplierForm = ({ setShowAddModal }) => {
+export const SupplierForm = ({ onClose }) => {
   const [abn, setAbn] = useState('');
   const [products, setProducts] = useState('');
   const [contact, setContact] = useState('');
@@ -130,7 +130,7 @@ export const SupplierForm = ({ setShowAddModal }) => {
         <div className="supplier-form-buttons">
           <div
             className="supplier-form-button cancel"
-            onClick={() => setShowAddModal(false)}
+            onClick={onClose}
           >
             <div className="button-text">Cancel</div>
           </div>
