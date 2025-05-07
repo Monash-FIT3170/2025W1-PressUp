@@ -14,7 +14,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
     <div className="card-container">
       {editingItem && (
         <MenuItemPopUp
-          existingData={editingItem}
+          existingItem={editingItem}
           onClose={() => setEditingItem(false)}
           addMenuItem={updateMenuItem}
         />

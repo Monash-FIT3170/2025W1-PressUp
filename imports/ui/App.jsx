@@ -19,6 +19,11 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
 
+  const updateMenuItem = (item) => {
+    setEditingItem(item);
+    setShowPopup(true);
+  }
+  
   useEffect(() => {
     Meteor.call('menu.getAll', (error, result) => {
       if (error) {
@@ -35,26 +40,6 @@ export const App = () => {
       }
     });
   }, []);
-
-  const updateMenuItem = (item) => {
-    setEditingItem(item);
-    setShowPopup(true);
-  };
-
-  const addMenuItem = (newMenuItem) => {
-    setMenuItems((prevItems) => {
-      const updatedItems = [...prevItems, newMenuItem];
-
-      const uniqueCategories = [...new Set(
-        updatedItems
-          .map(item => item.menuCategory)
-          .filter(category => category && category.trim() !== '')
-      )];
-      setCategories(['All', ...uniqueCategories]);
-
-      return updatedItems;
-    });
-  };
 
   return (
     <BrowserRouter>
@@ -87,7 +72,7 @@ export const App = () => {
                 <MenuControls
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
-                  addMenuItem={addMenuItem}
+                  // addMenuItem={addMenuItem}
                   categories={categories}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
