@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import './SupplierForm.css';
-import { SuppliersCollection } from '../../../api/suppliers/SuppliersCollection';
+import { SuppliersCollection } from '../api/suppliers/SuppliersCollection';
 
 export const SupplierForm = () => {
     const [abn, setAbn] = useState('');
@@ -16,10 +15,9 @@ export const SupplierForm = () => {
         e.preventDefault();
 
         if (!abn) return;
-        // Insert supplier data into the database (Meteor call)
+
         await Meteor.callAsync("suppliers.insert", {
             abn: abn.trim(),
-            active: true,
             name: name.trim(),
             contactPerson: contactPerson.trim(),
             email: email.trim(),
@@ -29,7 +27,6 @@ export const SupplierForm = () => {
             notes: notes,
         });
 
-        // Reset form fields after submit
         setAbn("");
         setName("");   
         setContactPerson("");
@@ -39,115 +36,42 @@ export const SupplierForm = () => {
         setProductsSupplied([]);
         setNotes(""); 
 
-        // Close the modal after submit
-        onclose();
-
     }
     return (
-        <div className="w-[557px] p-5 bg-white rounded-2xl outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-5 overflow-hidden">
-            <div className="self-stretch h-7 flex flex-col justify-start items-start gap-2.5">
-                <div className="text-black text-2xl font-semibold">Add Supplier</div>
-          </div>
-    
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 w-full">
-            <div className="input-container">
+        <form onSubmit={handleSubmit}>
+            <div>
                 <label>ABN:</label>
-                <input
-                    placeholder="ABN"
-                    value={abn}
-                    onChange={(e) => setAbn(e.target.value)}
-                    required
-                />
+                <input type="text" value={abn} onChange={(e) => setAbn(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Name:</label>
-                <input
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Contact Person:</label>
-                <input
-                    placeholder="Contact Person"
-                    value={contactPerson}
-                    onChange={(e) => setContactPerson(e.target.value)}
-                    required
-                />
+                <input type="text" value={contactPerson} onChange={(e) => setContactPerson(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Email:</label>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Phone:</label>
-                <input
-                    type="tel"
-                    placeholder="Phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                />
+                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Address:</label>
-                <input
-                    placeholder="Address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    required
-                />
+                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Products Supplied:</label>
-                <input
-                    placeholder="Products Supplied (comma separated)"
-                    value={productsSupplied.join(', ')}
-                    onChange={(e) =>
-                    setProductsSupplied(
-                        e.target.value.split(',').map((item) => item.trim())
-                    )
-                    }
-                    required
-                />
+                <input type="text" value={productsSupplied.join(', ')} onChange={(e) => setProductsSupplied(e.target.value.split(',').map(item => item.trim()))} required />
             </div>
-    
-            <div className="input-container">
+            <div>
                 <label>Notes:</label>
-                <textarea
-                    placeholder="Notes"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                />
+                <textarea value={notes} onChange={(e) => setNotes(e.target.value)}></textarea>
             </div>
-    
-            <div className="flex justify-between gap-4 mt-4">
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex-1 p-2.5 rounded-2xl border border-amber-200"
-                >
-                    Cancel
-                </button>
-                <button type="submit" className="flex-1 p-2.5 bg-amber-200 rounded-2xl">
-                    Done
-                </button>
-                </div>
-            </form>
-        </div>
-      );
-    };
+            <button type="submit">Add Supplier</button>
+        </form>
+    )
+}
