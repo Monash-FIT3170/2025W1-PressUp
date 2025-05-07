@@ -1,0 +1,110 @@
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 10000;
+  }
+  
+  .supplier-form-container {
+    width: 557px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 16px;
+    outline: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden;
+  }
+  
+  .supplier-form-header {
+    height: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .supplier-form-header .title {
+    color: black;
+    font-size: 24px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .supplier-form-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    padding-left: 1dvh;
+  }
+  
+  .supplier-form-input {
+    width: 517px;
+    padding: 10px;
+    border-radius: 16px;
+    outline: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+  
+  .supplier-form-input label {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .supplier-form-input input {
+    width: 100%;
+    outline: none;
+  }
+  
+  .supplier-form-input img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .supplier-form-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .supplier-form-button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .supplier-form-button.cancel {
+    background-color: white;
+    border: 1px solid #f59e0b;
+  }
+  
+  .supplier-form-button.done {
+    background-color: #f59e0b;
+    color: white;
+  }
+  
+  .supplier-form-button .button-text {
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+  }
+  
