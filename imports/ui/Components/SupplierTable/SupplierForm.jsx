@@ -36,7 +36,7 @@ export const SupplierForm = ({ setShowAddModal }) => {
   };
 
   return ( // implement the pop-up functionality in a lil-bit
-    // <div className="modal-overlay">
+    <div className="modal-overlay">
       <div className="modal-content supplier-form-container">
         <div className="supplier-form-header">
           <div className="title">Add New Supplier</div>
@@ -130,7 +130,7 @@ export const SupplierForm = ({ setShowAddModal }) => {
         <div className="supplier-form-buttons">
           <div
             className="supplier-form-button cancel"
-            // onClick={() => setShowAddModal(false)}
+            onClick={() => setShowAddModal(false)}
           >
             <div className="button-text">Cancel</div>
           </div>

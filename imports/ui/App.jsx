@@ -4,8 +4,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
-import { SupplierTable } from "./Components/SupplierTable/SupplierTableOld.jsx";
-import { SupplierForm} from "./Components/SupplierTable/SupplierForm.jsx";
+import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
 import { Card } from "./Components/Card.jsx";
 import "./AppStyle.css";
@@ -115,7 +114,12 @@ export const App = () => {
                     setOpenOverlay={setOpenOverlay}
                     overlayRef={overlayRef}
                   />
-                  <SupplierTable/>
+                  <SupplierTable
+                  searchTerm = {searchTerm}
+                  openOverlay={openOverlay}
+                  setOpenOverlay={setOpenOverlay}
+                  overlayRef={overlayRef}
+                  />
                 </>
               }
             />
