@@ -51,91 +51,113 @@ export const SupplierTable = ({
 
   return (
     
-        <div className="supplier-table-wrapper">
-          <button className="add-supplier-btn" onClick={() => setShowAddModal(true)}>
-            +
-          </button>
-    
-          {suppliers.map((supplier, index) => {
-            const dropdownProducts = openDropdowns[`products-${index}`];
-            const dropdownNotes = openDropdowns[`notes-${index}`];
-    
-            return (
-              <div key={index} className="supplier-section">
-                <h3>{supplier.name}</h3>
-                <table className="supplier-table">
-                  <thead>
-                    <tr>
-                      {headers.map((header, i) => (
-                        <th key={i}>{header}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{supplier.abn}</td>
-                      <td>
-                        <div
-                          className="dropdown-toggle"
-                          onClick={() => toggleDropdown(`products-${index}`)}
-                          aria-expanded={dropdownProducts ? "true" : "false"}
-                        >
-                          Products ▼
-                        </div>
-                        {dropdownProducts && (
-                          <ul className="dropdown-content">
-                            {supplier.products.map((item, i) => (
-                              <li key={i}>{item}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </td>
-                      <td>{supplier.contact}</td>
-                      <td>{supplier.email}</td>
-                      <td>{supplier.phone}</td>
-                      <td>{supplier.address}</td>
-                      <td>
-                        <div
-                          className="dropdown-toggle"
-                          onClick={() => toggleDropdown(`notes-${index}`)}
-                        >
-                          Notes ▼
-                        </div>
-                        {dropdownNotes && (
-                          <ul className="dropdown-content">
-                            {supplier.notes.map((note, i) => (
-                              <li key={i}>{note}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </td>
-                      <td>
-                        <div style={{ position: "relative" }}>
-                          <button
-                            onClick={() =>
-                              setOpenOverlay(
-                                openOverlay === `supplier-${index}` ? null : `supplier-${index}`
-                              )
-                            }
-                          >
-                            <img src="/images/MoreIcon.svg" alt="More button" />
-                          </button>
-                          {openOverlay === `supplier-${index}` && (
-                            <div ref={overlayRef}>
-                              <EditOverlay />
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
-     
-    {showAddModal && (<SupplierForm onClose={() => setShowAddModal(false)} />)}
-        </div>
+    <div className="supplier-table-wrapper">
+    <button
+      className="add-supplier-btn"
+      onClick={() => setShowAddModal(true)}
+    >
+      +
+    </button>
+  
+    <table className="supplier-table">
+      <thead>
+        <tr>
+          {headers.map((header, i) => (
+            <th key={i}>{header}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {suppliers.map((supplier, index) => {
+          const dropdownProducts = openDropdowns[`products-${index}`];
+          const dropdownNotes = openDropdowns[`notes-${index}`];
+  
+          return (
+            <tr key={index}>
+              <td>{supplier.abn}</td>
+  
+              {/* Products */}
+              <td>
+                <div
+                  className="dropdown-toggle"
+                  onClick={() => toggleDropdown(`products-${index}`)}
+                  aria-expanded={dropdownProducts ? "true" : "false"}
+                >
+                  Products ▼
+                </div>
+                {dropdownProducts && (
+                  <ul className="dropdown-content">
+                    {supplier.products.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </td>
+  
+              {/* Contact */}
+              <td>{supplier.contact}</td>
+  
+              {/* Email */}
+              <td>{supplier.email}</td>
+  
+              {/* Phone */}
+              <td>{supplier.phone}</td>
+  
+              {/* Address */}
+              <td>{supplier.address}</td>
+  
+              {/* Notes */}
+              <td>
+                <div
+                  className="dropdown-toggle"
+                  onClick={() => toggleDropdown(`notes-${index}`)}
+                >
+                  Notes ▼
+                </div>
+                {dropdownNotes && (
+                  <ul className="dropdown-content">
+                    {supplier.notes.map((note, i) => (
+                      <li key={i}>{note}</li>
+                    ))}
+                  </ul>
+                )}
+              </td>
+  
+              {/* Actions */}
+              <td>
+                <div style={{ position: "relative" }}>
+                  <button
+                    onClick={() =>
+                      setOpenOverlay(
+                        openOverlay === `supplier-${index}`
+                          ? null
+                          : `supplier-${index}`
+                      )
+                    }
+                  >
+                    <img
+                      src="/images/MoreIcon.svg"
+                      alt="More button"
+                    />
+                  </button>
+                  {openOverlay === `supplier-${index}` && (
+                    <div ref={overlayRef}>
+                      <EditOverlay />
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  
+    {showAddModal && (
+      <SupplierForm onClose={() => setShowAddModal(false)} />
+    )}
+  </div>
+  
       );
 
 
