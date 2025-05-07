@@ -115,7 +115,7 @@ Meteor.startup(async () => {
       },
     ]
     defaultSuppliers.forEach(
-      async (item) => await InventoryCollection.insertAsync(item)
+      async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
 });
