@@ -103,5 +103,10 @@ Meteor.methods({
 
 	async 'menu.getAll'() {
 		return await Menu.find().fetch();
-	}
+	},
+
+	async 'menu.getByName'(name) {
+    check(name, String);
+		return await Menu.findOne({ name });
+  },
 })

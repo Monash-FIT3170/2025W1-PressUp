@@ -29,17 +29,9 @@
     color: #555;
   }
 
-  .delete-button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-  
-  .delete-button:hover {
-    background-color: #ff1a1a;
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
