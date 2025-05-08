@@ -14,7 +14,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    if (existingItem) {
+    if (mode === 'update' && existingItem) {
       setName(existingItem.name || '');
       setPrice(existingItem.price || '');
       setMenuCategory(existingItem.menuCategory || '');
