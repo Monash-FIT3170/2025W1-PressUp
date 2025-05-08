@@ -1,7 +1,7 @@
 import React from 'react';
-import './ConfirmPopup.css';
+import './ConfirmMenuCreation.css';
 
-export const ConfirmPopup = ({ message, onConfirm, onCancel }) => {
+export const ConfirmMenuCreation = ({ message, onConfirm, onCancel }) => {
   return (
     <div className="confirm-overlay">
       <div className="confirm-modal">

@@ -29,3 +29,21 @@
     color: #555;
   }
   
+  .card {
+  position: relative; /* Needed to position the button inside */
+}
+
+.card-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #000000;
+}
+
+.card-button:hover {
+  background: #fcd58180;
+}

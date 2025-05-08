@@ -5,7 +5,7 @@ import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
-import { MenuItemPopUp } from "./Components/MenuItemPopUp.jsx";
+import { MenuItemCreation } from "./Components/MenuItemCreation.jsx";
 import { Card } from "./Components/Card.jsx";
 import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
@@ -148,7 +148,7 @@ export const App = () => {
                     Create Menu Item
                   </button>
                   {showPopup && (
-                    <MenuItemPopUp
+                    <MenuItemCreation
                       onClose={() => setShowPopup(false)}
                       addMenuItem={addMenuItem}
                     />

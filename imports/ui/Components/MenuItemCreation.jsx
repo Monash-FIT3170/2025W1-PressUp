@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import './MenuItemPopUp.css'; // for styling
+import './MenuItemCreation.css'; // for styling
 import { Meteor } from 'meteor/meteor';
-import { ConfirmPopup } from './ConfirmPopup.jsx';
+import { ConfirmMenuCreation } from './ConfirmMenuCreation.jsx';
 
-const MenuItemPopUp = ({ onClose, addMenuItem }) => {
+const MenuItemCreation = ({ onClose, addMenuItem }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
@@ -129,7 +129,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem }) => {
 
         {/* Confirmation popup if showConfirm is true */}
         {showConfirm && (
-          <ConfirmPopup 
+          <ConfirmMenuCreation
             message="Are you sure you want to add this menu item?" 
             onConfirm={handleConfirm}
             onCancel={handleCancel}
@@ -140,4 +140,4 @@ const MenuItemPopUp = ({ onClose, addMenuItem }) => {
   );
 };
 
-export { MenuItemPopUp };
+export { MenuItemCreation };
