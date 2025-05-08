@@ -2,13 +2,23 @@ import React, { useState } from 'react';
 import { Card } from './Card.jsx';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
-export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
+export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenuItems }) => {
   const [editingItem, setEditingItem] = useState(false);
 
   const handleEditClick = (item) => {
     console.log('Editing item:', item);
     setEditingItem(item)
   }
+
+  const deleteMenuItem = (itemId) => {
+    Meteor.call('menu.remove', itemId, (error) => {
+      if (error) {
+        console.error('Error deleting menu item:', error);
+      } else {
+        setMenuItems((prevItems) => prevItems.filter(item => item._id !== itemId));
+      }
+    });
+  };
   
   return (
     <div className="card-container">
@@ -30,6 +40,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
               title={item.name}
               description={`Price: $${item.price}`}
               onButtonClick={() => handleEditClick(item)}
+              onDelete={()=> deleteMenuItem(item._id)}
             />
           ))
       )}

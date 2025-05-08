@@ -102,6 +102,7 @@ export const App = () => {
                   menuItems={menuItems}
                   selectedCategory={selectedCategory}
                   updateMenuItem={updateMenuItem}
+                  setMenuItems={setMenuItems}
                 />
               </>
             }
