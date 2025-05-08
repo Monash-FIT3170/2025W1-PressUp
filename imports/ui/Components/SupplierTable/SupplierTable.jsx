@@ -53,9 +53,11 @@ export const SupplierTable = ({
     );
   }
 
-  const headers = Object.keys(suppliers[0])
-    .filter((header) => header !== "_id")
-    .map((header) => capitalizeFirstLetter(header));
+  const headers = Object
+  .keys(suppliers[0])
+  .filter(header => !["_id","createdAt","updatedAt"].includes(header))
+  .map(capitalizeFirstLetter);
+
   headers.push("");
 
   return (
