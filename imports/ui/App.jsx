@@ -6,7 +6,7 @@ import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSear
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuItemCreation } from "./Components/MenuItemCreation.jsx";
-import { Card } from "./Components/Card.jsx";
+import { MenuCard } from "./Components/MenuCard.jsx";
 import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
 
@@ -179,7 +179,7 @@ export const App = () => {
                             item.menuCategory === selectedCategory
                         )
                         .map((item) => (
-                          <Card
+                          <MenuCard
                             key={item.name}
                             title={item.name}
                             description={`Price: $${item.price}`}

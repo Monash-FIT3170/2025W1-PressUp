@@ -1,9 +1,8 @@
-// Card.js
-// Menu item card
+// MenuCard.jsx
 import React from 'react';
-import './Card.css'; // CSS for styling the card
+import './MenuCard.css';
 
-const Card = ({ title, description, image, onButtonClick }) => {
+const MenuCard = ({ title, description, image, onButtonClick }) => {
   return (
     <div className="card">
       <button className="card-button" onClick={onButtonClick}>+</button>
@@ -16,4 +15,4 @@ const Card = ({ title, description, image, onButtonClick }) => {
   );
 };
 
-export { Card };
+export { MenuCard };
