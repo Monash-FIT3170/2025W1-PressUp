@@ -48,7 +48,7 @@ export const SupplierForm = ({ onClose }) => {
           {/* Name */}
           <div className="supplier-form-input">
             <div className="Name field"></div>
-            <img src="/images/User.svg" alt="Name" className="w-5 h-5" />
+            <img src="/images/icon.svg" alt="Name" className="w-5 h-5" />
             <label>Name</label>
             <input
               name="name"
