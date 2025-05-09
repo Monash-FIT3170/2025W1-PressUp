@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './MenuItemPopUp.css';
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
+import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
-  console.log("here")
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
@@ -50,7 +50,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     };
 
     if (mode === 'create') {
-      Meteor.call('menu.insert', { menuItem: newMenuItem }, (error, result) => {
+      Meteor.call('menu.insert', { menuItem: itemData }, (error, result) => {
         if (error) {
           alert('Failed to add menu item: ' + error.reason);
         } else {

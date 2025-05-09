@@ -15,12 +15,12 @@ export const App = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [editingItem, setEditingItem] = useState(null);
+  const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
 
   const updateMenuItem = (item) => {
-    setEditingItem(item);
+    setExistingItem(item);
     setShowPopup(true);
   }
   

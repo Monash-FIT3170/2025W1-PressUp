@@ -3,19 +3,19 @@ import { Card } from './Card.jsx';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
 export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
-  const [editingItem, setEditingItem] = useState(false);
-
+  const [existingItem, setExistingItem] = useState(false);
+  
   const handleEditClick = (item) => {
-    console.log('Editing item:', item);
-    setEditingItem(item)
+    setExistingItem(item)
   }
   
   return (
     <div className="card-container">
-      {editingItem && (
+      {existingItem && (
         <MenuItemPopUp
-          existingItem={editingItem}
-          onClose={() => setEditingItem(false)}
+          mode='update'
+          existingItem={existingItem}
+          onClose={() => setExistingItem(false)}
           addMenuItem={updateMenuItem}
         />
       )}
@@ -29,7 +29,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem }) => {
               key={item._id}
               title={item.name}
               description={`Price: $${item.price}`}
-              onButtonClick={() => handleEditClick(item)}
+              onEdit={() => handleEditClick(item)}
             />
           ))
       )}
