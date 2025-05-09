@@ -9,12 +9,16 @@ import "/imports/api/menu/menu-methods";
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
 import "../imports/api/inventory/inventory-publications";
 import "../imports/api/inventory/inventory-methods";
+import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
+import "../imports/api/suppliers/SuppliersMethods";
+import "../imports/api/suppliers/SuppliersPublications";
 
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
   const nMenuItems = await Menu.find().countAsync();
   const nIngredients = await InventoryCollection.find().countAsync();
+  const nSuppliers = await SuppliersCollection.find().countAsync();
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );
@@ -73,6 +77,45 @@ Meteor.startup(async () => {
     ];
     defaultItems.forEach(
       async (item) => await InventoryCollection.insertAsync(item)
+    );
+  }
+
+  if (nSuppliers===0){
+    console.log("No suppliers in database. some generated for funsies :D");
+    const defaultSuppliers = [
+      {
+        name: "Coles",
+        abn: "24 392 710 462",
+        products: ["Beans", "Grinders", "Machines"],
+        contact: "Jerry",
+        email: "Jerry@gmail.com",
+        phone: "0427382992",
+        address: "5 bonk ave, 3190 melbourne vic",
+        notes: ["Ships weekly", "Prefers email"],
+      },
+      {
+        name: "Woolworth",
+        abn: "24 392 710 462",
+        products: ["Milk", "Cups"],
+        contact: "Jerry",
+        email: "Alice@gmail.com",
+        phone: "0427382992",
+        address: "5 bonk ave, 3190 melbourne vic",
+        notes: ["Pays on time"],
+      },
+      {
+        name: "Aldi",
+        abn: "24 392 710 462",
+        products: ["Coffee Machines"],
+        contact: "Alex",
+        email: "Alexy@gmail.com",
+        phone: "0427382992",
+        address: "5 bonk ave, 3190 melbourne vic",
+        notes: ["High-volume orders"],
+      },
+    ]
+    defaultSuppliers.forEach(
+      async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
 });

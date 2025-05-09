@@ -63,3 +63,22 @@
   align-self: stretch;
   overflow: auto;
 }
+
+.toggle-view-btn {
+  padding: 0.5rem 1rem;           /* keep your existing padding */
+  background-color: #fff;         /* white background */
+  border: 1px solid #ddd;         /* light gray border */
+  border-radius: 0.375rem;        /* same rounded-corner pill shape */
+  display: inline-block;          /* inline so it stays left-aligned */
+  margin-bottom: 1rem;            /* vertical spacing only */
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background-color .2s, box-shadow .2s;
+  color: #111;                    /* dark text for contrast */
+}
+
+.toggle-view-btn:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
