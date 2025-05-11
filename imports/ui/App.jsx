@@ -1,4 +1,3 @@
-// imports/ui/App.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
@@ -19,7 +18,7 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showSuppliersView, setShowSuppliersView] = useState(false);
+  const [viewMode, setViewMode] = useState("Ingredients");
 
   useEffect(() => {
     Meteor.call("menu.getAll", (error, result) => {
@@ -57,24 +56,6 @@ export const App = () => {
     });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
-        setOpenOverlay(null);
-      }
-    };
-
-    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
-      setIsSidebarOpen(false);
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen]);
-
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
@@ -100,33 +81,31 @@ export const App = () => {
               path="/inventory"
               element={
                 <>
-                  {/* always show header */}
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                     searchBar={<IngredientSearchBar onSearch={handleSearch} />}
                   />
 
-                  {/* toggle button under the header */}
-                  <button
-                    className="toggle-view-btn"
-                    onClick={() => setShowSuppliersView((v) => !v)}
-                  >
-                    {showSuppliersView
-                      ? "← Back to Ingredients"
-                      : "View Suppliers →"}
-                  </button>
+                  <div className="view-mode-container">
+                    <select
+                      className="view-mode-dropdown"
+                      value={viewMode}
+                      onChange={(e) => setViewMode(e.target.value)}
+                    >
+                      <option value="Ingredients">Ingredients</option>
+                      <option value="Suppliers">Suppliers</option>
+                    </select>
+                  </div>
 
-                  {/* conditional view */}
-                  {showSuppliersView ? (
-                    <SupplierTable
-                      searchTerm={searchTerm}
-                      openOverlay={openOverlay}
-                      setOpenOverlay={setOpenOverlay}
-                      overlayRef={overlayRef}
-                    />
-                  ) : (
+                  {viewMode === "Ingredients" ? (
                     <IngredientTable
+                    searchTerm={searchTerm}
+                    openOverlay={openOverlay}
+                    setOpenOverlay={setOpenOverlay}
+                    overlayRef={overlayRef}
+                  />) :(
+                    <SupplierTable
                       searchTerm={searchTerm}
                       openOverlay={openOverlay}
                       setOpenOverlay={setOpenOverlay}
