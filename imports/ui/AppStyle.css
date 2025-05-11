@@ -85,15 +85,17 @@
 
 .view-mode-container {
   display: flex;
-  justify-content: flex-start;  /* Align to the left */
-  padding-left: 16px;           /* Optional spacing */
-  margin-bottom: 1rem;          /* Maintain vertical spacing */
+  justify-content: flex-start; 
+  align-items: center ; 
+  padding-left: 16px;           
+  margin-bottom: 1rem;          
 }
 
 .view-mode-dropdown {
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: 0.8rem;
   font-size: 1rem;
   border: 1px solid #ddd;
   box-sizing: border-box;
+  margin-left: true;
 }
