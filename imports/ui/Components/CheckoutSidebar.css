@@ -1,0 +1,66 @@
+/* CheckoutSidebar.css */
+.sidebar-right {
+  padding: 20px;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  z-index: 1000;
+  width: 300px;
+  background-color: #f4f4f4;
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+
+
+  transform: translateX(100%); /* Sidebar starts off-screen */
+  transition: transform 0.3s ease;
+}
+
+.sidebar-right.open {
+  transform: translateX(0); /* Sidebar slides in */
+}
+
+.sidebar-right.closed {
+  transform: translateX(100%);
+  width: 0 !important;
+  padding: 0 !important;
+  pointer-events: none;
+  flex: 0 0 0;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.sidebar-body {
+  margin-top: 1rem;
+}
+
+.sidebar-footer {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.checkout-btn {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.checkout-btn:hover {
+  background-color: #218838;
+}
+
+

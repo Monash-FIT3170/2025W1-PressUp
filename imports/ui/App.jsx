@@ -1,25 +1,27 @@
-// imports/ui/App.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuItemCreation } from "./Components/MenuItemCreation.jsx";
-import { MenuCard } from "./Components/MenuCard.jsx";
-import "./AppStyle.css";
+import { MenuCardContainer } from "./Components/MenuCardContainer.jsx";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
+import { CheckoutSidebar } from "./Components/CheckoutSidebar.jsx"; // Import CheckoutSidebar
+import "./AppStyle.css";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);  // Left sidebar state
+  const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false); // Right sidebar state
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuppliersView, setShowSuppliersView] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]); // State for selected items
 
   useEffect(() => {
     Meteor.call("menu.getAll", (error, result) => {
@@ -57,41 +59,45 @@ export const App = () => {
     });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
-        setOpenOverlay(null);
-      }
-    };
-
-    if (isSidebarOpen && !event.target.closest(".menu-icon-btn")) {
-      setIsSidebarOpen(false);
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSidebarOpen]);
-
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
 
+  const handleAddItemToCart = (item) => {
+    setSelectedItems((prevItems) => {
+      const updatedItems = [...prevItems, item];
+      // Only open the right sidebar if it's the first item
+      if (updatedItems.length === 1) {
+        setIsRightSidebarOpen(true); // Open the right sidebar if first item added
+      }
+      return updatedItems;
+    });
+  };
+
   return (
     <BrowserRouter>
-      <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        <div className="main-content">
+      <div className="app-container">
+        {/* Left Sidebar */}
+        <Sidebar
+          isOpen={isLeftSidebarOpen}
+          setIsOpen={setIsLeftSidebarOpen}
+          position="left"
+        />
+        
+        {/* Main Content */}
+        <div
+          className={`main-content ${
+            isLeftSidebarOpen ? "content-shifted-left" : ""
+          } ${isRightSidebarOpen ? "content-shifted-right" : ""}`}
+        >
           <Routes>
             <Route
               path="/"
               element={
                 <>
                   <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
+                    isSidebarOpen={isLeftSidebarOpen}
+                    setIsSidebarOpen={setIsLeftSidebarOpen}
                   />
                 </>
               }
@@ -100,14 +106,11 @@ export const App = () => {
               path="/inventory"
               element={
                 <>
-                  {/* always show header */}
                   <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
+                    isSidebarOpen={isLeftSidebarOpen}
+                    setIsSidebarOpen={setIsLeftSidebarOpen}
                     searchBar={<IngredientSearchBar onSearch={handleSearch} />}
                   />
-
-                  {/* toggle button under the header */}
                   <button
                     className="toggle-view-btn"
                     onClick={() => setShowSuppliersView((v) => !v)}
@@ -117,7 +120,6 @@ export const App = () => {
                       : "View Suppliers →"}
                   </button>
 
-                  {/* conditional view */}
                   {showSuppliersView ? (
                     <SupplierTable
                       searchTerm={searchTerm}
@@ -141,8 +143,8 @@ export const App = () => {
               element={
                 <>
                   <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
+                    isSidebarOpen={isLeftSidebarOpen}
+                    setIsSidebarOpen={setIsLeftSidebarOpen}
                   />
                   <button onClick={() => setShowPopup(true)}>
                     Create Menu Item
@@ -168,41 +170,25 @@ export const App = () => {
                     ))}
                   </div>
 
-                  <div className="card-container">
-                    {menuItems.length === 0 ? (
-                      <p>No menu items available.</p>
-                    ) : (
-                      menuItems
-                        .filter(
-                          (item) =>
-                            selectedCategory === "All" ||
-                            item.menuCategory === selectedCategory
-                        )
-                        .map((item) => (
-                          <MenuCard
-                            key={item.name}
-                            title={item.name}
-                            description={`Price: $${item.price}`}
-                          />
-                        ))
-                    )}
-                  </div>
-                </>
-              }
-            />
-            <Route
-              path="/scheduling"
-              element={
-                <>
-                  <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
+                  <MenuCardContainer
+                    menuItems={menuItems}
+                    selectedCategory={selectedCategory}
+                    onItemAdd={handleAddItemToCart} // Pass addItem function
                   />
                 </>
               }
             />
           </Routes>
         </div>
+
+        {/* Right Sidebar (Checkout Sidebar) */}
+        {selectedItems.length > 0 && (
+          <CheckoutSidebar
+            items={selectedItems}
+            isOpen={isRightSidebarOpen}
+            toggleSidebar={() => setIsRightSidebarOpen(!isRightSidebarOpen)}
+          />
+        )}
       </div>
     </BrowserRouter>
   );
