@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
+import { useTracker } from 'meteor/react-meteor-data';
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
+
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
 
-export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
-  
+export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
+
+  const categories = useTracker(() => {
+    Meteor.subscribe('menuCategories.all');
+    const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
+    console.log('Fetched categories:', dbCategories);
+    return ['All', ...dbCategories.map(c => c.category)];
+  });
+
   const addMenuItem = (newMenuItem) => {
     setMenuItems((prevItems) => {
       const updatedItems = [...prevItems, newMenuItem];

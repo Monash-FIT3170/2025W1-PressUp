@@ -5,6 +5,7 @@ import { WebApp } from 'meteor/webapp';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection';
 import { Menu } from '/imports/api/menu/menu-collection';
 import '/imports/api/menu-categories/menu-categories-initialise';
+import '/imports/api/menu-categories/menu-categories-publications';
 import '/imports/api/menu/menu-methods';
 
 import {InventoryCollection} from '/imports/api/inventory/inventory-collection';

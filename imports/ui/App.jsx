@@ -73,7 +73,7 @@ export const App = () => {
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
                   // addMenuItem={addMenuItem}
-                  categories={categories}
+                  // categories={categories}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
                 />
