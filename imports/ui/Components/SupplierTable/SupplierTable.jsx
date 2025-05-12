@@ -4,7 +4,6 @@ import { EditOverlay } from "../EditOverlay/EditOverlay.jsx";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 import { SuppliersCollection } from "../../../api/suppliers/SuppliersCollection.js";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
-import { capitalizeFirstLetter } from "../../../utils/utils.js";
 import { SupplierForm } from "./SupplierForm.jsx";
 
 export const SupplierTable = ({
