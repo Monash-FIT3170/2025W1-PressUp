@@ -88,7 +88,8 @@
   justify-content: flex-start; 
   align-items: center ; 
   padding-left: 16px;           
-  margin-bottom: 1rem;          
+  margin-bottom: 1rem;   
+  align-self: start;
 }
 
 .view-mode-dropdown {
@@ -97,5 +98,4 @@
   font-size: 1rem;
   border: 1px solid #ddd;
   box-sizing: border-box;
-  margin-left: true;
 }
