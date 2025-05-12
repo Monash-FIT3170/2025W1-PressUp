@@ -1,112 +1,49 @@
-.supplier-section {
-  margin-bottom: 32px;
+.supplier-block {
+  margin-bottom: 2rem;
 }
 
-.supplier-section h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #222;
-  margin-bottom: 12px;
+.supplier-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 .supplier-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #fafafa;
-}
-
-.supplier-table thead {
-  background-color: #f0f0f0;
+  table-layout: fixed; /* makes columns evenly spaced */
 }
 
 .supplier-table th,
 .supplier-table td {
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 14px;
-  color: #333;
-}
-
-.supplier-table th {
-  font-weight: 600;
-}
-
-.supplier-table td:last-child,
-.supplier-table th:last-child {
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: center;
-  width: 50px;
-}
-
-.supplier-table img {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
+  vertical-align: top;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .dropdown-toggle {
   cursor: pointer;
-  color: #0077cc;
-  font-weight: 500;
-  display: inline-block;
+  color: black;
+  margin-bottom: 0.25rem;
+  text-align: center;
 }
 
 .dropdown-content {
-  margin-top: 6px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 8px 12px;
-  list-style: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.dropdown-content li {
-  padding: 4px 0;
-  font-size: 13px;
-  color: #333;
-}
-
-.dropdown-active {
-  display: block !important;
-}
-
-
-/* Buttons Styling */
-button {
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:focus {
-  outline: none;
-}
-
-.supplier-table-wrapper{
-  width: 100%
+  margin-top: 0.25rem;
+  list-style: disc;
+  padding-left: 1rem;
 }
 
 .add-supplier-btn {
-  width: 40px;             /* same as your  w-10 */
-  height: 40px;            /* same as your  h-10 */
-  background-color: #fff;  /* white background */
-  border: 1px solid #ddd;  /* light border */
-  border-radius: 50%;      /* make it a perfect circle */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;       /* size of the “+” */
-  line-height: 1;
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 80%;
+  color: black;
+  border: none;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: background-color .2s, box-shadow .2s;
-}
-
-.add-supplier-btn:hover {
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
