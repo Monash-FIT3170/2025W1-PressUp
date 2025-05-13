@@ -88,14 +88,20 @@ export const App = () => {
                   />
 
                   <div className="view-mode-container">
-                    <select
-                      className="view-mode-dropdown"
-                      value={viewMode}
-                      onChange={(e) => setViewMode(e.target.value)}
-                    >
-                      <option value="Ingredients">Ingredients</option>
-                      <option value="Suppliers">Suppliers</option>
-                    </select>
+                    <div className="view-mode-dropdown">
+                      <img
+                        src={viewMode === "Ingredients" ? "/images/Wheat.png" : "/images/Supplier.png"}
+                        alt={viewMode}
+                        className="view-icon"
+                      />
+                      <select
+                        value={viewMode}
+                        onChange={(e) => setViewMode(e.target.value)}
+                      >
+                        <option value="Ingredients">Ingredients</option>
+                        <option value="Suppliers">Suppliers</option>
+                      </select>
+                    </div>
                   </div>
 
                   {viewMode === "Ingredients" ? (

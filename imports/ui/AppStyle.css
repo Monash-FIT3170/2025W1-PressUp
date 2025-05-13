@@ -93,10 +93,26 @@
 }
 
 .view-mode-dropdown {
-  padding: 0.6rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1rem;
   border-radius: 0.8rem;
   font-size: 1rem;
   border: 1px solid #ddd;
   box-sizing: border-box;
-  font-size: 20;
+  background-color: #fff;
+}
+
+.view-mode-dropdown select {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.view-mode-dropdown .view-icon {
+  width: 20px;
+  height: 20px;
 }
