@@ -17,7 +17,10 @@
 
 .supplier-table th,
 .supplier-table td {
-  border: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-left: transparent;
+  border-right: transparent;
   padding: 8px;
   text-align: center;
   vertical-align: top;
@@ -25,6 +28,10 @@
   overflow-wrap: break-word;
 }
 
+.supplier-table thead th {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
 .dropdown-toggle {
   cursor: pointer;
   color: black;
