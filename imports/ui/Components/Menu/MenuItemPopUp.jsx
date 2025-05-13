@@ -76,6 +76,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     }
 
     setShowConfirm(false);
+    window.location.reload(); // Reload the page to reflect changes
   };
 
   const handleCancel = () => setShowConfirm(false);
