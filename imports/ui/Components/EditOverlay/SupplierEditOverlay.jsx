@@ -12,7 +12,7 @@ export const SupplierEditOverlay = ({id, onClose}) => {
         }
 
         try {
-            await Meteor.callAsync("suppliers.remove", {id});
+            await Meteor.callAsync("suppliers.remove", id);
             onClose();
             
         } catch (err) {
