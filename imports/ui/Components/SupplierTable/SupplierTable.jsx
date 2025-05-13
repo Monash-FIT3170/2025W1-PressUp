@@ -145,7 +145,9 @@ export const SupplierTable = ({
                           ref={overlayRef}
                           style={{ overflow: 'visible' }}
                         >
-                          <SupplierEditOverlay/>
+                          <SupplierEditOverlay
+                          id = {supplier._id}
+                          onClose = {() => setOpenOverlay(null)}/>
                         </div>
                       )}
                     </div>
