@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SupplierTable.css";
-import { EditOverlay } from "../EditOverlay/EditOverlay.jsx";
+import { SupplierEditOverlay } from "../EditOverlay/SupplierEditOverlay.jsx";
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 import { SuppliersCollection } from "../../../api/suppliers/SuppliersCollection.js";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
@@ -145,7 +145,7 @@ export const SupplierTable = ({
                           ref={overlayRef}
                           style={{ overflow: 'visible' }}
                         >
-                          <EditOverlay />
+                          <SupplierEditOverlay/>
                         </div>
                       )}
                     </div>
