@@ -46,12 +46,12 @@
 }
 
 .add-supplier-btn {
-  font-size: 3rem;
   width: 3rem;
   height: 3rem;
-  border-radius: 80%;
-  color: black;
-  border: none;
-  cursor: pointer;
-  padding-bottom: 5rem;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;                  /* make it a flex container */
+  align-items: center;            /* vertical centering */
+  justify-content: center;        /* horizontal centering */
+  font-size: 1.5rem;              /* scale the plus to taste */
 }
