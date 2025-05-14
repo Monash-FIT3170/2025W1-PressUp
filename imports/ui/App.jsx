@@ -11,19 +11,19 @@ import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
 
 export const App = () => {
-  const [showPopup, setShowPopup] = useState(false); 
-  const [menuItems, setMenuItems] = useState([]); 
+  const [showPopup, setShowPopup] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
+  const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuppliersView, setShowSuppliersView] = useState(false);
 
   const updateMenuItem = (item) => {
-    setEditingItem(item);
+    setExistingItem(item);
     setShowPopup(true);
   }
 
@@ -109,12 +109,15 @@ export const App = () => {
             />
             <Route path="/menu" element={
               <>
-                <h1>Menu</h1>
+                <PageHeader
+                  isSidebarOpen={isSidebarOpen}
+                  setIsSidebarOpen={setIsSidebarOpen}
+                />
                 <MenuControls
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
                   // addMenuItem={addMenuItem}
-                  categories={categories}
+                  // categories={categories}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
                 />

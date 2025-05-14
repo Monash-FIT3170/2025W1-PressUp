@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Card } from './Card.jsx';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
+import { Meteor } from 'meteor/meteor';
+import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
 
 export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenuItems }) => {
-  const [editingItem, setEditingItem] = useState(false);
+  const [existingItem, setExistingItem] = useState(false);
+
 
   const handleEditClick = (item) => {
-    console.log('Editing item:', item);
-    setEditingItem(item)
+    setExistingItem(item)
   }
 
   const deleteMenuItem = (itemId) => {
@@ -19,13 +21,14 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
       }
     });
   };
-  
+
   return (
     <div className="card-container">
-      {editingItem && (
+      {existingItem && (
         <MenuItemPopUp
-          existingItem={editingItem}
-          onClose={() => setEditingItem(false)}
+          mode='update'
+          existingItem={existingItem}
+          onClose={() => setExistingItem(false)}
           addMenuItem={updateMenuItem}
         />
       )}
@@ -40,7 +43,8 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
               title={item.name}
               description={`Price: $${item.price}`}
               onButtonClick={() => handleEditClick(item)}
-              onDelete={()=> deleteMenuItem(item._id)}
+              onDelete={() => deleteMenuItem(item._id)}
+              onEdit={() => handleEditClick(item)}
             />
           ))
       )}

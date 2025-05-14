@@ -1,30 +1,38 @@
 import React, { useState } from 'react';
+import { useTracker } from 'meteor/react-meteor-data';
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
+
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 
 
-const addMenuItem = (newMenuItem) => {
-  setMenuItems((prevItems) => {
-    const updatedItems = [...prevItems, newMenuItem];
+export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
 
-    const uniqueCategories = [...new Set(
-      updatedItems
-        .map(item => item.menuCategory)
-        .filter(category => category && category.trim() !== '')
-    )];
-    setCategories(['All', ...uniqueCategories]);
-
-    return updatedItems;
+  const categories = useTracker(() => {
+    Meteor.subscribe('menuCategories.all');
+    const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
+    console.log('Fetched categories:', dbCategories);
+    return ['All', ...dbCategories.map(c => c.category)];
   });
-};
 
-
-
-
-export const MenuControls = ({ categories, selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
+  const addMenuItem = (newMenuItem) => {
+    setMenuItems((prevItems) => {
+      const updatedItems = [...prevItems, newMenuItem];
+  
+      const uniqueCategories = [...new Set(
+        updatedItems
+          .map(item => item.menuCategory)
+          .filter(category => category && category.trim() !== '')
+      )];
+      setCategories(['All', ...uniqueCategories]);
+  
+      return updatedItems;
+    });
+  };
+  
   return (
     <>
       <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
-      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} />}
+      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
 
       <div className="filter-bar">
         {categories.map((category) => (
