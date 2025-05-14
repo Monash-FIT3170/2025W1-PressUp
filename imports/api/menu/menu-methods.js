@@ -68,14 +68,15 @@ Meteor.methods({
 			available: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
 		});
-	
+		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
-		if (menuCategory && !MenuCategories.findOne(menuCategory)) {
+		/* if (menuItem.menuCategory && !MenuCategories.findOne(menuItem.menuCategory)) {
+			console.log(menuItem.menuCategory);
 			throw new Meteor.Error(
 				'invalid-category', 'The specified category does not exist.'
 			);
-		}
-
+		} */
+		
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(
 			Object.entries(menuItem).filter(([key, val]) => val !== undefined)
@@ -87,8 +88,8 @@ Meteor.methods({
 				'no-update', 'No fields provided to update.'
 			);
 		}
-	
-		return await Menu.updateAsync({ _id }, { menuItemDoc });
+	    
+		return await Menu.updateAsync({ _id }, { $set: menuItemDoc });
 	},
 
 	/**
@@ -103,5 +104,10 @@ Meteor.methods({
 
 	async 'menu.getAll'() {
 		return await Menu.find().fetch();
-	}
+	},
+
+	async 'menu.getByName'(name) {
+    check(name, String);
+		return await Menu.findOne({ name });
+  },
 })

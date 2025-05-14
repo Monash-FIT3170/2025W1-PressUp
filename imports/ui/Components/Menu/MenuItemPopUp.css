@@ -76,11 +76,12 @@ input[type="checkbox"] {
 
 button {
   padding: 10px;
+  background-color: #FCD581;
   color: black;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
+  }
 
 .error {
   color: red;

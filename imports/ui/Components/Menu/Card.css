@@ -28,4 +28,22 @@
     font-size: 1rem;
     color: #555;
   }
+
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   
+  .trash-icon-button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+  }
