@@ -2,40 +2,18 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
-export const Sidebar = () => {
-  // Tracking whether the sidebar is open
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Sidebar toggle
-  const toggleSidebar = () => setIsOpen((prev) => !prev);
-
-  // When sidebar is toggled, update body class
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("sidebar-open");
-    } else {
-      document.body.classList.remove("sidebar-open");
-    }
-  }, [isOpen]);
-
+export const Sidebar = ({ isOpen, setIsOpen }) => {
   return (
     <>
-      {/* Hamburger button to only show when the sidebar is closed */}
-      {!isOpen && (
-        <button onClick={toggleSidebar} className="hamburger-btn">
-          ☰
-        </button>
-      )}
-
       {/* Sidebar container */}
       <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
         {isOpen && (
           <>
             <div className="sidebar-header">
-              <button onClick={toggleSidebar} className="close-btn">
-                ×
+              <button onClick={() => setIsOpen(false)} className="close-btn">
+                <img src="/images/CloseIcon.svg" alt="Close" />
               </button>
-              <img src="/images/PressUpLogo.png" alt="Logo" />
+              <img src="/images/PressUpLogo.png" id="logo" alt="Logo" />
             </div>
 
             <div className="sidebar-content">

@@ -1,37 +1,37 @@
 .ingredient-table {
-    width: 100%;
-    display: table;
-    border-collapse: collapse;
-    table-layout: auto;
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+  table-layout: auto;
 }
 
 .ingredient-table thead {
-    border-bottom: 1px solid #67544E;
-    background: #FFF;
+  border-bottom: 1px solid #67544e;
+  background: #fff;
 }
 
 th {
-    font-size: 1.25rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 150%;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
 }
 
 th,
 td {
-    padding: 10px;
-    text-align: left;
+  padding: 10px;
+  text-align: left;
 }
 
 .ingredient-table tbody tr {
-    border-bottom: 1px solid #E5E7EB;
-    background: #FFF;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
 }
 
 .number-pill {
-    padding: 10px;
-    width: fit-content;
-    border-radius: 16px;
-    border: 1px solid #E0E0E0;
-    background: #FFF;
+  padding: 10px;
+  width: fit-content;
+  border-radius: 16px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
 }
