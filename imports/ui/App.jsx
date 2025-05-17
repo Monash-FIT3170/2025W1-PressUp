@@ -8,6 +8,8 @@ import { MenuControls } from './Components/Menu/MenuControls.jsx';
 import { MenuCards } from './Components/Menu/MenuCards.jsx';
 import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
+import { POSMenuControls } from './Components/POS/POSMenuControls.jsx';
+import { POSMenuCards } from './Components/POS/POSMenuCards.jsx';
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -62,6 +64,21 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
+                    searchBar={<IngredientSearchBar onSearch={handleSearch} />}
+                  />
+                  <POSMenuControls
+                  showPopup={showPopup}
+                  setShowPopup={setShowPopup}
+                  // addMenuItem={addMenuItem}
+                  // categories={categories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  />
+                  <POSMenuCards
+                    menuItems={menuItems}
+                    selectedCategory={selectedCategory}
+                    updateMenuItem={updateMenuItem}
+                    setMenuItems={setMenuItems}
                   />
                 </>
               }
