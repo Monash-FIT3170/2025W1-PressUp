@@ -12,6 +12,13 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [ingredients, setIngredients] = useState('');
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const [schedule, setSchedule] = useState(
+    daysOfWeek.reduce((acc, day) => {
+      acc[day] = { available: false, start: '', end: '' };
+      return acc;
+    }, {})
+  );
 
   useEffect(() => {
     if (mode === 'update' && existingItem) {
@@ -20,6 +27,12 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setMenuCategory(existingItem.menuCategory || '');
       setAvailable(existingItem.available || true);
       setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
+      if (existingItem.schedule) {
+        setSchedule(prev => ({
+          ...prev,
+          ...existingItem.schedule
+        }));
+      }
     }
   }, [existingItem, mode]);
 
@@ -47,6 +60,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       menuCategory,
       available,
       ingredients: ingredients.split(',').map(i => i.trim()),
+      schedule,
     };
 
     if (mode === 'create') {
@@ -123,6 +137,60 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             <label>Ingredients</label>
             <input type="text" value={ingredients} onChange={(e) => setIngredients(e.target.value)} />
             {errors.ingredients && <span className="error">{errors.ingredients}</span>}
+          </div>
+
+          <div className="schedule-section">
+            <h4>Availability Schedule</h4>
+            {daysOfWeek.map((day) => (
+              <div key={day} className="schedule-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={schedule[day].available}
+                    onChange={(e) =>
+                      setSchedule({
+                        ...schedule,
+                        [day]: {
+                          ...schedule[day],
+                          available: e.target.checked
+                        }
+                      })
+                    }
+                  />
+                  {day}
+                </label>
+                {schedule[day].available && (
+                  <>
+                    <input
+                      type="time"
+                      value={schedule[day].start}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          [day]: {
+                            ...schedule[day],
+                            start: e.target.value
+                          }
+                        })
+                      }
+                    />
+                    <input
+                      type="time"
+                      value={schedule[day].end}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          [day]: {
+                            ...schedule[day],
+                            end: e.target.value
+                          }
+                        })
+                      }
+                    />
+                  </>
+                )}
+              </div>
+            ))}
           </div>
 
           <button type="submit">{mode === 'update' ? 'Update Menu Item' : 'Add Menu Item'}</button>
