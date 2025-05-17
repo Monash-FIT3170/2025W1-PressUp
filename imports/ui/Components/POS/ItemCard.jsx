@@ -2,26 +2,13 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const Card = ({ title, description, onDelete, onEdit }) => {
+const Card = ({ title, description, onDelete, onEdit, onAddToOrder }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [item, setItem] = useState(null); // full menu item info
+  const [item, setItem] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  // useEffect(() => {
-  //   Meteor.call('menu.getByName', title, (error, result) => {
-  //     if (!error && result) {
-  //       console.log("Fetched menu item:", result);
-  //       setItem(result);
-  //     } else {
-  //       console.warn("Failed to fetch item by name:", title, error);
-  //     }
-  //   });
-  // }, [title]);
-  
 
   const handleUpdate = (id, updatedData) => {
     setItem(prev => ({ ...prev, ...updatedData }));
-    // Optional: add local cache update logic if needed
   };
 
   const handleDeleteClick = () => {
@@ -30,11 +17,17 @@ const Card = ({ title, description, onDelete, onEdit }) => {
 
   const confirmDelete = () => {
     setShowConfirm(false);
-    onDelete();
+    if (onDelete) onDelete();
   };
   
   const cancelDelete = () => {
     setShowConfirm(false);
+  };
+  
+  const handleAddToOrder = () => {
+    if (onAddToOrder) {
+      onAddToOrder();
+    }
   };
 
   return (
@@ -43,17 +36,13 @@ const Card = ({ title, description, onDelete, onEdit }) => {
         <div className="card-header">
           <h3 className="card-title">{title}</h3>
         </div>
-        <p className="card-description">{description}
-        <button onClick>+</button>
-        </p>
-        {/* {console.log("HI") && item && (
-          <MenuItemPopUp
-            mode="update"
-            onClose={() => setShowPopup(false)}
-            existingItem={item}
-            onUpdate={handleUpdate}
-          />
-        )} */}
+        <div className="card-description-container">
+          <p className="card-description">{description}</p>
+          <button 
+            className="add-to-order-btn" 
+            onClick={handleAddToOrder}
+          >+</button>
+        </div>
       </div>
     </div>
   );
