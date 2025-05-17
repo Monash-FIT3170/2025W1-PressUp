@@ -31,7 +31,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
   
   return (
     <>
-      <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+      <button className="action-button" onClick={() => setShowPopup(true)}>+ New Menu Item</button>
       {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
 
       <div className="filter-bar">

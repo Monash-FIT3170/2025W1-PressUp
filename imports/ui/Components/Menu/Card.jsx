@@ -49,7 +49,7 @@ const Card = ({ title, description, onDelete, onEdit }) => {
           </button>
         </div>
         <p className="card-description">{description}</p>
-        <button onClick={onEdit}>Edit Menu</button>
+        <button onClick={onEdit}><img src="/images/EditIcon.svg" alt="Edit" /></button>
         {showConfirm && (
           <ConfirmPopup
             message="Are you sure you want to delete this item?"
