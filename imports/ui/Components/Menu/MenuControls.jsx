@@ -3,6 +3,7 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
 
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
+import "./MenuControls.css"
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
@@ -37,6 +38,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
       <div className="filter-bar">
         {categories.map((category) => (
           <button
+            class="filter-bubble"
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}

@@ -18,18 +18,6 @@
   padding-top: 10px;
 }
 
-.filter-bubble {
-  padding: 8px 16px;
-  border-radius: 20px;
-  background-color: #fcd58180;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.filter-bubble.active {
-  background-color: #fcd581;
-}
-
 .header-text {
   display: inline-block;
   flex-grow: 1;
