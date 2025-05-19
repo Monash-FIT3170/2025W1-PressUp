@@ -4,7 +4,7 @@ import './OrderPanel.css';
 
 export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder }) => {
   // State for tracking table number and checkout status
-  const [tableNumber, setTableNumber] = useState(1);
+  const [tableNumber, setTableNumber] = useState('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
@@ -16,8 +16,9 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   
   // Function to handle table number changes
   const handleTableChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value > 0) {
+    const value = e.target.value;
+    // Allow blank input or valid numbers
+    if (value === '' || /^[1-9][0-9]*$/.test(value)) {
       setTableNumber(value);
     }
   };
@@ -69,7 +70,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
     <div className="order-panel">
       <div className="order-panel-header">
         <div className="table-selector">
-          <label htmlFor="table-number">Order Table</label>
+          <label htmlFor="table-number"><h3>Table #:</h3></label>
           <input 
             id="table-number"
             type="number" 
@@ -77,6 +78,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
             value={tableNumber}
             onChange={handleTableChange}
             className="table-number-input"
+            placeholder="-"
           />
         </div>
       </div>

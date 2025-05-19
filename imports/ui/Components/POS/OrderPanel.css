@@ -1,12 +1,17 @@
 /* OrderPanel.css */
 .order-panel {
+  margin:2px;
   width: 320px;
-  height: 90vh;
-  background-color: #f5f5f5;
+  max-height: 90vh;
+  background-color: #ffffff;
   border-left: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  .container {
+  overflow: visible;
+}
 }
 
 .order-panel-header {
@@ -48,10 +53,12 @@
 }
 
 .order-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 8px 10px;
+  border-bottom: 4px solid #ffffff;
   display: flex;
   justify-content: space-between;
+  background-color: #E5E7EB;
+  border-radius: 16px;
 }
 
 .order-item-info {
@@ -69,8 +76,7 @@
 }
 
 .quantity-btn {
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: #000000;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -78,7 +84,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-weight: bold;
+  font-size: large;
+  color: #ffffff;
 }
 
 .quantity {
@@ -154,4 +161,15 @@
   margin-bottom: 16px;
   font-size: 0.9rem;
   text-align: center;
+}
+
+/* Removes number input arrows for order table */
+.table-number-input::-webkit-outer-spin-button,
+.table-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.table-number-input {
+  -moz-appearance: textfield;
 }
