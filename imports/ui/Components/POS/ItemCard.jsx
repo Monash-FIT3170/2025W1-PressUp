@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const Card = ({ title, description, onDelete, onEdit }) => {
+const Card = ({ title, description, onDelete, onEdit, available = true}) => {
   const [showPopup, setShowPopup] = useState(false);
   const [item, setItem] = useState(null); // full menu item info
   const [showConfirm, setShowConfirm] = useState(false);
+  const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
   // useEffect(() => {
   //   Meteor.call('menu.getByName', title, (error, result) => {
@@ -38,7 +39,7 @@ const Card = ({ title, description, onDelete, onEdit }) => {
   };
 
   return (
-    <div className="card">
+    <div className={cardClass}>
       <div className="card-content">
         <div className="card-header">
           <h3 className="card-title">{title}</h3>

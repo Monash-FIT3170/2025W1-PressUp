@@ -25,7 +25,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setName(existingItem.name || '');
       setPrice(existingItem.price || '');
       setMenuCategory(existingItem.menuCategory || '');
-      setAvailable(existingItem.available || true);
+      setAvailable(existingItem.available ?? true);
       setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
       if (existingItem.schedule) {
         setSchedule(prev => ({
