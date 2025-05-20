@@ -2,18 +2,27 @@
 import { Meteor } from "meteor/meteor";
 import { WebApp } from "meteor/webapp";
 
-import { MenuCategories } from "/imports/api/menu-categories/menu-categories-collection";
-import { Menu } from "/imports/api/menu/menu-collection";
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection';
 import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
-import "/imports/api/menu/menu-methods";
+import "/imports/api/menu-categories/menu-categories-methods";
+
+import { Menu } from '/imports/api/menu/menu-collection';
+import '/imports/api/menu/menu-initialise'
+import '/imports/api/menu/menu-publications'
+import '/imports/api/menu/menu-methods';
 
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
 import "../imports/api/inventory/inventory-publications";
 import "../imports/api/inventory/inventory-methods";
+
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+
+import { ScheduledChanges } from '/imports/api/scheduled-changes/scheduled-changes-collection';
+import '/imports/api/scheduled-changes/scheduled-changes-initialise'
+import '/imports/api/scheduled-changes/scheduled-changes-methods';
 
 Meteor.startup(async () => {
   // Testing menu and categories.
