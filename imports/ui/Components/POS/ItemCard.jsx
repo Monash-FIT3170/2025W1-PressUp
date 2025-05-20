@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree}) => {
+const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [item, setItem] = useState(null);

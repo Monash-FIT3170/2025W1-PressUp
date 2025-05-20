@@ -1,7 +1,7 @@
 import React from 'react';
 import { ItemCard } from './ItemCard.jsx';
 import { Meteor } from 'meteor/meteor';
-import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
+import "/imports/api/menu/menu-methods.js";
 
 export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
   // Function to handle adding an item to the order
