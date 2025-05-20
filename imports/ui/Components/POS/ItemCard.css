@@ -1,4 +1,7 @@
-/* existing styles… */
+.card-container {
+  display: flex;        
+  align-items: flex-start;  
+}
 
 .card-description {
   display: flex;
