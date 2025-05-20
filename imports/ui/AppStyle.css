@@ -82,3 +82,37 @@
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
+
+.view-mode-container {
+  display: flex;
+  justify-content: flex-start; 
+  align-items: center ; 
+  padding-left: 16px;           
+  margin-bottom: 1rem;   
+  align-self: start;
+}
+
+.view-mode-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1rem;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.view-mode-dropdown select {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.view-mode-dropdown .view-icon {
+  width: 20px;
+  height: 20px;
+}
