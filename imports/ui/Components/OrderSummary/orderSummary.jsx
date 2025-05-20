@@ -3,6 +3,7 @@ import { useSubscribe, useFind } from "meteor/react-meteor-data";
 import "./orderSummary.css";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { OrdersCollection } from "../../../api/orders/orders-collection.js";
+import { PrintReciept } from "../PrintRecieptButton/printReciept.jsx";
 
 export const OrderSummary = ({
     orderID
@@ -27,12 +28,12 @@ export const OrderSummary = ({
         order.items.forEach(item => {
             gross += item.quantity*item.price;
         });
-        var GST = 0.1*gross;
-        var total = gross + GST;
+        var GST = gross/11;
+        var total = gross;
         if (order.discount) {
             total -= order.discount;
         }
-        var change = order.paymentRecieved - total;
+        var change = order.recievedPayment - total;
         var isPaidFor = change > 0;
     }
     //display order summary
@@ -49,7 +50,7 @@ export const OrderSummary = ({
               {item.quantity + "x" + item.menu_item}
             </div>
             <div className="order-item-qty">
-              {"$" + item.price.toFixed(2)}
+              {"$" + (item.price*item.quantity).toFixed(2)}
             </div>
           </div>
           ))}
@@ -122,10 +123,10 @@ export const OrderSummary = ({
             Change
             </div>
             <div className="detail-qty">
-            {"$" + (order.paymentRecieved - total).toFixed(2)}
+            {"$" + change.toFixed(2)}
             </div>
         </div>) : (<div></div>))}
-        
+        <PrintReciept order={order}/>
         </div>
     </div>
     );
