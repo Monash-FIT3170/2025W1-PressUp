@@ -171,5 +171,5 @@
 }
 
 .table-number-input {
-  -moz-appearance: textfield;
+  appearance: textfield;
 }
