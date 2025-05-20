@@ -9,7 +9,13 @@
     border-radius: 16px;
     background: #FFF;
 }
-
+.top-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
 .order-number {
     color: #000;
     font-family: Inter;
@@ -54,6 +60,16 @@
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
+    line-height: normal;
+}
+
+.order-item-qty {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
     line-height: normal;
 }
 
