@@ -8,7 +8,7 @@ export const PrintReciept = ({
     order.items.forEach(item => {
         gross += item.quantity*item.price;
     });
-    var GST = 0.1*gross;
+    var GST = gross/11;
     var total = gross;
     if (order.discount) {
         total -= order.discount;
@@ -28,9 +28,9 @@ export const PrintReciept = ({
         if (order.discount) {
             str += "\ndiscount ....................... -$" + order.discount.toFixed(2);
         }
-        str += "\ntotal ....................... " + total.toFixed(2);
-        str += "\nrecieved ....................... " + order.recievedPayment.toFixed(2);
-        str += "\nchange ....................... " + change.toFixed(2);
+        str += "\ntotal ....................... $" + total.toFixed(2);
+        str += "\nrecieved ....................... $" + order.recievedPayment.toFixed(2);
+        str += "\nchange ....................... $" + change.toFixed(2);
         console.log(str);
     }
     return (
