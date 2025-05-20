@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Card } from './ItemCard.jsx';
+import { ItemCard } from './ItemCard.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
 
 export const POSMenuCards = ({ menuItems, selectedCategory}) => {
-  const [existingItem, setExistingItem] = useState(false);
 
   return (
     <div className="card-container">
@@ -14,10 +13,14 @@ export const POSMenuCards = ({ menuItems, selectedCategory}) => {
         menuItems
           .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
           .map(item => (
-            <Card
+            <ItemCard
               key={item._id}
-              title={item.name}
-              description={`Price: $${item.price}`}
+              name={item.name}
+              price={`Price: $${item.price}`}
+              ingredients = {item.ingredients}
+              isGlutenFree={item.isGlutenFree}
+              isHalal={item.isHalal}
+              isVegetarian={item.isVegetarian}
               onButtonClick={() => handleEditClick(item)}
             />
           ))
