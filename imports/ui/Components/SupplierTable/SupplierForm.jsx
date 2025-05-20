@@ -79,7 +79,7 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
     <div className="modal-overlay">
       <div className="modal-content supplier-form-container">
         <div className="supplier-form-header">
-          <div className="title">Add New Supplier</div>
+          <div className="title">{mode === 'edit' ? 'Edit Supplier' : 'Add New Supplier'}</div>
         </div>
         <div className="supplier-form-input-container">
           {/* Name */}
@@ -190,7 +190,7 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
             className="supplier-form-button done"
             onClick={handleSubmit}
           >
-            <div className="button-text">Add</div>
+            <div className="button-text">{mode === 'edit' ? 'Save Changes' : 'Add'}</div>
           </div>
         </div>
       </div>
