@@ -31,6 +31,12 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       return;
     }
 
+	if (!tableNumber) {
+		setCheckoutError("Please enter a table number");
+		setTimeout(() => setCheckoutError(null), 3000);
+		return;
+	}
+
     setIsCheckingOut(true);
     
     // Format order data according to the schema
