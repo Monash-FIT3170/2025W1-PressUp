@@ -15,6 +15,10 @@ import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollectio
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
 
+import { OrdersCollection } from '../imports/api/orders/orders-collection';
+import "../imports/api/orders/orders-methods";
+import "../imports/api/orders/orders-publications";
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();

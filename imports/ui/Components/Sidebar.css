@@ -1,6 +1,6 @@
 .sidebar {
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   z-index: 1000;
   box-sizing: border-box;

@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ItemCard } from './ItemCard.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
 
-export const POSMenuCards = ({ menuItems, selectedCategory}) => {
+export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
+  // Function to handle adding an item to the order
+  const handleAddToOrder = (item) => {
+    addToOrder(item);
+  };
 
   return (
     <div className="card-container">
@@ -21,7 +25,7 @@ export const POSMenuCards = ({ menuItems, selectedCategory}) => {
               isGlutenFree={item.isGlutenFree}
               isHalal={item.isHalal}
               isVegetarian={item.isVegetarian}
-              onButtonClick={() => handleEditClick(item)}
+              onAddToOrder={() => handleAddToOrder(item)}
             />
           ))
       )}

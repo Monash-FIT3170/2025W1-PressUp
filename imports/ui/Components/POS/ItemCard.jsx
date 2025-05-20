@@ -4,8 +4,34 @@ import { Meteor } from 'meteor/meteor';
 
 const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree}) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [item, setItem] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
+
+  const handleUpdate = (id, updatedData) => {
+    setItem(prev => ({ ...prev, ...updatedData }));
+  };
+
+  const handleDeleteClick = () => {
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    setShowConfirm(false);
+    if (onDelete) onDelete();
+  };
+  
+  const cancelDelete = () => {
+    setShowConfirm(false);
+  };
+  
+  const handleAddToOrder = () => {
+    if (onAddToOrder) {
+      onAddToOrder();
+    }
+  };
 
   return (
     <div className="card" onClick={toggleExtraInfo}>
@@ -15,15 +41,10 @@ const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetari
         </div>
         <p className="card-description">
           <span className="price">{price}</span>
-          <button
-            className="add-button"
-            onClick={e => {
-              e.stopPropagation();
-              onButtonClick && onButtonClick();
-            }}
-          >
-            +
-          </button>
+          <button 
+            className="add-to-order-btn" 
+            onClick={handleAddToOrder}
+          >+</button>
         </p>
         {showExtraInfo && (<>
             <div className="card-dietary">
