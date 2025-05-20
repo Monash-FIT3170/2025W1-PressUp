@@ -14,6 +14,9 @@ import "../imports/api/inventory/inventory-methods";
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+import { OrdersCollection } from "../imports/api/orders/orders-collection";
+import "../imports/api/orders/orders-methods";
+import "../imports/api/orders/orders-publications";
 
 Meteor.startup(async () => {
   // Testing menu and categories.
@@ -21,6 +24,8 @@ Meteor.startup(async () => {
   const nMenuItems = await Menu.find().countAsync();
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
+  const nOrders = await OrdersCollection.find().countAsync();
+
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );
@@ -54,6 +59,27 @@ Meteor.startup(async () => {
       next();
     }
   });
+  if (nOrders === 0) {
+    console.log("No order items found. Initializing with default items.");
+    const defaultItems = [
+      {
+        table:1,
+        status:"closed",
+        items:[{menu_item:"Espresso",quantity:2,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
+        paymentRecieved:15
+      },
+      {
+        table:3,
+        status:"closed",
+        items:[{menu_item:"Espresso",quantity:1,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
+        discount:2,
+        paymentRecieved:10
+      }
+    ];
+    defaultItems.forEach(
+      async (item) => await OrdersCollection.insertAsync(item)
+    );
+  }
 
   if (nIngredients === 0) {
     console.log("No inventory items found. Initializing with default items.");
