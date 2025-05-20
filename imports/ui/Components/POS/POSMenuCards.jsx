@@ -27,14 +27,27 @@ export const POSMenuCards = ({ menuItems, selectedCategory}) => {
     const endTime = moment(end, 'HH:mm');
   
     return now.isBetween(startTime, endTime);
-  };  
+  }; 
+
+  const itemsWithAvailability = menuItems.map(item => ({
+    ...item,
+    isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+  }));
+  
+  const sortedItems = itemsWithAvailability.sort((a, b) => {
+    return (a.isCurrentlyAvailable === b.isCurrentlyAvailable)
+      ? 0
+      : a.isCurrentlyAvailable
+      ? -1
+      : 1;
+  });
 
   return (
     <div className="card-container">
-      {menuItems.length === 0 ? (
+      {sortedItems === 0 ? (
         <p>No menu items available.</p>
       ) : (
-        menuItems
+        sortedItems
           .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
           .map(item => {
             const isCurrentlyAvailable = getIsCurrentlyAvailable(item);
