@@ -66,18 +66,19 @@ Meteor.startup(async () => {
         table:1,
         status:"closed",
         items:[{menu_item:"Espresso",quantity:2,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
-        paymentRecieved:15
+        recievedPayment:15
       },
       {
         table:3,
         status:"closed",
         items:[{menu_item:"Espresso",quantity:1,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
         discount:2,
-        paymentRecieved:10
       }
     ];
     defaultItems.forEach(
-      async (item) => await OrdersCollection.insertAsync(item)
+      (item) => {
+        Meteor.call("orders.insert",OrdersCollection.schema.clean(item));
+      }
     );
   }
 
