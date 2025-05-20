@@ -4,7 +4,7 @@ import "./orderSummary.css";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { OrdersCollection } from "../../../api/orders/orders-collection.js";
 
-export const orderSummaryPage = ({
+export const OrderSummary = ({
     orderID
 }) => {
     const isLoading = useSubscribe("orders.id", orderID);
