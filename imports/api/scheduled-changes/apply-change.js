@@ -1,5 +1,5 @@
-import { MenuItems } from '../menuItems/collection.js';
-import { ScheduledChanges } from './collection.js';
+import { MenuItems } from '../menu/menu-collection';
+import { ScheduledChanges } from './scheduled-changes-collection';
 
 export function applyScheduledChange(change) {
 	const update = { $set: change.changes };
