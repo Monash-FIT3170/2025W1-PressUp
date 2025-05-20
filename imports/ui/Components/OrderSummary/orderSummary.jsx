@@ -24,7 +24,6 @@ export const OrderSummary = ({
     } else {
         var gross = 0;
         order = order[0];
-        console.log(order);
         order.items.forEach(item => {
             gross += item.quantity*item.price;
         });
@@ -40,7 +39,7 @@ export const OrderSummary = ({
     return (
       <div className="order-summary">
         <div className="top-section">
-          <div className="order-number">{"Order " + orderID}</div>
+          <div className="order-number">{"Order #" + orderID}</div>
           <div className="table-number">{"Table " + order.table + "."}</div>
         </div>
         <div className="middle-section">
@@ -50,7 +49,7 @@ export const OrderSummary = ({
               {item.quantity + "x" + item.menu_item}
             </div>
             <div className="order-item-qty">
-              {"$" + item.price}
+              {"$" + item.price.toFixed(2)}
             </div>
           </div>
           ))}
@@ -107,7 +106,7 @@ export const OrderSummary = ({
             Received
             </div>
             <div className="detail-qty">
-            {"$" + order.paymentRecieved.toFixed(2)}
+            {"$" + order.recievedPayment.toFixed(2)}
             </div>
         </div>)
         }
@@ -116,7 +115,7 @@ export const OrderSummary = ({
             Received
             </div>
             <div className="detail-qty">
-            {"$" + order.paymentRecieved.toFixed(2)}
+            {"$" + order.recievedPayment.toFixed(2)}
             </div>
         </div>) : (isPaidFor ? (<div className="detail-section">
             <div className="detail-name">
