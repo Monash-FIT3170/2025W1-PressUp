@@ -29,6 +29,10 @@ Meteor.startup(async () => {
 					bsonType: 'objectId',
 					description: 'An id of a menu category.'
 				},
+				// menuSubCategory: {
+				// 	bsonType: 'objectId',
+				// 	description: 'An id of a menu sub category.'
+				// },
 				ingredients: {
 					bsonType: 'array',
 					items: { bsonType: 'objectId' },

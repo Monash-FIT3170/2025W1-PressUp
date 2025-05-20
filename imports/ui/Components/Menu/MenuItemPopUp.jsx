@@ -3,11 +3,13 @@ import './MenuItemPopUp.css';
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
+import '/imports/api/menu-categories/menu-categories-methods.js';
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
+  const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState('');
   const [isHalal, setIsHalal] = useState(false);
@@ -17,6 +19,17 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
+
+    Meteor.call('menuCategories.getCategories', (error, result) => {
+    if (error) {
+      console.error('Failed to fetch categories:', error);
+    } else {
+      console.log('Fetched categories:', result);
+      setMenuCategories(result); // assuming result is an array of category strings
+    }
+  });
+
+
     if (mode === 'update' && existingItem) {
       setName(existingItem.name || '');
       setPrice(existingItem.price || '');
@@ -122,7 +135,14 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
 
           <div>
             <label>Menu Category</label>
-            <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} />
+            {/* <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} /> */}
+            <select value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)}>
+            <option value="">-- Select a category --</option>
+            {menuCategories.map((cat, index) => (
+              // <option key={index} value={cat}>{cat}</option>
+              <option key={cat._id} value={cat.category}>{cat.category}</option>
+            ))}
+          </select>
             {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>
 
