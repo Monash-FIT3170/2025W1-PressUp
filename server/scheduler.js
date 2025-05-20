@@ -1,7 +1,10 @@
 import { ScheduledChanges } from '../imports/api/scheduled-changes/scheduled-changes-collection.js';
 import { applyScheduledChange } from '../imports/api/scheduled-changes/apply-change.js';
 
-const ONE_MINUTE_MS = 60 * 1000;
+// Interval to get and apply changes in milliseconds.
+// Every interval, the server will check for pending scheduled changes and apply 
+// them.
+const INTERVAL_MILLIS = 5 * 60 * 1000;
 
 async function getApplyScheduledChanges(date) {
 	console.log(`Looking for scheduled changes at ${date}`);
@@ -28,5 +31,5 @@ Meteor.startup(() => {
 
 	Meteor.setInterval(() => {
 		getApplyScheduledChanges(new Date());
-	}, ONE_MINUTE_MS);
+	}, INTERVAL_MILLIS);
 });
