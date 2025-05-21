@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { Card } from './ItemCard.jsx';
+import React from 'react';
+import { ItemCard } from './ItemCard.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
 import moment from 'moment';
 
-export const POSMenuCards = ({ menuItems, selectedCategory}) => {
-  const [existingItem, setExistingItem] = useState(false);
+export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
+  // Function to handle adding an item to the order
+  const handleAddToOrder = (item) => {
+    addToOrder(item);
+  };
 
   const getIsCurrentlyAvailable = (item) => {
     if (!item.available) return false;
@@ -52,12 +55,16 @@ export const POSMenuCards = ({ menuItems, selectedCategory}) => {
           .map(item => {
             const isCurrentlyAvailable = getIsCurrentlyAvailable(item);
             return (
-              <Card
+              <ItemCard
                 key={item._id}
-                title={item.name}
-                description={`Price: $${item.price}`}
+                name={item.name}
+                price={`Price: $${item.price}`}
                 available={isCurrentlyAvailable}
-                onButtonClick={() => handleEditClick(item)}
+                ingredients = {item.ingredients}
+              isGlutenFree={item.isGlutenFree}
+              isHalal={item.isHalal}
+              isVegetarian={item.isVegetarian}
+              onAddToOrder={() => handleAddToOrder(item)}
               />
             );
           })

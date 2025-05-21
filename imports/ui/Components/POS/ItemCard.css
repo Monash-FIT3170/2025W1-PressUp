@@ -1,52 +1,32 @@
-/* Card.css */
-.card {
-    width: 200px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 15px;
-    background-color: white;
-  }
-  
-  .card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  .card-content {
-    margin-top: 10px;
-  }
-  
-  .card-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .card-description {
-    font-size: 1rem;
-    color: #555;
-  }
+.card-container {
+  display: flex;        
+  align-items: flex-start;  
+}
 
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.card-description {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #555;
+}
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .trash-icon-button {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-  }
+.card-description .price {
+  margin-right: 1rem;
+}
+
+.add-button {
+  margin-left: auto;
+  /* you can keep any other existing button styles here */
+}
+
+.card-ingredients {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* the rest of your existing styles… */
+
 
   .card-disabled {
     background-color: #f0f0f0;

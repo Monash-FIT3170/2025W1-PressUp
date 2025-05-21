@@ -10,6 +10,9 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [menuCategory, setMenuCategory] = useState('');
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState('');
+  const [isHalal, setIsHalal] = useState(false);
+  const [isVegetarian, setIsVegetarian] = useState(false);
+  const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -26,6 +29,9 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setPrice(existingItem.price || '');
       setMenuCategory(existingItem.menuCategory || '');
       setAvailable(existingItem.available ?? true);
+      setIsHalal(existingItem.isHalal || false);
+      setIsVegetarian(existingItem.isVegetarian || false);
+      setIsGlutenFree(existingItem.isGlutenFree || false);
       setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
       if (existingItem.schedule) {
         setSchedule(prev => ({
@@ -59,6 +65,9 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       price: parseFloat(price),
       menuCategory,
       available,
+      isHalal,
+      isVegetarian,
+      isGlutenFree,
       ingredients: ingredients.split(',').map(i => i.trim()),
       schedule,
     };
@@ -101,6 +110,9 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     setMenuCategory('');
     setIngredients('');
     setAvailable(true);
+    setIsHalal(false);
+    setIsVegetarian(false);
+    setIsGlutenFree(false);
   };
 
   return (
@@ -128,9 +140,42 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>
 
-          <div>
-            <label>Available</label>
-            <input type="checkbox" checked={available} onChange={(e) => setAvailable(e.target.checked)} />
+          <div className="checkbox-row">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={available}
+                onChange={(e) => setAvailable(e.target.checked)}
+              />
+              Available
+            </label>
+
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isVegetarian}
+                onChange={(e) => setIsVegetarian(e.target.checked)}
+              />
+              Vegetarian
+            </label>
+
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isHalal}
+                onChange={(e) => setIsHalal(e.target.checked)}
+              />
+              Halal
+            </label>
+
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isGlutenFree}
+                onChange={(e) => setIsGlutenFree(e.target.checked)}
+              />
+              Gluten Free
+            </label>
           </div>
 
           <div>

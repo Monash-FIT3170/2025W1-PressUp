@@ -64,8 +64,24 @@ Meteor.startup(async () => {
 							}
 						}
 					}
-				}
+				},
 				
+				isHalal: {
+					bsonType: 'bool',
+					description: 
+						'Whether the menu item is Halal.'
+				},
+				isVegetarian: {
+					bsonType: 'bool',
+					description: 
+						'Whether the menu item is Vegatarian.'
+				},
+				isGlutenFree: {
+					bsonType: 'bool',
+					description: 
+						'Whether the menu item is Gluten Free.'
+				}
+
             }
         }
     };

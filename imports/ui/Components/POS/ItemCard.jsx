@@ -2,27 +2,17 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const Card = ({ title, description, onDelete, onEdit, available = true}) => {
+const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder }) => {
+  const [showExtraInfo, setShowExtraInfo] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [item, setItem] = useState(null); // full menu item info
+  const [item, setItem] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
-  // useEffect(() => {
-  //   Meteor.call('menu.getByName', title, (error, result) => {
-  //     if (!error && result) {
-  //       console.log("Fetched menu item:", result);
-  //       setItem(result);
-  //     } else {
-  //       console.warn("Failed to fetch item by name:", title, error);
-  //     }
-  //   });
-  // }, [title]);
-  
+  const toggleExtraInfo = () => setShowExtraInfo(v => !v);
 
   const handleUpdate = (id, updatedData) => {
     setItem(prev => ({ ...prev, ...updatedData }));
-    // Optional: add local cache update logic if needed
   };
 
   const handleDeleteClick = () => {
@@ -31,33 +21,46 @@ const Card = ({ title, description, onDelete, onEdit, available = true}) => {
 
   const confirmDelete = () => {
     setShowConfirm(false);
-    onDelete();
+    if (onDelete) onDelete();
   };
   
   const cancelDelete = () => {
     setShowConfirm(false);
   };
+  
+  const handleAddToOrder = () => {
+    if (onAddToOrder) {
+      onAddToOrder();
+    }
+  };
 
   return (
-    <div className={cardClass}>
+    <div className={cardClass} onClick={toggleExtraInfo}>
       <div className="card-content">
         <div className="card-header">
-          <h3 className="card-title">{title}</h3>
+          <h3 className="card-title">{name}</h3>
         </div>
-        <p className="card-description">{description}
-        <button onClick>+</button>
+        <p className="card-description">
+          <span className="price">{price}</span>
+          <button 
+            className="add-to-order-btn" 
+            onClick={handleAddToOrder}
+          >+</button>
         </p>
-        {/* {console.log("HI") && item && (
-          <MenuItemPopUp
-            mode="update"
-            onClose={() => setShowPopup(false)}
-            existingItem={item}
-            onUpdate={handleUpdate}
-          />
-        )} */}
+        {showExtraInfo && (<>
+            <div className="card-dietary">
+              {isHalal && <strong>H </strong>}
+              {isVegetarian && <strong>V </strong>}
+              {isGlutenFree && <strong>GF </strong>}
+            </div>
+            <p className="card-ingredients">
+              {ingredients.join(", ")}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
-export { Card };
+export { ItemCard };
