@@ -63,7 +63,10 @@ export const CategoryManager = ({ onClose }) => {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="close-button" onClick={onClose}>X</button>
+        <button className="close-button" onClick={() => {
+          onClose();
+          // window.location.reload(); // TODO: Remove this line. Currently used as editing menu throws error once category is updated
+        }}>X</button>
         <h2>Manage Categories</h2>
         <ul>
           {categories.map(cat => (

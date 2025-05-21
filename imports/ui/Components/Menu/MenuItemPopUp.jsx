@@ -24,7 +24,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     if (error) {
       console.error('Failed to fetch categories:', error);
     } else {
-      console.log('Fetched categories:', result);
+      // console.log('Fetched categories:', result);
       setMenuCategories(result); // assuming result is an array of category strings
     }
   });
@@ -138,10 +138,13 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             {/* <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} /> */}
             <select value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)}>
             <option value="">-- Select a category --</option>
-            {menuCategories.map((cat, index) => (
+            {
+            // console.log('menuCategories:', menuCategories)
+            menuCategories.map((cat, index) => (
               // <option key={index} value={cat}>{cat}</option>
-              <option key={cat._id} value={cat.category}>{cat.category}</option>
-            ))}
+              <option key={cat._id} value={cat._id}>{cat.category}</option>
+            ))
+            }
           </select>
             {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>

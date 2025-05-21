@@ -36,7 +36,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
         <p>No menu items available.</p>
       ) : (
         menuItems
-          .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
+          .filter(item => selectedCategory === 'all' || item.menuCategory === selectedCategory)
           .map(item => (
             <Card
               key={item._id}

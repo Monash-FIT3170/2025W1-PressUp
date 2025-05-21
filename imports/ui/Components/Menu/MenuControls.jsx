@@ -7,6 +7,8 @@ import { CategoryManager } from './CategoryPopUp.jsx';
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
+  console.log('selectedCategory:', selectedCategory);
+  console.log('setSelectedCategory:', setSelectedCategory);
 
   const [showCategoryManager, setShowCategoryManager] = useState(false);
 
@@ -58,8 +60,8 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
         {categories.map(({ _id, name }) => (
           <button
             key={_id}
-            onClick={() => setSelectedCategory(name)}
-            className={`filter-bubble ${selectedCategory === name ? 'active' : ''}`}
+            onClick={() => setSelectedCategory(_id)}
+            className={`filter-bubble ${selectedCategory === _id ? 'active' : ''}`}
           >
             {name}
           </button>
