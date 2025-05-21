@@ -24,7 +24,11 @@ export const CategoryManager = ({ onClose }) => {
 
     Meteor.call('menuCategories.update', {
       _id: id,
-      menuCategory: { name: updatedCategory.trim() }
+    //   category: updatedCategory.trim() 
+    menuCategory: {
+    category: updatedCategory.trim()
+    // You can add sortOrder here if you want to update it
+  }
     }, (error) => {
       if (!error) {
         setCategories(prev =>
