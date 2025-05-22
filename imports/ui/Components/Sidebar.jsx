@@ -90,6 +90,24 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                 />
                 Scheduling
               </NavLink>
+              <NavLink
+                to="/promotions"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+              >
+                <img
+                  src="/images/PromotionIcon.png"
+                  alt="Promotions"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Promotions
+              </NavLink>
             </div>
           </>
         )}

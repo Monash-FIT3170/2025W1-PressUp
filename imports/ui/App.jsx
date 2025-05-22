@@ -13,6 +13,8 @@ import { POSMenuControls } from './Components/POS/POSMenuControls.jsx';
 import { POSMenuCards } from './Components/POS/POSMenuCards.jsx';
 import { OrderPanel } from './Components/POS/OrderPanel.jsx';
 import "./Components/POS/OrderPanel.css";
+import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+
 
 // Import Meteor for data operations
 import { Meteor } from 'meteor/meteor';
@@ -211,6 +213,18 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                </>
+              }
+            />
+            <Route
+              path="/promotions"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <PromotionPage />
                 </>
               }
             />

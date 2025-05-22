@@ -20,6 +20,10 @@ import { OrdersCollection } from '../imports/api/orders/orders-collection';
 import "../imports/api/orders/orders-methods";
 import "../imports/api/orders/orders-publications";
 
+import { PromotionsCollection } from '/imports/api/promotions/promotions-collection.js';
+import '/imports/api/promotions/promotions-methods.js';
+import '/imports/api/promotions/promotions-publications.js';
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
