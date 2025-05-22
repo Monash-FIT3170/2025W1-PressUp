@@ -1,0 +1,33 @@
+import { Meteor } from 'meteor/meteor';
+import { TablesCollection } from './TablesCollection.js'; 
+
+Meteor.methods({
+
+  async 'tables.insert'(tableData) {
+
+    try {
+      const tableId = await TablesCollection.insertAsync(
+        tableData
+    );
+
+      console.log(`Table added with ID: ${tableId}`);
+      return tableId;
+
+    } catch (error) {
+      console.error("Error inserting table:", error);
+
+      throw new Meteor.Error('insert-failed', 'Failed to add the table.');
+    }
+  },
+
+  async 'tables.remove'(tableId) {
+
+    try {
+      const result = await TablesCollection.removeAsync(tableId);
+      console.log(`Table removed: ${tableId}, Removed documents: ${result}`);
+    } catch (error) {
+      console.error(`Error removing table ${tableId}:`, error);
+      throw new Meteor.Error('remove-failed', 'Failed to remove the table.');
+    }
+  },
+});
