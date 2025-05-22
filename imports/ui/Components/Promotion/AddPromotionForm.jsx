@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import '/imports/api/promotions/promotions-methods.js';
 
 export const AddPromotionForm = ({ onClose }) => {
   const [form, setForm] = useState({

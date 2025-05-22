@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { Promotions } from './promotions-collection';
+import { PromotionsCollection } from './promotions-collection';
 
 Meteor.publish('promotions.activePublic', function () {
-    return Promotions.find({
+    return PromotionsCollection.find({
       isActive: true,
       requiresCode: false,
       expiresAt: { $gte: new Date() }

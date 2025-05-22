@@ -30,6 +30,7 @@ Meteor.startup(async () => {
   const nMenuItems = await Menu.find().countAsync();
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
+  const nPromotions = await PromotionsCollection.find().countAsync();
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );
@@ -129,4 +130,17 @@ Meteor.startup(async () => {
       async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
+  if (nPromotions === 0) {
+    PromotionsCollection.insertAsync({
+      code: 'TESTCODE',
+      type: 'flat',
+      amount: 10,
+      scope: { type: 'all', value: null },
+      requiresCode: false,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // expires 1 day from now
+      isActive: true,
+      createdAt: new Date()
+    });
+    console.log('[Server] Inserted test promotion');
+  }  
 });

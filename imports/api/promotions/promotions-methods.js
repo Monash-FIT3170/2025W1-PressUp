@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
-import { Promotions } from './promotions-collection';
+import { PromotionsCollection } from './promotions-collection';
 
 Meteor.methods({
-    'promotions.insert'(data) {
+    async 'promotions.insert'(data) {
       check(data, {
         code: Match.Maybe(String), // Optional
         type: Match.OneOf('flat', 'percentage'),
@@ -16,7 +16,7 @@ Meteor.methods({
         expiresAt: Date
       });
   
-      return Promotions.insert({
+      return await PromotionsCollection.insertAsync({
         ...data,
         isActive: true,
         createdAt: new Date()
@@ -26,7 +26,7 @@ Meteor.methods({
 
   'promotions.getActive'() {
     const now = new Date();
-    return Promotions.find({
+    return PromotionsCollection.find({
       isActive: true,
       expiresAt: { $gte: now }
     }).fetch();
@@ -38,7 +38,7 @@ Meteor.methods({
     check(itemCategory, String);
 
     const now = new Date();
-    const promo = Promotions.findOne({
+    const promo = PromotionsCollection.findOne({
       code,
       requiresCode: true,
       isActive: true,
@@ -62,10 +62,10 @@ Meteor.methods({
   },
 
 
-  'promotions.toggleActive'(promotionId, status) {
+  async 'promotions.toggleActive'(promotionId, status) {
     check(promotionId, String);
     check(status, Boolean);
-    return Promotions.update(promotionId, { $set: { isActive: status } });
+    return await PromotionsCollection.updateAsync(promotionId, { $set: { isActive: status } });
   },
 
   'promotions.getApplicableToItem'(itemId, itemCategory) {
@@ -74,7 +74,7 @@ Meteor.methods({
 
   const now = new Date();
 
-  return Promotions.find({
+  return PromotionsCollection.find({
     requiresCode: false,
     isActive: true,
     expiresAt: { $gte: now },
