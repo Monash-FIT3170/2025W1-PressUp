@@ -6,6 +6,7 @@ import { MenuCategories } from "/imports/api/menu-categories/menu-categories-col
 import { Menu } from "/imports/api/menu/menu-collection";
 import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
+import '/imports/api/menu-categories/menu-categories-methods';
 import "/imports/api/menu/menu-methods";
 
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
