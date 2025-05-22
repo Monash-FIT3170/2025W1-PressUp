@@ -25,6 +25,7 @@ Meteor.methods({
 			isVegetarian: Match.Optional(Boolean),
 			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
@@ -76,6 +77,7 @@ Meteor.methods({
 			isVegetarian: Match.Optional(Boolean),
 			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.

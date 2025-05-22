@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder }) => {
+const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder, available = true }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [item, setItem] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
 
@@ -34,7 +35,7 @@ const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetari
   };
 
   return (
-    <div className="card" onClick={toggleExtraInfo}>
+    <div className={cardClass} onClick={toggleExtraInfo}>
       <div className="card-content">
         <div className="card-header">
           <h3 className="card-title">{name}</h3>
