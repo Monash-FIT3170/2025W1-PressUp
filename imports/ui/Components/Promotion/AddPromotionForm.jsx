@@ -4,6 +4,7 @@ import '/imports/api/promotions/promotions-methods.js';
 
 export const AddPromotionForm = ({ onClose }) => {
   const [form, setForm] = useState({
+    name: '',
     type: 'flat',
     amount: '',
     scopeType: 'all',
@@ -25,6 +26,7 @@ export const AddPromotionForm = ({ onClose }) => {
     e.preventDefault();
 
     const data = {
+      name: form.name,
       code: form.code || undefined,
       type: form.type,
       amount: parseFloat(form.amount),
@@ -41,6 +43,7 @@ export const AddPromotionForm = ({ onClose }) => {
       else {
         alert('Promotion added!');
         setForm({
+          name: '',
           type: 'flat',
           amount: '',
           scopeType: 'all',
@@ -60,6 +63,16 @@ export const AddPromotionForm = ({ onClose }) => {
         <h3>Add Promotion</h3>
         <button type="button" className="close-button" onClick={onClose}>✕</button>
       </div>
+
+      <label>Promotion Name:</label>
+        <input
+        type="text"
+        name="name"
+        value={form.name}
+        onChange={handleChange}
+        placeholder=" "
+        required
+        />
 
       <label>Type:</label>
       <select name="type" value={form.type} onChange={handleChange}>

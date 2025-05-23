@@ -5,6 +5,7 @@ import { PromotionsCollection } from './promotions-collection';
 Meteor.methods({
     async 'promotions.insert'(data) {
       check(data, {
+        name: String,
         code: Match.Maybe(String), // Optional
         type: Match.OneOf('flat', 'percentage'),
         amount: Number,
