@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './ItemCard.css';
 import { Meteor } from 'meteor/meteor';
 
-const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder, available = true }) => {
+const ItemCard = ({ name, price, discountedPrice = null, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder, available = true }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [item, setItem] = useState(null);
@@ -41,7 +41,19 @@ const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetari
           <h3 className="card-title">{name}</h3>
         </div>
         <p className="card-description">
-          <span className="price">{price}</span>
+          Price:{" "}
+            {discountedPrice !== null && discountedPrice < price ? (
+              <>
+                <span style={{ textDecoration: 'line-through', marginRight: 8 }}>
+                  ${price.toFixed(2)}
+                </span>
+                <span>
+                  ${discountedPrice.toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <span>${price.toFixed(2)}</span>
+            )}
           <button 
             className="add-to-order-btn" 
             onClick={handleAddToOrder}

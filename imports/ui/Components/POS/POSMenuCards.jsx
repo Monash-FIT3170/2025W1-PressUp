@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ItemCard } from './ItemCard.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js"; // Ensure this is imported to use Meteor methods
 import moment from 'moment';
 
 export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
+  const [itemsWithDiscount, setItemsWithDiscount] = useState([]);
   // Function to handle adding an item to the order
   const handleAddToOrder = (item) => {
     addToOrder(item);
@@ -36,8 +37,60 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
     ...item,
     isCurrentlyAvailable: getIsCurrentlyAvailable(item),
   }));
-  
-  const sortedItems = itemsWithAvailability.sort((a, b) => {
+
+  useEffect(() => {
+    if (!menuItems || menuItems.length === 0) {
+      setItemsWithDiscount([]);
+      return;
+    }
+
+    const fetchDiscounts = async () => {
+      // Wrap Meteor.call in a Promise
+      const getDiscountedPrice = (itemId, category, basePrice) =>
+        new Promise((resolve, reject) => {
+          Meteor.call('promotions.getDiscountedPrice', itemId, category, basePrice, null, (err, res) => {
+            if (err) reject(err);
+            else resolve(res);
+          });
+        });
+
+      // Map each menu item to its discounted data
+      const updatedItems = await Promise.all(
+        menuItems.map(async (item) => {
+          try {
+            const discountResult = await getDiscountedPrice(item._id, item.menuCategory, item.price);
+            return {
+              ...item,
+              discountedPrice: discountResult.finalPrice,
+              discountAmount: discountResult.discount,
+              appliedPromotion: discountResult.appliedPromotion,
+              isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+            };
+          } catch (error) {
+            // If error, fallback to original price, mark available
+            return {
+              ...item,
+              discountedPrice: item.price,
+              discountAmount: 0,
+              appliedPromotion: null,
+              isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+            };
+          }
+        })
+      );
+
+      setItemsWithDiscount(updatedItems);
+    };
+
+    fetchDiscounts();
+  }, [menuItems]);
+
+  const itemsToRender = (itemsWithDiscount.length > 0 ? itemsWithDiscount : menuItems).map(item => ({
+    ...item,
+    isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+  }));
+
+  const sortedItems = [...itemsToRender].sort((a, b) => {
     return (a.isCurrentlyAvailable === b.isCurrentlyAvailable)
       ? 0
       : a.isCurrentlyAvailable
@@ -47,7 +100,7 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
 
   return (
     <div className="card-container">
-      {sortedItems === 0 ? (
+      {sortedItems.length === 0 ? (
         <p>No menu items available.</p>
       ) : (
         sortedItems
@@ -58,7 +111,8 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
               <ItemCard
                 key={item._id}
                 name={item.name}
-                price={`Price: $${item.price}`}
+                price={item.price}
+                discountedPrice={item.discountedPrice}
                 available={isCurrentlyAvailable}
                 ingredients = {item.ingredients}
               isGlutenFree={item.isGlutenFree}

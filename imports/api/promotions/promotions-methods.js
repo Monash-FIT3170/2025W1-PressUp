@@ -85,5 +85,76 @@ Meteor.methods({
       { 'scope.type': 'item', 'scope.value': itemId }
     ]
   }).fetch();
-}
+  },
+
+  async 'promotions.getDiscountedPrice'(itemId, itemCategory, basePrice, promoCode = null) {
+    check(itemId, String);
+    check(itemCategory, String);
+    check(basePrice, Number);
+    check(promoCode, Match.Maybe(String));
+  
+    const now = new Date();
+  
+    let applicablePromos = [];
+  
+    // 1. Check for auto promotions (only if no promo code provided)
+    if (!promoCode) {
+      const autoPromos = await PromotionsCollection.find({
+        requiresCode: false,
+        isActive: true,
+        expiresAt: { $gte: now },
+        $or: [
+          { 'scope.type': 'all' },
+          { 'scope.type': 'category', 'scope.value': itemCategory },
+          { 'scope.type': 'item', 'scope.value': itemId }
+        ]
+      }).fetch();
+  
+      applicablePromos = Array.isArray(autoPromos) ? autoPromos : [];
+    } else {
+      // 2. Check promo code (if given)
+      const codePromo = await PromotionsCollection.findOneAsync({
+        code: promoCode,
+        requiresCode: true,
+        isActive: true,
+        expiresAt: { $gte: now },
+        $or: [
+          { 'scope.type': 'all' },
+          { 'scope.type': 'category', 'scope.value': itemCategory },
+          { 'scope.type': 'item', 'scope.value': itemId }
+        ]
+      });
+  
+      if (codePromo) {
+        applicablePromos = [codePromo];
+      } else {
+        return { finalPrice: basePrice, discount: 0, appliedPromotion: null };
+      }
+    }
+  
+    if (applicablePromos.length === 0) {
+      return { finalPrice: basePrice, discount: 0, appliedPromotion: null };
+    }
+  
+    // 3. Choose the best promo (highest discount)
+    let bestPromo = null;
+    let maxDiscount = 0;
+  
+    for (const promo of applicablePromos) {
+      let discount = 0;
+      if (promo.type === 'flat') {
+        discount = promo.amount;
+      } else if (promo.type === 'percentage') {
+        discount = (promo.amount / 100) * basePrice;
+      }
+  
+      if (discount > maxDiscount) {
+        maxDiscount = discount;
+        bestPromo = promo;
+      }
+    }
+  
+    const finalPrice = Math.max(basePrice - maxDiscount, 0);
+    return { finalPrice, discount: maxDiscount, appliedPromotion: bestPromo?.name || null };
+  }  
 });

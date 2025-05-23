@@ -45,7 +45,7 @@ export const PromotionPage = () => {
       )}
 
       {/* Active Promotions List */}
-      <div className="promotion-list">
+      <div className="promotions">
         <h2>Active Promotions</h2>
         {promotions.length === 0 ? (
           <p>No active promotions.</p>
