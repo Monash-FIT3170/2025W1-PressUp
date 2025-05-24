@@ -196,6 +196,7 @@ export const App = () => {
                         compact={true} // Only render the button
                       />}
                   />
+                  <div className="menu-layout">
                 <MenuControls
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
@@ -208,6 +209,7 @@ export const App = () => {
                   updateMenuItem={updateMenuItem}
                   setMenuItems={setMenuItems}
                 />
+                  </div>
               </>
             }
             />
