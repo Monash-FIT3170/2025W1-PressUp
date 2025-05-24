@@ -18,8 +18,8 @@
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
+  min-width: 600px;     /* never go below 600px */
+  max-width: 90%;       /* but never overflow the screen */
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
