@@ -185,9 +185,18 @@ export const App = () => {
             <Route path="/menu" element={
               <>
                 <PageHeader
-                  isSidebarOpen={isSidebarOpen}
-                  setIsSidebarOpen={setIsSidebarOpen}
-                />
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                    searchBar={<IngredientSearchBar onSearch={handleSearch}/>}
+                    addButton={<MenuControls
+                        showPopup={showPopup}
+                        setShowPopup={setShowPopup}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        compact={true} // Only render the button
+                      />}
+                  />
+                  <div className="menu-layout">
                 <MenuControls
                   showPopup={showPopup}
                   setShowPopup={setShowPopup}
@@ -200,6 +209,7 @@ export const App = () => {
                   updateMenuItem={updateMenuItem}
                   setMenuItems={setMenuItems}
                 />
+                  </div>
               </>
             }
             />

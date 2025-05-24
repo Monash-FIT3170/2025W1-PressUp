@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./PageHeader.css";
 import { capitalizeFirstLetter } from "../../../utils/utils.js";
 
-export const PageHeader = ({ isSidebarOpen, setIsSidebarOpen, searchBar }) => {
+export const PageHeader = ({ isSidebarOpen, setIsSidebarOpen, searchBar, addButton }) => {
   const location = useLocation();
   const title = capitalizeFirstLetter(
     location.pathname.replace("/", "") || "Home"
@@ -26,6 +26,7 @@ export const PageHeader = ({ isSidebarOpen, setIsSidebarOpen, searchBar }) => {
       )}
       <h1>{title}</h1>
       {searchBar}
+      {addButton}
     </div>
   );
 };
