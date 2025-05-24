@@ -45,10 +45,9 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
     }
 
     const fetchDiscounts = async () => {
-      // Wrap Meteor.call in a Promise
-      const getDiscountedPrice = (itemId, category, basePrice) =>
+      const getDiscountedPrice = (itemName, category, basePrice) =>
         new Promise((resolve, reject) => {
-          Meteor.call('promotions.getDiscountedPrice', itemId, category, basePrice, null, (err, res) => {
+          Meteor.call('promotions.getDiscountedPrice', itemName, category, basePrice, null, (err, res) => {
             if (err) reject(err);
             else resolve(res);
           });
@@ -58,7 +57,7 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
       const updatedItems = await Promise.all(
         menuItems.map(async (item) => {
           try {
-            const discountResult = await getDiscountedPrice(item._id, item.menuCategory, item.price);
+            const discountResult = await getDiscountedPrice(item.name, item.menuCategory, item.price);
             return {
               ...item,
               discountedPrice: discountResult.finalPrice,
