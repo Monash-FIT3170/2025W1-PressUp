@@ -10,23 +10,6 @@ const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetari
   const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
-
-  const handleUpdate = (id, updatedData) => {
-    setItem(prev => ({ ...prev, ...updatedData }));
-  };
-
-  const handleDeleteClick = () => {
-    setShowConfirm(true);
-  };
-
-  const confirmDelete = () => {
-    setShowConfirm(false);
-    if (onDelete) onDelete();
-  };
-  
-  const cancelDelete = () => {
-    setShowConfirm(false);
-  };
   
   const handleAddToOrder = () => {
     if (onAddToOrder) {
