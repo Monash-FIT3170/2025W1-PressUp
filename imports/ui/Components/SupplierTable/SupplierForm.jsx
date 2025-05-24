@@ -39,16 +39,17 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const notesArray = notes.split(',').map(note => note.trim()).filter(note => note);
+    const productsArray = products.split(',').map(product => product.trim()).filter(product => product);
     const supplierData = {
       name: name.trim(),
       abn: abn.trim(),
-      // products will be split into an array in the Meteor method
-      products: products, 
+      products: productsArray, 
       contact: contact.trim(),
       email: email.trim(),
       phone: phone.trim(),
       address: address.trim(),
-      notes: notes, 
+      notes: notesArray, 
     };
 
     try {
