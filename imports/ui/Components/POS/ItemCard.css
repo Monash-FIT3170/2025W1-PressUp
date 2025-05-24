@@ -1,0 +1,41 @@
+.card-container {
+  display: flex;        
+  align-items: flex-start;  
+}
+
+.card-description {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #555;
+}
+
+.card-description .price {
+  margin-right: 1rem;
+}
+
+.add-button {
+  margin-left: auto;
+  /* you can keep any other existing button styles here */
+}
+
+.card-ingredients {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.5rem;
+}
+
+/* the rest of your existing styles… */
+
+
+  .card-disabled {
+    background-color: #f0f0f0;
+    opacity: 0.6;
+    border: 1px solid #ccc;
+  }
+
+  .add-to-order-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+  

@@ -5,22 +5,22 @@ import { MenuCategories } from './menu-categories-collection';
 Meteor.methods({
 	/**
 	 * Insert a new menu category.
-	 * @param {{ name: string, sortOrder: number }} menuCategory
+	 * @param {{ category: string, sortOrder: number }} menuCategory
 	 */
 
-	async 'menuCategories.insert'({ name, sortOrder }) {
-		check(name, String);
+	async 'menuCategories.insert'({ category, sortOrder }) {
+		check(category, String);
 		check(sortOrder, Number);
 
 		return await MenuCategories.insertAsync({
-			name,
+			category,
 			sortOrder: Math.floor(sortOrder)
 		});
 	},
 
 	/**
 	 * Update a menu category by Id.
-	 * @param {{ _id: String, name: string, sortOrder: number }} menuCategory
+	 * @param {{ _id: String, category: string, sortOrder: number }} menuCategory
 	 */
 
 	async 'menuCategories.update'({ _id, menuCategory }) {
@@ -28,7 +28,7 @@ Meteor.methods({
 
 		// Ensure the menu category object is correct.
 		check(menuCategory, {
-			name: Match.Optional(String),
+			category: Match.Optional(String),
 			sortOrder: Match.Optional(Number)
 		});
 
@@ -59,5 +59,12 @@ Meteor.methods({
 		check(_id, String);
 
 		return await MenuCategories.removeAsync(_id);
+	},
+
+  	async 'menuCategories.getCategories'() {
+	// const raw = MenuCategories.rawCollection();
+	// const categories = await raw.find({}, { projection: { category: _id } }).toArray();
+	// return categories.map(cat => cat.category);
+	return await MenuCategories.find().fetch();
 	}
 })
