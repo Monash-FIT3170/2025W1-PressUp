@@ -4,9 +4,6 @@ import { Meteor } from 'meteor/meteor';
 
 const ItemCard = ({ name, price, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder, available = true }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [item, setItem] = useState(null);
-  const [showConfirm, setShowConfirm] = useState(false);
   const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
