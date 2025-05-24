@@ -132,12 +132,13 @@ Meteor.startup(async () => {
   }
   if (nPromotions === 0) {
     PromotionsCollection.insertAsync({
+      name: 'Promotion',
       code: 'TESTCODE',
       type: 'flat',
-      amount: 10,
+      amount: 1,
       scope: { type: 'all', value: null },
       requiresCode: false,
-      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // expires 1 day from now
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), 
       isActive: true,
       createdAt: new Date()
     });
