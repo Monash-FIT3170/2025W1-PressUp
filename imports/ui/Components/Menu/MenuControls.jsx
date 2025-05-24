@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
-
+import { IngredientSearchBar } from "../IngredientTable/ingredientSearchBar.jsx";
+import { PageHeader } from "../PageHeader/PageHeader.jsx";
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
 
 
-export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
+export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
   console.log('selectedCategory:', selectedCategory);
   console.log('setSelectedCategory:', setSelectedCategory);
 
@@ -40,12 +41,20 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
       return updatedItems;
     });
   };
-  
-  return (
+
+  const createButton = (
     <>
       <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
       {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
+    </>
+  );
 
+  if (compact) {
+    return createButton;
+  }
+  
+  return (
+    <>
       <div className="filter-bar">
         {/* {categories.map((category) => (
           <button
