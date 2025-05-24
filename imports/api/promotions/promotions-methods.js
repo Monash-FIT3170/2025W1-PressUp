@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import { PromotionsCollection } from './promotions-collection';
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection.js';
 
 Meteor.methods({
     async 'promotions.insert'(data) {
@@ -33,9 +34,9 @@ Meteor.methods({
     }).fetch();
   },
 
-  'promotions.validateCode'(code, itemId, itemCategory) {
+  'promotions.validateCode'(code, itemName, itemCategory) {
     check(code, String);
-    check(itemId, String);
+    check(itemName, String);
     check(itemCategory, String);
 
     const now = new Date();
@@ -54,7 +55,7 @@ Meteor.methods({
     if (
       scope.type === 'all' ||
       (scope.type === 'category' && scope.value === itemCategory) ||
-      (scope.type === 'item' && scope.value === itemId)
+      (scope.type === 'item' && scope.value === itemName)
     ) {
       return promo;
     }
@@ -69,8 +70,8 @@ Meteor.methods({
     return await PromotionsCollection.updateAsync(promotionId, { $set: { isActive: status } });
   },
 
-  'promotions.getApplicableToItem'(itemId, itemCategory) {
-  check(itemId, String);
+  'promotions.getApplicableToItem'(itemName, itemCategory) {
+  check(itemName, String);
   check(itemCategory, String);
 
   const now = new Date();
@@ -82,18 +83,21 @@ Meteor.methods({
     $or: [
       { 'scope.type': 'all' },
       { 'scope.type': 'category', 'scope.value': itemCategory },
-      { 'scope.type': 'item', 'scope.value': itemId }
+      { 'scope.type': 'item', 'scope.value': itemName }
     ]
   }).fetch();
   },
 
-  async 'promotions.getDiscountedPrice'(itemId, itemCategory, basePrice, promoCode = null) {
-    check(itemId, String);
+  async 'promotions.getDiscountedPrice'(itemName, itemCategory, basePrice, promoCode = null) {
+    check(itemName, String);
     check(itemCategory, String);
     check(basePrice, Number);
     check(promoCode, Match.Maybe(String));
   
     const now = new Date();
+
+    const menuCategoryDoc = await MenuCategories.findOneAsync({ _id: itemCategory });
+    const categoryName = menuCategoryDoc?.category;
   
     let applicablePromos = [];
   
@@ -105,8 +109,8 @@ Meteor.methods({
         expiresAt: { $gte: now },
         $or: [
           { 'scope.type': 'all' },
-          { 'scope.type': 'category', 'scope.value': itemCategory },
-          { 'scope.type': 'item', 'scope.value': itemId }
+          { 'scope.type': 'category', 'scope.value': categoryName },
+          { 'scope.type': 'item', 'scope.value': itemName }
         ]
       }).fetch();
   
@@ -120,8 +124,8 @@ Meteor.methods({
         expiresAt: { $gte: now },
         $or: [
           { 'scope.type': 'all' },
-          { 'scope.type': 'category', 'scope.value': itemCategory },
-          { 'scope.type': 'item', 'scope.value': itemId }
+          { 'scope.type': 'category', 'scope.value': categoryName },
+          { 'scope.type': 'item', 'scope.value': itemName }
         ]
       });
   

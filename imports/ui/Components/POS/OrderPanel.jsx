@@ -24,8 +24,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         await new Promise((resolve) => {
           Meteor.call(
             'promotions.getDiscountedPrice',
-            item._id || '',
-            item.category || 'general',
+            item.name || '',
+            item.menuCategory || 'general',
             item.price,
             appliedPromoCode,
             (err, result) => {
