@@ -61,10 +61,10 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
                 price={`Price: $${item.price}`}
                 available={isCurrentlyAvailable}
                 ingredients = {item.ingredients}
-              isGlutenFree={item.isGlutenFree}
-              isHalal={item.isHalal}
-              isVegetarian={item.isVegetarian}
-              onAddToOrder={() => handleAddToOrder(item)}
+                isGlutenFree={item.isGlutenFree}
+                isHalal={item.isHalal}
+                isVegetarian={item.isVegetarian}
+                onAddToOrder={() => handleAddToOrder(item)}
               />
             );
           })

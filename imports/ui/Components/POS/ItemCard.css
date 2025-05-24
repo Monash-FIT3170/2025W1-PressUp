@@ -31,7 +31,11 @@
   .card-disabled {
     background-color: #f0f0f0;
     opacity: 0.6;
-    pointer-events: none;
     border: 1px solid #ccc;
   }
+
+  .add-to-order-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
   
