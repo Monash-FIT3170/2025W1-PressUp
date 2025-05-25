@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
-import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuControls } from "./Components/Menu/MenuControls.jsx";
@@ -16,6 +15,7 @@ import "./Components/POS/OrderPanel.css";
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
+import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -118,7 +118,7 @@ export const App = () => {
                       isSidebarOpen={isSidebarOpen}
                       setIsSidebarOpen={setIsSidebarOpen}
                       searchBar={
-                        <IngredientSearchBar onSearch={handleSearch} />
+                        <SearchBar onSearch={handleSearch} />
                       }
                     />
                     <POSMenuControls
@@ -149,7 +149,7 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<IngredientSearchBar onSearch={handleSearch} />}
+                    searchBar={<SearchBar onSearch={handleSearch} />}
                   />
 
                   <InventoryViewModeDropdown
