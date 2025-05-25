@@ -64,21 +64,6 @@ input[type="text"] {
   border-radius: 4px;
 }
 
-button {
-  padding: 8px 12px;
-  background-color: #fcd581;
-  color: black;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-button:hover {
-  background-color: #fbc25c;
-}
-
 /* Ensure parent is flex and aligns items horizontally */
 .add-category-row {
   display: flex;
