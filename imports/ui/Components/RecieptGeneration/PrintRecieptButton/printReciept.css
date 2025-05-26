@@ -23,3 +23,7 @@
     font-weight: 500;
     line-height: normal;
 }
+
+.link {
+    text-decoration: none;
+}
