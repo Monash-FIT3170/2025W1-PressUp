@@ -2,7 +2,6 @@
 .order-panel {
   margin:2px;
   width: 320px;
-  max-height: 90vh;
   background-color: #ffffff;
   border-left: 1px solid #e0e0e0;
   display: flex;
@@ -43,6 +42,7 @@
 .order-items-container {
   flex: 1;
   overflow-y: auto;
+  height: 590px;
   padding: 16px;
 }
 
@@ -121,8 +121,8 @@
 }
 
 .checkout-btn {
-  width: 100%;
-  padding: 12px;
+  width: 50%;
+  padding: 10px;
   background-color: #ffd966;
   border: none;
   border-radius: 8px;

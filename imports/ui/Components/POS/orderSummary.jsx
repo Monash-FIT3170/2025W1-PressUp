@@ -1,9 +1,9 @@
 import React from "react";
 import { useSubscribe, useFind } from "meteor/react-meteor-data";
-import "./orderSummary.css";
+import "../OrderHistory/OrderSummary/orderSummary.css";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
-import { OrdersCollection } from "../../../api/orders/orders-collection.js";
-import { PrintReciept } from "../PrintRecieptButton/printReciept.jsx";
+import { OrdersCollection } from "../../../api/orders/orders-collection";
+import { PrintReciept } from "../RecieptGeneration/PrintRecieptButton/printReciept.jsx";
 
 export const OrderSummary = ({
     orderID
@@ -102,30 +102,8 @@ export const OrderSummary = ({
             <div className="detail-qty">
             {"$" + total.toFixed(2)}
             </div>
-        </div>) : (<div className="detail-section">
-            <div className="detail-name">
-            Received
-            </div>
-            <div className="detail-qty">
-            {"$" + order.recievedPayment.toFixed(2)}
-            </div>
-        </div>)
+        </div>) : (<></>)
         }
-        {order.discount ? (<div className="detail-section">
-            <div className="detail-name">
-            Received
-            </div>
-            <div className="detail-qty">
-            {"$" + order.recievedPayment.toFixed(2)}
-            </div>
-        </div>) : (isPaidFor ? (<div className="detail-section">
-            <div className="detail-name">
-            Change
-            </div>
-            <div className="detail-qty">
-            {"$" + change.toFixed(2)}
-            </div>
-        </div>) : (<div></div>))}
         <PrintReciept order={order}/>
         </div>
     </div>

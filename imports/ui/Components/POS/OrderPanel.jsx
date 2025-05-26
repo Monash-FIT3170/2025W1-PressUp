@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
+import { OrderSummary } from './orderSummary.jsx';
 
 export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder }) => {
   // State for tracking table number and checkout status
@@ -8,6 +9,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(null);
   
   // Calculate subtotal
   const subtotal = orderItems.reduce((sum, item) => {
@@ -49,7 +51,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         quantity: item.quantity,
         price: item.price
       })),
-      createdAt: new Date()
+      createdAt: new Date(),
+      recievedPayment: 0
     };
     
     // Call the Meteor method to insert the order
@@ -62,11 +65,11 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         setTimeout(() => setCheckoutError(null), 3000);
       } else {
         console.log("Order created successfully with ID:", result);
+        setOrderNumber(result);
         setCheckoutSuccess(true);
         
         // Reset checkout success message after delay and clear the order
         setTimeout(() => {
-          setCheckoutSuccess(false);
           if (clearOrder) clearOrder();
         }, 2000);
       }
@@ -74,8 +77,9 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   };
   
   return (
-    <div className="order-panel">
-      <div className="order-panel-header">
+    <div>
+      {checkoutSuccess ? (<OrderSummary orderID={orderNumber} />) : (<div  className="order-panel">
+        <div className="order-panel-header">
         <div className="table-selector">
           <label htmlFor="table-number"><h3>Table #:</h3></label>
           <input 
@@ -148,7 +152,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         >
           {isCheckingOut ? 'Processing...' : 'Check out'}
         </button>
-      </div>
+      </div></div>
+      )}
     </div>
   );
 };

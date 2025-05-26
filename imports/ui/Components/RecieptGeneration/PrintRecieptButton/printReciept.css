@@ -7,8 +7,13 @@
     gap: 10px;
     align-self: stretch;
     border-radius: 16px;
-    background: #FCD581;    
+    background: #FCD581; 
+    cursor: pointer;
+    transition: background-color 0.2s;  
 }
+.button:hover {
+    background-color: #ffc107;   /* Optional: subtle hover effect */
+  }
 
 .text {
     color: #000;
