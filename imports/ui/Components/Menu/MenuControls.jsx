@@ -4,6 +4,7 @@ import { MenuCategories } from '/imports/api/menu-categories/menu-categories-col
 
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
+import './MenuControls.css'
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
@@ -43,7 +44,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
   
   return (
     <>
-      <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ Create Menu Item</button>
       {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
 
       <div className="filter-bar">
@@ -63,7 +64,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
             onClick={() => setSelectedCategory(_id)}
             className={`filter-bubble ${selectedCategory === _id ? 'active' : ''}`}
           >
-            {name}
+            {name.charAt(0).toUpperCase() + name.slice(1)}
           </button>
         ))}
         <button onClick={() => setShowCategoryManager(true)}>

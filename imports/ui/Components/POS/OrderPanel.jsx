@@ -33,7 +33,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
 
 	if (!tableNumber) {
 		setCheckoutError("Please enter a table number");
-		setTimeout(() => setCheckoutError(null), 3000);
+		setTimeout(() => 
+      setCheckoutError(null), 3000);
 		return;
 	}
 
