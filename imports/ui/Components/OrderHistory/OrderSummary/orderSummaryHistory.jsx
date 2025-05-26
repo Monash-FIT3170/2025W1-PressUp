@@ -5,7 +5,7 @@ import { LoadingIndicator } from "../OrderSummary/LoadingIndicator/LoadingIndica
 import { OrdersCollection } from "../../../../api/orders/orders-collection";
 import { PrintReciept } from "../../RecieptGeneration/PrintRecieptButton/printReciept.jsx";
 
-export const OrderSummary = ({
+export const OrderSummaryHistory = ({
     orderID
 }) => {
     const isLoading = useSubscribe("orders.id", orderID);
@@ -18,7 +18,7 @@ export const OrderSummary = ({
     //if loaded but no order found indicate such
     if (!order || order.length === 0) {
         return (
-        <div className="order-summary">
+        <div className="order-history-summary">
             invalid order number.
       </div>
         )
@@ -38,15 +38,15 @@ export const OrderSummary = ({
     }
     //display order summary
     return (
-      <div className="order-summary">
-        <div className="top-section">
-          <div className="order-number">{"Order #" + orderID}</div>
-          <div className="table-number">{"Table " + order.table + "."}</div>
+      <div className="order-history-summary">
+        <div className="top-history-section">
+          <div className="order-history-number">{"Order #" + orderID}</div>
+          <div className="table-history-number">{"Table " + order.table + "."}</div>
         </div>
-        <div className="middle-section">
+        <div className="middle-history-section">
           {order.items.map((item) => (
-            <div className="order-item" key={item.menu_item}>
-            <div className="order-item-name">
+            <div className="order-history-item" key={item.menu_item}>
+            <div className="order-history-item-name">
               {item.quantity + "x" + item.menu_item}
             </div>
             <div className="order-item-qty">
@@ -55,74 +55,74 @@ export const OrderSummary = ({
           </div>
           ))}
         </div>
-        <div className="bottom-section">
-          <div className="summary-title">
+        <div className="bottom-history-section">
+          <div className="summary-history-title">
             Summary
           </div>
-          <div className="summary-details">
-            <div className="detail-section">
-              <div className="detail-name">
+          <div className="summary-history-details">
+            <div className="detail-history-section">
+              <div className="detail-history-name">
                 Subtotal
               </div>
-              <div className="detail-qty">
+              <div className="detail-history-qty">
                 {"$" + gross.toFixed(2)}
               </div>
             </div>
-            <div className="detail-section">
-            <div className="detail-name">
+            <div className="detail-history-section">
+            <div className="detail-history-name">
                 GST 10%
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
                 {"$" + GST.toFixed(2)}
             </div>
             </div>
         </div>
         {order.discount ? (
-            <div className="detail-section">
-            <div className="detail-name">
+            <div className="detail-history-section">
+            <div className="detail-history-name">
                 Discount
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
                 {"-$" + order.discount}
             </div>
             </div>
-        ) : (<div className="detail-section">
-            <div className="detail-name">
+        ) : (<div className="detail-history-section">
+            <div className="detail-history-name">
             Total
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
             {"$" + total.toFixed(2)}
             </div>
         </div>)}
         {order.discount ? (
-            <div className="detail-section">
-            <div className="detail-name">
+            <div className="detail-history-section">
+            <div className="detail-history-name">
             Total
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
             {"$" + total.toFixed(2)}
             </div>
-        </div>) : (<div className="detail-section">
-            <div className="detail-name">
+        </div>) : (<div className="detail-history-section">
+            <div className="detail-history-name">
             Received
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
             {"$" + order.recievedPayment.toFixed(2)}
             </div>
         </div>)
         }
-        {order.discount ? (<div className="detail-section">
-            <div className="detail-name">
+        {order.discount ? (<div className="detail-history-section">
+            <div className="detail-history-name">
             Received
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
             {"$" + order.recievedPayment.toFixed(2)}
             </div>
-        </div>) : (isPaidFor ? (<div className="detail-section">
-            <div className="detail-name">
+        </div>) : (isPaidFor ? (<div className="detail-history-section">
+            <div className="detail-history-name">
             Change
             </div>
-            <div className="detail-qty">
+            <div className="detail-history-qty">
             {"$" + change.toFixed(2)}
             </div>
         </div>) : (<div></div>))}

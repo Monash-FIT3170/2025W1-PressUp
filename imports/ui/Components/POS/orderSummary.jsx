@@ -1,6 +1,6 @@
 import React from "react";
 import { useSubscribe, useFind } from "meteor/react-meteor-data";
-import "../OrderHistory/OrderSummary/orderSummary.css";
+import "./orderSummary.css";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { OrdersCollection } from "../../../api/orders/orders-collection";
 import { PrintReciept } from "../RecieptGeneration/PrintRecieptButton/printReciept.jsx";
@@ -38,9 +38,9 @@ export const OrderSummary = ({
     }
     //display order summary
     return (
-      <div className="order-summary">
+      <div className="order-summary-section">
         <div className="top-section">
-          <div className="order-number">{"Order #" + orderID}</div>
+          <div className="order-number">Your Order</div>
           <div className="table-number">{"Table " + order.table + "."}</div>
         </div>
         <div className="middle-section">

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
-import { OrderSummary } from './orderSummary.jsx';
 
-export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder }) => {
+export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder , setCheckout, setCheckoutID}) => {
   // State for tracking table number and checkout status
   const [tableNumber, setTableNumber] = useState('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
-  const [orderNumber, setOrderNumber] = useState(null);
   
   // Calculate subtotal
   const subtotal = orderItems.reduce((sum, item) => {
@@ -65,9 +63,9 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         setTimeout(() => setCheckoutError(null), 3000);
       } else {
         console.log("Order created successfully with ID:", result);
-        setOrderNumber(result);
         setCheckoutSuccess(true);
-        
+        setCheckoutID(result);
+        setCheckout(true);
         // Reset checkout success message after delay and clear the order
         setTimeout(() => {
           if (clearOrder) clearOrder();
@@ -75,88 +73,83 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       }
     });
   };
-  if (checkoutSuccess) {
-    return (
-      <OrderSummary orderID={orderNumber} />
-    );
-  }
   
   return (
     <div className="order-panel">
-    <div className="order-panel-header">
-      <div className="table-selector">
-        <label htmlFor="table-number"><h3>Table #:</h3></label>
-        <input 
-          id="table-number"
-          type="number" 
-          min="1"
-          value={tableNumber}
-          onChange={handleTableChange}
-          className="table-number-input"
-          placeholder="-"
-        />
+      <div className="order-panel-header">
+        <div className="table-selector">
+          <label htmlFor="table-number"><h3>Table #:</h3></label>
+          <input 
+            id="table-number"
+            type="number" 
+            min="1"
+            value={tableNumber}
+            onChange={handleTableChange}
+            className="table-number-input"
+            placeholder="-"
+          />
+        </div>
       </div>
-    </div>
-    
-    <div className="order-items-container">
-      {orderItems.length === 0 ? (
-        <p className="empty-order">No items added</p>
-      ) : (
-        orderItems.map((item, index) => (
-          <div key={`${item._id || index}`} className="order-item">
-            <div className="order-item-info">
-              <h3>{item.name}</h3>
-              <div className="quantity-controls">
+      
+      <div className="order-items-container">
+        {orderItems.length === 0 ? (
+          <p className="empty-order">No items added</p>
+        ) : (
+          orderItems.map((item, index) => (
+            <div key={`${item._id || index}`} className="order-item">
+              <div className="order-item-info">
+                <h3>{item.name}</h3>
+                <div className="quantity-controls">
+                  <button 
+                    className="quantity-btn" 
+                    onClick={() => updateQuantity(item._id || index, Math.max(1, item.quantity - 1))}
+                  >
+                    -
+                  </button>
+                  <span className="quantity">{item.quantity}</span>
+                  <button 
+                    className="quantity-btn"
+                    onClick={() => updateQuantity(item._id || index, item.quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="order-item-price">
+                <span>${(item.price * item.quantity).toFixed(2)}</span>
                 <button 
-                  className="quantity-btn" 
-                  onClick={() => updateQuantity(item._id || index, Math.max(1, item.quantity - 1))}
+                  className="remove-btn"
+                  onClick={() => removeFromOrder(item._id || index)}
                 >
-                  -
-                </button>
-                <span className="quantity">{item.quantity}</span>
-                <button 
-                  className="quantity-btn"
-                  onClick={() => updateQuantity(item._id || index, item.quantity + 1)}
-                >
-                  +
+                  ×
                 </button>
               </div>
             </div>
-            <div className="order-item-price">
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
-              <button 
-                className="remove-btn"
-                onClick={() => removeFromOrder(item._id || index)}
-              >
-                ×
-              </button>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-    
-    <div className="order-summary">
-      {checkoutError && (
-        <div className="checkout-error">{checkoutError}</div>
-      )}
-      
-      {checkoutSuccess && (
-        <div className="checkout-success">Order placed successfully!</div>
-      )}
-      
-      <div className="subtotal">
-        <span>Subtotal</span>
-        <span>${subtotal.toFixed(2)}</span>
+          ))
+        )}
       </div>
-      <button 
-        className={`checkout-btn ${isCheckingOut ? 'checking-out' : ''}`}
-        onClick={handleCheckout}
-        disabled={isCheckingOut}
-      >
-        {isCheckingOut ? 'Processing...' : 'Check out'}
-      </button>
+      
+      <div className="order-summary">
+        {checkoutError && (
+          <div className="checkout-error">{checkoutError}</div>
+        )}
+        
+        {checkoutSuccess && (
+          <div className="checkout-success">Order placed successfully!</div>
+        )}
+        
+        <div className="subtotal">
+          <span>Subtotal</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        <button 
+          className={`checkout-btn ${isCheckingOut ? 'checking-out' : ''}`}
+          onClick={handleCheckout}
+          disabled={isCheckingOut}
+        >
+          {isCheckingOut ? 'Processing...' : 'Check out'}
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
 };
