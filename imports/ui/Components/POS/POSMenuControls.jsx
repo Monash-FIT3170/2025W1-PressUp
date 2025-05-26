@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
+import './POSMenuControls.css';
 
 export const POSMenuControls = ({ selectedCategory, setSelectedCategory}) => {
 
@@ -20,7 +21,7 @@ export const POSMenuControls = ({ selectedCategory, setSelectedCategory}) => {
             onClick={() => setSelectedCategory(category)}
             className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}
           >
-            {category}
+            {category.charAt(0).toUpperCase() + category.slice(1)}
           </button>
         ))}
       </div>

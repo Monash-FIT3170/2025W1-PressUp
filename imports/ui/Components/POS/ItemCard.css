@@ -16,7 +16,6 @@
 
 .add-button {
   margin-left: auto;
-  /* you can keep any other existing button styles here */
 }
 
 .card-ingredients {
@@ -25,16 +24,48 @@
   margin-top: 0.5rem;
 }
 
-/* the rest of your existing styles… */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Keep items top-aligned */
+  gap: 0.5rem;
+}
+
+.card-title {
+  flex: 1;
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  word-break: break-word; /* Allows title to break naturally on smaller screens */
+}
 
 
-  .card-disabled {
-    background-color: #f0f0f0;
-    opacity: 0.6;
-    border: 1px solid #ccc;
-  }
+.card-disabled {
+  background-color: #f0f0f0;
+  opacity: 0.6;
+  border: 1px solid #ccc;
+}
 
-  .add-to-order-btn:disabled {
+.add-to-order-btn {
+  background-color: #ffd966;
+  color: #000000;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;  
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-to-order-btn:hover {
+  background-color: #333333;   /* Optional: subtle hover effect */
+}
+.add-to-order-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
