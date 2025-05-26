@@ -21,7 +21,11 @@ Meteor.methods({
 			price: Number,
 			menuCategory: Match.Optional(String),
 			available: Match.Optional(Boolean),
+			isHalal: Match.Optional(Boolean),
+			isVegetarian: Match.Optional(Boolean),
+			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
@@ -55,6 +59,9 @@ Meteor.methods({
 	*   	price?: number, 
 	*   	menuCategory?: string,
 	*   	available?: boolean,
+	*   	isHalal?: boolean,
+	*   	isVegetarian?: boolean,
+	*   	isGlutenFree?: boolean,
 	*   	ingredients?: string[]
 	* }} menuItem
     */
@@ -66,7 +73,11 @@ Meteor.methods({
 			price: Match.Optional(Number),
 			menuCategory: Match.Optional(String),
 			available: Match.Optional(Boolean),
+			isHalal: Match.Optional(Boolean),
+			isVegetarian: Match.Optional(Boolean),
+			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
