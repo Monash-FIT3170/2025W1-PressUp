@@ -132,11 +132,7 @@ export const IngredientTable = ({
       </table>
 
       {showAddModal && (
-        <IngredientForm
-          mode="add"
-          onClose={() => setShowAddModal(false)}
-          onIngredientUpdated={handleIngredientUpdated}
-        />
+        <IngredientForm mode="add" onClose={() => setShowAddModal(false)} />
       )}
 
       {showEditModal && editingIngredient && (
