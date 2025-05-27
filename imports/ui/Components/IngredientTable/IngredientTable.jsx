@@ -8,13 +8,13 @@ import { capitalizeFirstLetter } from "../../../utils/utils.js";
 import { IngredientForm } from "./IngredientForm.jsx";
 
 export const IngredientTable = ({
-  searchTerm = '',
+  searchTerm = "",
   openOverlay,
   setOpenOverlay,
   overlayRef,
 }) => {
   const [showAddModal, setShowAddModal] = useState(false);
-  
+
   // State for editing
   const [editingIngredient, setEditingIngredient] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -22,18 +22,14 @@ export const IngredientTable = ({
   const isLoading = useSubscribe("inventory.nameIncludes", searchTerm);
   const ingredients = useFind(() => InventoryCollection.find({}), [searchTerm]);
 
-  const handleEditIngredient = useCallback((ingredientId) => {
-    const ingredientToEdit = ingredients.find(i => i._id === ingredientId);
-    if (ingredientToEdit) {
-      setEditingIngredient(ingredientToEdit);
+  const handleEditIngredient = useCallback(
+    (ingredient) => {
+      setEditingIngredient(ingredient);
       setShowEditModal(true);
       setOpenOverlay(null);
-    }
-  }, [ingredients, setOpenOverlay]);
-
-  const handleIngredientUpdated = () => {
-    // Refresh might be needed here
-  };
+    },
+    [setEditingIngredient, setOpenOverlay]
+  );
 
   if (isLoading()) {
     return <LoadingIndicator />;
@@ -51,12 +47,11 @@ export const IngredientTable = ({
         >
           +
         </button>
-        
+
         <div className="no-results">
-          {searchTerm ? 
-            `No ingredients found matching "${searchTerm}"` : 
-            'No ingredients found. Click the "+" button to add one.'
-          }
+          {searchTerm
+            ? `No ingredients found matching "${searchTerm}"`
+            : 'No ingredients found. Click the "+" button to add one.'}
         </div>
 
         {showAddModal && (
@@ -122,7 +117,11 @@ export const IngredientTable = ({
                   </button>
                   {openOverlay === `ingredient-${ingredientIndex}` && (
                     <div ref={overlayRef}>
-                      <EditOverlay ingredientName={ingredient.name} />
+                      <EditOverlay
+                        edittingIngredient={ingredient}
+                        onEdit={handleEditIngredient}
+                        ingredientName={ingredient.name}
+                      />
                     </div>
                   )}
                 </div>
@@ -133,11 +132,7 @@ export const IngredientTable = ({
       </table>
 
       {showAddModal && (
-        <IngredientForm
-          mode="add"
-          onClose={() => setShowAddModal(false)}
-          onIngredientUpdated={handleIngredientUpdated}
-        />
+        <IngredientForm mode="add" onClose={() => setShowAddModal(false)} />
       )}
 
       {showEditModal && editingIngredient && (
@@ -148,7 +143,6 @@ export const IngredientTable = ({
             setShowEditModal(false);
             setEditingIngredient(null);
           }}
-          onIngredientUpdated={handleIngredientUpdated}
         />
       )}
     </>

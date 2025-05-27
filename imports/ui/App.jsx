@@ -61,6 +61,20 @@ export const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
+        setOpenOverlay(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [overlayRef]);
+
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
@@ -198,7 +212,9 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<MenuItemSearchBar onSearch={handleMenuItemSearch} />}
+                    searchBar={
+                      <MenuItemSearchBar onSearch={handleMenuItemSearch} />
+                    }
                   />
                   <MenuControls
                     showPopup={showPopup}
