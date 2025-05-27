@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
 
-export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder }) => {
+export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder , setCheckout, setCheckoutID}) => {
   // State for tracking table number and checkout status
   const [tableNumber, setTableNumber] = useState('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -49,7 +49,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         quantity: item.quantity,
         price: item.price
       })),
-      createdAt: new Date()
+      createdAt: new Date(),
+      recievedPayment: 0
     };
     
     // Call the Meteor method to insert the order
@@ -63,10 +64,10 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       } else {
         console.log("Order created successfully with ID:", result);
         setCheckoutSuccess(true);
-        
+        setCheckoutID(result);
+        setCheckout(true);
         // Reset checkout success message after delay and clear the order
         setTimeout(() => {
-          setCheckoutSuccess(false);
           if (clearOrder) clearOrder();
         }, 2000);
       }

@@ -7,6 +7,10 @@ Meteor.methods({
         return await OrdersCollection.insertAsync(order);
     },
 
+    async 'orders.updatePayment'(id,payment) {
+        return await OrdersCollection.updateAsync({_id: id},{$set: {"recievedPayment":payment}})
+    },
+
     async 'orders.remove'(id) {
         return await OrdersCollection.removeAsync({_id: id});
     }

@@ -16,6 +16,7 @@ import "./Components/POS/OrderPanel.css";
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
+import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -28,6 +29,8 @@ export const App = () => {
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
+  const [checkout, setCheckout] = useState(false);
+  const [checkoutID, setCheckoutID] = useState(null);
 
   // State for order management
   const [orderItems, setOrderItems] = useState([]);
@@ -133,12 +136,17 @@ export const App = () => {
                       addToOrder={addToOrder}
                     />
                   </div>
-                  <OrderPanel
+                  {checkout ? (<OrderSummary 
+                  orderID={checkoutID}
+                  setCheckout={setCheckout}
+                  />) : (<OrderPanel
                     orderItems={orderItems}
                     removeFromOrder={removeFromOrder}
                     updateQuantity={updateQuantity}
                     clearOrder={clearOrder}
-                  />
+                    setCheckout={setCheckout}
+                    setCheckoutID={setCheckoutID}
+                  />)}
                 </div>
               }
             />
