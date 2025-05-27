@@ -66,7 +66,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
           </button>
         ))}
         <button onClick={() => setShowCategoryManager(true)} className='add-category-button'>
-          + New Category
+          ✏️
         </button>
       </div>
       {showCategoryManager && <CategoryManager onClose={() => setShowCategoryManager(false)} />}

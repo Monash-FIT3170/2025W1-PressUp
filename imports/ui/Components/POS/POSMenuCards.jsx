@@ -58,7 +58,7 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
               <ItemCard
                 key={item._id}
                 name={item.name}
-                price={`Price: $${item.price}`}
+                price={item.price}
                 available={isCurrentlyAvailable}
                 ingredients = {item.ingredients}
                 isGlutenFree={item.isGlutenFree}
