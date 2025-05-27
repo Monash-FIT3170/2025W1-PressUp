@@ -16,6 +16,7 @@ export const initializeUsers = async () => {
       const adminId = Accounts.createUser({
         username: 'admin',
         password: 'admin123',
+        isAdmin: true
       });
       
       // Immediately set admin status with direct database update
