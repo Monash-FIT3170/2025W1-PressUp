@@ -44,12 +44,14 @@ const Card = ({ title, description, onDelete, onEdit }) => {
       <div className="card-content">
         <div className="card-header">
           <h3 className="card-title">{title}</h3>
-          <button onClick={handleDeleteClick} className="trash-icon-button" title="Delete">
-            🗑
-          </button>
-        </div>
+          <div className="card-actions-header">
+            <button onClick={onEdit} className="edit-button" title="Edit"><img src="/images/EditIcon.svg" alt="Edit" /></button>
+            <button onClick={handleDeleteClick} className="trash-icon-button" title="Delete">
+              🗑
+            </button>
+          </div>
+        </div>  
         <p className="card-description">{description}</p>
-        <button onClick={onEdit}><img src="/images/EditIcon.svg" alt="Edit" /></button>
         {showConfirm && (
           <ConfirmPopup
             message="Are you sure you want to delete this item?"

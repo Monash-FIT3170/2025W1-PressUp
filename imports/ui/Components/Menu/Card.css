@@ -1,61 +1,69 @@
 /* Card.css */
 .card {
-    width: 150px;
-    height: 150px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    padding: 15px;
-    background-color: #E5E7EB;
-  }
-  
-  .card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  .card-content {
-    margin-top: 5px;
-  }
-  
-  .card-title {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  .card-description {
-    font-size: 1rem;
-    color: #555;
-  }
+  width: 150px;
+  height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 15px;
+  background-color: #E5E7EB;
+}
 
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.card-image {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .trash-icon-button {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-  }
+.card-content {
+  margin-top: 5px;
+}
 
-  .edit-button {
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.card-description {
+  font-size: 1rem;
+  color: #555;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trash-icon-button {
   margin-top: 10px;
-  padding: 8px 14px;
-  background-color: #fde9bf;
-  border-radius: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.edit-button {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.card-actions-header {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-end; /* Align to the right */
 }
 
 .edit-button:hover {
-  background-color: #ffd966;
+  background: none;
 }

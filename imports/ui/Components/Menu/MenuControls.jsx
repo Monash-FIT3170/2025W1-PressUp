@@ -8,8 +8,6 @@ import './MenuControls.css'
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
-  console.log('selectedCategory:', selectedCategory);
-  console.log('setSelectedCategory:', setSelectedCategory);
 
   const [showCategoryManager, setShowCategoryManager] = useState(false);
 
@@ -22,7 +20,6 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
   const categories = useTracker(() => {
     Meteor.subscribe('menuCategories.all');
     const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
-    console.log('Fetched categories:', dbCategories);
     return [{ _id: 'all', name: 'All' }, ...dbCategories.map(c => ({ _id: c._id, name: c.category }))];
   });
 
