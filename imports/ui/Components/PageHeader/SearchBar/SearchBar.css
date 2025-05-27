@@ -1,0 +1,25 @@
+.search-container {
+  display: flex;
+  padding: 5px 10px;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  align-self: stretch;
+  border-radius: 16px;
+  background: #e5e7eb;
+}
+
+#search-icon {
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1/1;
+}
+
+.search-input {
+  border: none;
+  background: transparent;
+  flex-grow: 1;
+  font-size: 14px;
+  outline: none;
+  box-shadow: none;
+}
