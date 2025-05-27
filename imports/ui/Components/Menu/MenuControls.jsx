@@ -42,19 +42,10 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
     });
   };
 
-  const createButton = (
-    <>
-      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ New Menu Item</button>
-      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
-    </>
-  );
-
-  if (compact) {
-    return createButton;
-  }
-  
   return (
     <>
+      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ New Menu Item</button>
+      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create' />}
       <div className="filter-bar">
         {/* {categories.map((category) => (
           <button
