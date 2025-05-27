@@ -93,15 +93,6 @@ input[type="checkbox"] {
   margin-top: 5px;
 }
 
-button {
-  padding: 10px;
-  background-color: #FCD581;
-  color: black;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  }
-
 .error {
   color: red;
   font-size: 12px;
@@ -120,3 +111,22 @@ select:focus {
   border-color: #fcd581;
   outline: none;
 }
+
+/* Button styling */
+button[type="submit"] {
+  padding: 12px 24px;
+  background-color: #fcd581;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #fcca5f;
+}
+

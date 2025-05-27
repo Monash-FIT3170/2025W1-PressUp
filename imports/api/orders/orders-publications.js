@@ -5,6 +5,10 @@ Meteor.publish("orders.all", function() {
   return OrdersCollection.find();
 });
 
+Meteor.publish("orders.id", function(myId) {
+  return OrdersCollection.find({_id:myId});
+})
+
 // Active orders
 Meteor.publish("orders.active", function() {
   return OrdersCollection.find({ status: "open" });

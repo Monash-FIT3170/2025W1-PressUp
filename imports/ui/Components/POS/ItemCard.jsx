@@ -17,7 +17,8 @@ const ItemCard = ({
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
   
-  const handleAddToOrder = () => {
+  const handleAddToOrder = (event) => {
+    event.stopPropagation(); // Prevents the parent onClick from firing
     if (onAddToOrder) {
       onAddToOrder();
     }
@@ -31,17 +32,16 @@ const ItemCard = ({
       <div className="card-content">
         <div className="card-header">
           <h3 className="card-title">{name}</h3>
+            <button
+            className="add-to-order-btn"
+            onClick={handleAddToOrder}
+            disabled={!available}
+            aria-disabled={!available}>
+            +
+          </button>
         </div>
         <p className="card-description">
           <span className="price">{price}</span>
-          <button
-            className="add-to-order-btn"
-            onClick={handleAddToOrder}
-            disabled={!available}            /* disables the button when needed */
-            aria-disabled={!available}       /* accessibility hint */
-          >
-            +
-          </button>
         </p>
         {showExtraInfo && (
           <>

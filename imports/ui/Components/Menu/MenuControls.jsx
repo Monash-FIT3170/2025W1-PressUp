@@ -5,6 +5,7 @@ import { IngredientSearchBar } from "../IngredientTable/ingredientSearchBar.jsx"
 import { PageHeader } from "../PageHeader/PageHeader.jsx";
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
+import './MenuControls.css'
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
@@ -44,7 +45,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
 
   const createButton = (
     <>
-      <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
+      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ Create Menu Item</button>
       {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
     </>
   );
@@ -72,7 +73,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
             onClick={() => setSelectedCategory(_id)}
             className={`filter-bubble ${selectedCategory === _id ? 'active' : ''}`}
           >
-            {name}
+            {name.charAt(0).toUpperCase() + name.slice(1)}
           </button>
         ))}
         <button onClick={() => setShowCategoryManager(true)}>
