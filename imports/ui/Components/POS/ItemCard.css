@@ -1,6 +1,7 @@
+
 .card-container {
   display: flex;        
-  align-items: flex-start;  
+  align-items: flex-start;
 }
 
 .card-description {
@@ -26,19 +27,20 @@
 
 .card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* Keep items top-aligned */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   gap: 0.5rem;
+  margin-bottom: 10px;
 }
 
 .card-title {
-  flex: 1;
+  flex-grow: 1;
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  word-break: break-word; /* Allows title to break naturally on smaller screens */
+  word-break: break-word;
 }
-
 
 .card-disabled {
   background-color: #f0f0f0;
@@ -69,4 +71,8 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-  
+
+.price-and-button {
+  display: flex; /* Arrange price and button horizontally */
+  align-items: center; /* Vertically align price and button */
+}

@@ -1,10 +1,53 @@
-  .create-menu-item-button {
+.create-menu-item-button {
   margin-top: 10px;
   padding: 8px 14px;
-  background-color: #fde9bf;
+  background-color: #FCD581;
   border-radius: 16px;
+  position: fixed;
+  right: 50px;
+  height: 40px;
+  width: 150px;
+  font-weight: 500;
 }
 
 .create-menu-item-button:hover {
+  background-color: #ffd966;
+}
+
+.filter-bubble {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #fcd58180;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  min-width: 69px;
+  height: 69px;
+  font-weight: 500;
+}
+
+.filter-bubble.active {
+  background-color: #fcd581;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #FCD581;
+  cursor: pointer;
+  height: 69px;
+}
+
+.add-category-button {
+  padding: 8px 16px;
+  background-color: #FCD581;
+  border-radius: 20px;
+  position: fixed;
+  right: 50px;
+  height: 69px;
+  width: 69px;
+  font-weight: 500;
+}
+
+.add-category-button:hover {
   background-color: #ffd966;
 }

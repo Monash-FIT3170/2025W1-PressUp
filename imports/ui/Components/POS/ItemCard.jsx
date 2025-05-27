@@ -13,10 +13,10 @@ const ItemCard = ({
   available = true
 }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
-  
+
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
-  
+
   const handleAddToOrder = (event) => {
     event.stopPropagation(); // Prevents the parent onClick from firing
     if (onAddToOrder) {
@@ -32,23 +32,25 @@ const ItemCard = ({
       <div className="card-content">
         <div className="card-header">
           <h3 className="card-title">{name}</h3>
+          <div className="price-and-button">
+            <p className="card-description">
+              <span className="price">{'Price: $' + parseFloat(price).toFixed(2)}</span>
+            </p>
             <button
-            className="add-to-order-btn"
-            onClick={handleAddToOrder}
-            disabled={!available}
-            aria-disabled={!available}>
-            +
-          </button>
+              className="add-to-order-btn"
+              onClick={handleAddToOrder}
+              disabled={!available}
+              aria-disabled={!available}>
+              +
+            </button>
+          </div>
         </div>
-        <p className="card-description">
-          <span className="price">{price}</span>
-        </p>
         {showExtraInfo && (
           <>
             <div className="card-dietary">
-              {isHalal       && <strong>H </strong>}
-              {isVegetarian  && <strong>V </strong>}
-              {isGlutenFree  && <strong>GF </strong>}
+              {isHalal && <strong>H </strong>}
+              {isVegetarian && <strong>V </strong>}
+              {isGlutenFree && <strong>GF </strong>}
             </div>
             <p className="card-ingredients">
               {ingredients.join(", ")}

@@ -37,7 +37,18 @@ Meteor.methods({
   },
 
   async "inventory.remove"(name) {
-    return await InventoryCollection.removeAsync({ name: name });
+    try {
+      const result = await InventoryCollection.removeAsync({ name: name });
+      console.log(
+        `Inventory item removed: ${name}, Removed documents: ${result}`
+      );
+    } catch (error) {
+      console.error(`Error removing inventory item ${name}:`, error);
+      throw new Meteor.Error(
+        "remove-failed",
+        "Failed to remove the inventory item."
+      );
+    }
   },
 
   async "inventory.clear"() {

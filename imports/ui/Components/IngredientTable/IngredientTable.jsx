@@ -120,6 +120,7 @@ export const IngredientTable = ({
                       <EditOverlay
                         edittingIngredient={ingredient}
                         onEdit={handleEditIngredient}
+                        ingredientName={ingredient.name}
                       />
                     </div>
                   )}

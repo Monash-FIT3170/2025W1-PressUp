@@ -11,6 +11,7 @@ import { POSMenuControls } from "./Components/POS/POSMenuControls.jsx";
 import { POSMenuCards } from "./Components/POS/POSMenuCards.jsx";
 import { OrderPanel } from "./Components/POS/OrderPanel.jsx";
 import "./Components/POS/OrderPanel.css";
+import { MenuItemSearchBar } from "./Components/Menu/menuItemSearchBar.jsx";
 
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
@@ -28,6 +29,7 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
   const [checkout, setCheckout] = useState(false);
   const [checkoutID, setCheckoutID] = useState(null);
@@ -61,6 +63,10 @@ export const App = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+  };
+
+  const handleMenuItemSearch = (term) => {
+    setMenuItemSearchTerm(term);
   };
 
   // Function to add an item to the order
@@ -192,31 +198,21 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<SearchBar onSearch={handleSearch} />}
-                    addButton={
-                      <MenuControls
-                        showPopup={showPopup}
-                        setShowPopup={setShowPopup}
-                        selectedCategory={selectedCategory}
-                        setSelectedCategory={setSelectedCategory}
-                        compact={true} // Only render the button
-                      />
-                    }
+                    searchBar={<MenuItemSearchBar onSearch={handleMenuItemSearch} />}
                   />
-                  <div className="menu-layout">
-                    <MenuControls
-                      showPopup={showPopup}
-                      setShowPopup={setShowPopup}
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
-                    />
-                    <MenuCards
-                      menuItems={menuItems}
-                      selectedCategory={selectedCategory}
-                      updateMenuItem={updateMenuItem}
-                      setMenuItems={setMenuItems}
-                    />
-                  </div>
+                  <MenuControls
+                    showPopup={showPopup}
+                    setShowPopup={setShowPopup}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                  />
+                  <MenuCards
+                    menuItems={menuItems}
+                    selectedCategory={selectedCategory}
+                    updateMenuItem={updateMenuItem}
+                    setMenuItems={setMenuItems}
+                    searchTerm={menuItemSearchTerm}
+                  />
                 </>
               }
             />
