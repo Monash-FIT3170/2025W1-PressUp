@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Meteor } from 'meteor/meteor';
 import "./Sidebar.css";
 
-export const Sidebar = ({ isOpen, setIsOpen }) => {
+export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    Meteor.logout((err) => {
+      if (err) {
+        console.error('Logout error:', err);
+      } else {
+        navigate('/login');
+      }
+    });
+  };
+
   return (
     <>
       {/* Sidebar container */}
@@ -36,60 +49,85 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                 />
                 Home
               </NavLink>
-              <NavLink
-                to="/inventory"
-                className={({ isActive }) =>
-                  `sidebar-btn ${isActive ? "active" : ""}`
-                }
-              >
+              
+              {/* Only show these links if user is admin */}
+              {isAdmin && (
+                <>
+                  <NavLink
+                    to="/inventory"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/InventoryIcon.png"
+                      alt="Inventory"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Inventory
+                  </NavLink>
+                  
+                  <NavLink
+                    to="/menu"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/MenuIcon.png"
+                      alt="Menu"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Menu
+                  </NavLink>
+                  
+                  <NavLink
+                    to="/scheduling"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/ScheduleIcon.png"
+                      alt="Scheduling"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Scheduling
+                  </NavLink>
+                </>
+              )}
+              
+              {/* Logout button */}
+              <div className="sidebar-logout">
+                <button onClick={handleLogout} className="sidebar-btn logout-btn">
                 <img
-                  src="/images/InventoryIcon.png"
-                  alt="Inventory"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Inventory
-              </NavLink>
-              <NavLink
-                to="/menu"
-                className={({ isActive }) =>
-                  `sidebar-btn ${isActive ? "active" : ""}`
-                }
-              >
-                <img
-                  src="/images/MenuIcon.png"
-                  alt="Menu"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Menu
-              </NavLink>
-              <NavLink
-                to="/scheduling"
-                className={({ isActive }) =>
-                  `sidebar-btn ${isActive ? "active" : ""}`
-                }
-              >
-                <img
-                  src="/images/ScheduleIcon.png"
-                  alt="Scheduling"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Scheduling
-              </NavLink>
+                    src="/images/logout.jpg"
+                    alt="Logout"
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      verticalAlign: "-4px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  Logout
+                </button>
+              </div>
             </div>
           </>
         )}

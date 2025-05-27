@@ -18,6 +18,9 @@ import "../imports/api/suppliers/SuppliersPublications";
 import { OrdersCollection } from "../imports/api/orders/orders-collection";
 import "../imports/api/orders/orders-methods";
 import "../imports/api/orders/orders-publications";
+import '../imports/api/users/users-methods';
+import '../imports/api/users/users-publications';
+import { initializeUsers } from '../imports/api/users/users-initialization';
 
 Meteor.startup(async () => {
   // Testing menu and categories.
@@ -26,6 +29,7 @@ Meteor.startup(async () => {
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
+  await initializeUsers();
 
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`

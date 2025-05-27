@@ -1,25 +1,52 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { useTracker } from 'meteor/react-meteor-data';
+import { Meteor } from "meteor/meteor";
+
+// Components
 import { Sidebar } from "./Components/Sidebar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuControls } from "./Components/Menu/MenuControls.jsx";
 import { MenuCards } from "./Components/Menu/MenuCards.jsx";
-import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
 import { POSMenuControls } from "./Components/POS/POSMenuControls.jsx";
 import { POSMenuCards } from "./Components/POS/POSMenuCards.jsx";
 import { OrderPanel } from "./Components/POS/OrderPanel.jsx";
-import "./Components/POS/OrderPanel.css";
 import { MenuItemSearchBar } from "./Components/Menu/menuItemSearchBar.jsx";
-
-// Import Meteor for data operations
-import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
+import { Login } from "./Components/Login/Login.jsx";
+
+// Styles
+import "./AppStyle.css";
+import "./Components/POS/OrderPanel.css";
 
 export const App = () => {
+  // Authentication tracking
+  const { user, isLoading } = useTracker(() => {
+    const subscription = Meteor.subscribe('currentUser');
+    const user = Meteor.user();
+
+    if (user) {
+      console.log('=== USER DEBUG ===');
+      console.log('Full user object:', user);
+      console.log('Username:', user.username);
+      console.log('isAdmin value:', user.isAdmin);
+      console.log('Type of isAdmin:', typeof user.isAdmin);
+      console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
+      console.log('=================');
+    }
+    
+    return {
+      user,
+      isLoading: !subscription.ready() || Meteor.loggingIn()
+    };
+  });
+  
+
+  // Existing state
   const [showPopup, setShowPopup] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(["all"]);
@@ -43,23 +70,26 @@ export const App = () => {
   };
 
   useEffect(() => {
-    Meteor.call("menu.getAll", (error, result) => {
-      if (error) {
-        console.error("Error fetching menu items:", error);
-      } else {
-        setMenuItems(result);
+    // Only fetch menu items if user is logged in
+    if (user) {
+      Meteor.call("menu.getAll", (error, result) => {
+        if (error) {
+          console.error("Error fetching menu items:", error);
+        } else {
+          setMenuItems(result);
 
-        const uniqueCategories = [
-          ...new Set(
-            result
-              .map((item) => item.menuCategory)
-              .filter((category) => category && category.trim() !== "")
-          ),
-        ];
-        setCategories(["All", ...uniqueCategories]);
-      }
-    });
-  }, []);
+          const uniqueCategories = [
+            ...new Set(
+              result
+                .map((item) => item.menuCategory)
+                .filter((category) => category && category.trim() !== "")
+            ),
+          ];
+          setCategories(["All", ...uniqueCategories]);
+        }
+      });
+    }
+  }, [user]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -110,17 +140,46 @@ export const App = () => {
     setOrderItems([]);
   };
 
+  // Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // Main app with routing
   return (
     <BrowserRouter>
-      <div
-        className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
-      >
-        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-        <div className="main-content">
-          <Routes>
-            <Route
-              path="/"
-              element={
+      <Routes>
+        {/* Login route */}
+        <Route 
+          path="/login" 
+          element={
+            user ? <Navigate to="/" replace /> : <Login />
+          } 
+        />
+        
+        {/* Protected routes */}
+        <Route
+          path="/*"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : (
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar 
+                  isOpen={isSidebarOpen} 
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user.isAdmin} 
+                />
+                <div className="main-content">
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
                 <div className="pos-layout">
                   <div className="pos-content">
                     <PageHeader
@@ -158,39 +217,46 @@ export const App = () => {
                 </div>
               }
             />
-            <Route
-              path="/inventory"
-              element={
-                <>
-                  <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<SearchBar onSearch={handleSearch} />}
-                  />
+            
+            {/* Admin-only routes */}
+            {user.isAdmin ? (
+              <>
+                <Route
+                  path="/inventory"
+                  element={
+                    <>
+                      <PageHeader
+                        isSidebarOpen={isSidebarOpen}
+                        setIsSidebarOpen={setIsSidebarOpen}
+                        searchBar={<SearchBar onSearch={handleSearch} />}
+                      />
 
-                  <InventoryViewModeDropdown
-                    viewMode={viewMode}
-                    setViewMode={setViewMode}
-                  />
+                      <InventoryViewModeDropdown
+                        viewMode={viewMode}
+                        setViewMode={setViewMode}
+                      />
 
-                  {viewMode === "Ingredients" ? (
-                    <IngredientTable
-                      searchTerm={searchTerm}
-                      openOverlay={openOverlay}
-                      setOpenOverlay={setOpenOverlay}
-                      overlayRef={overlayRef}
-                    />
-                  ) : (
-                    <SupplierTable
-                      searchTerm={searchTerm}
-                      openOverlay={openOverlay}
-                      setOpenOverlay={setOpenOverlay}
-                      overlayRef={overlayRef}
-                    />
-                  )}
-                </>
-              }
-            />
+                      {viewMode === "Ingredients" ? (
+                        <IngredientTable
+                          searchTerm={searchTerm}
+                          openOverlay={openOverlay}
+                          setOpenOverlay={setOpenOverlay}
+                          overlayRef={overlayRef}
+                        />
+                      ) : (
+                        <SupplierTable
+                          searchTerm={searchTerm}
+                          openOverlay={openOverlay}
+                          setOpenOverlay={setOpenOverlay}
+                          overlayRef={overlayRef}
+                        />
+                      )}
+                    </>
+                  }
+                />
+              </>
+            ) : null}
+            
             <Route
               path="/menu"
               element={
@@ -226,10 +292,14 @@ export const App = () => {
                   />
                 </>
               }
-            />
-          </Routes>
-        </div>
-      </div>
+                    />
+                  </Routes>
+                </div>
+              </div>
+            )
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 };
