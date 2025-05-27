@@ -5,7 +5,8 @@ import { LoadingIndicator } from "../../LoadingIndicator/LoadingIndicator.jsx";
 import { OrdersCollection } from "../../../../api/orders/orders-collection";
 
 export const PrintReciept = ({
-    orderID
+    orderID,
+    setCheckout
 }) => {
     const isLoading = useSubscribe("orders.id", orderID);
     var order = useFind(() => OrdersCollection.find({}), [orderID]);
@@ -28,7 +29,6 @@ export const PrintReciept = ({
     str += "Table " + order.table;
     str += "\n\n";
     str += "Ordered Items:\n";
-    console.log(Number(order.recievedPayment));
     order.items.forEach(item => {
         str += item.quantity + " " + item.menu_item + " ....................... $" + (item.quantity*item.price).toFixed(2) + "\n";
     })
@@ -46,13 +46,16 @@ export const PrintReciept = ({
 
     function printReceiptFunction() {
         console.log(str);
+        if (setCheckout) {
+            setCheckout(false);
+        }
     }
 
     return (
         <a href = {URL.createObjectURL(file)} className="link" download={order._id+".txt"}>
-        <div className="button">
+        <div className="button-div">
             <button
-                className="text"
+                className="button"
                 onClick={printReceiptFunction}
             >Print Reciept</button>
         </div>

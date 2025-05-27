@@ -3,7 +3,8 @@ import "./ChangeDetails.css";
 import { PrintReciept } from "../RecieptGeneration/PrintRecieptButton/printReciept.jsx";
 
 export const PrintRecieptSection = ({
-    order
+    order,
+    setCheckout
 }) => {
     return (
       <div className="reciept-section">
@@ -11,7 +12,7 @@ export const PrintRecieptSection = ({
           className="reciept-image"
           src="/images/recieptImage.png"
         />
-        <PrintReciept order={order._id}/>
+        <PrintReciept order={order._id} setCheckout={setCheckout}/>
       </div>
     );
 }

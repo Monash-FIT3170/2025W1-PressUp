@@ -7,7 +7,8 @@ import { PrintReciept } from "../RecieptGeneration/PrintRecieptButton/printRecie
 import { ChangeDetails } from "./ChangeDetails.jsx";
 
 export const OrderSummary = ({
-    orderID
+    orderID,
+    setCheckout
 }) => {
   
     const [showChangeInfo,setShowChangeInfo] = useState(false);
@@ -64,7 +65,7 @@ export const OrderSummary = ({
             ))}
           </div>
           <div className="bottom-section">
-            <ChangeDetails order = {order} orderID= {order._id}/>
+            <ChangeDetails order = {order} orderID= {order._id} setCheckout={setCheckout}/>
           </div>
       </div>
       );

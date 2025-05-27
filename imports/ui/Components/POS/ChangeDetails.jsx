@@ -5,7 +5,8 @@ import { Meteor } from 'meteor/meteor';
 
 export const ChangeDetails = ({
     orderID,
-    order
+    order,
+    setCheckout
 }) => {
     
     var gross = 0;
@@ -37,7 +38,7 @@ export const ChangeDetails = ({
 
     if (paid) {
         return (
-            <PrintRecieptSection order={order}/>
+            <PrintRecieptSection order={order} setCheckout={setCheckout}/>
         )
     }
     return (

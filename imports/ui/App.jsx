@@ -136,7 +136,10 @@ export const App = () => {
                       addToOrder={addToOrder}
                     />
                   </div>
-                  {checkout ? (<OrderSummary orderID={checkoutID}/>) : (<OrderPanel
+                  {checkout ? (<OrderSummary 
+                  orderID={checkoutID}
+                  setCheckout={setCheckout}
+                  />) : (<OrderPanel
                     orderItems={orderItems}
                     removeFromOrder={removeFromOrder}
                     updateQuantity={updateQuantity}
