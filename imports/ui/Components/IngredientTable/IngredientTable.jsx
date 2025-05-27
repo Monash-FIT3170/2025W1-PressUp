@@ -122,7 +122,7 @@ export const IngredientTable = ({
                   </button>
                   {openOverlay === `ingredient-${ingredientIndex}` && (
                     <div ref={overlayRef}>
-                      <EditOverlay />
+                      <EditOverlay ingredientName={ingredient.name} />
                     </div>
                   )}
                 </div>
