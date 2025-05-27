@@ -134,6 +134,7 @@ export const App = () => {
                       menuItems={menuItems}
                       selectedCategory={selectedCategory}
                       addToOrder={addToOrder}
+                      searchTerm={searchTerm}
                     />
                   </div>
                   {checkout ? (<OrderSummary 
