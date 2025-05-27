@@ -88,6 +88,7 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  gap: 20px;
 }
 
 .pos-content {
@@ -136,15 +137,14 @@
 .menu-layout {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;  /* 👈 spacing between filter bar and cards */
+  gap: 1.5rem; /* 👈 spacing between filter bar and cards */
   padding: 1rem;
 }
-
 
 .menu-page-content {
   display: flex;
   flex-direction: column; /* stack controls then cards vertically */
-  gap: 1rem;              /* add spacing between controls and cards */
+  gap: 1rem; /* add spacing between controls and cards */
   width: 100%;
   box-sizing: border-box;
 }
@@ -154,7 +154,7 @@
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
-  width: 100%;   /* fill container width */
+  width: 100%; /* fill container width */
   box-sizing: border-box;
 }
 
@@ -168,7 +168,5 @@
   position: relative;
   z-index: 2;
   justify-content: center; /* 👈 center horizontally */
-  width: 100%;             /* optional, ensures it spans parent */
+  width: 100%; /* optional, ensures it spans parent */
 }
-
-
