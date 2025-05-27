@@ -1,0 +1,175 @@
+/* OrderPanel.css */
+.order-panel {
+  margin:2px;
+  width: 320px;
+  max-height: 90vh;
+  background-color: #ffffff;
+  border-left: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  .container {
+  overflow: visible;
+}
+}
+
+.order-panel-header {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-selector label {
+  font-weight: 500;
+}
+
+.table-number-input {
+  width: 50px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.order-items-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.empty-order {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+}
+
+.order-item {
+  padding: 8px 10px;
+  border-bottom: 4px solid #ffffff;
+  display: flex;
+  justify-content: space-between;
+  background-color: #E5E7EB;
+  border-radius: 16px;
+}
+
+.order-item-info {
+  flex: 1;
+}
+
+.order-item-info h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  background-color: #000000;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: large;
+  color: #ffffff;
+}
+
+.quantity {
+  margin: 0 10px;
+  font-weight: 500;
+}
+
+.order-item-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.order-summary {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #ffd966;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.checkout-btn:hover:not(:disabled) {
+  background-color: #ffc107;
+}
+
+.checkout-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.checkout-btn.checking-out {
+  background-color: #e0e0e0;
+}
+
+.checkout-error {
+  background-color: #ffebee;
+  color: #d32f2f;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.checkout-success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Removes number input arrows for order table */
+.table-number-input::-webkit-outer-spin-button,
+.table-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.table-number-input {
+  appearance: textfield;
+}

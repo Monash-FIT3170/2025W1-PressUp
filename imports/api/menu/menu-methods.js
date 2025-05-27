@@ -1,7 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { check, Match }  from 'meteor/check';
+import { check, Match } from 'meteor/check';
 import { Menu } from './menu-collection';
-import { MenuCategories } from '../menu-categories/menu-categories-collection';
+
+const ongoingDeletions = new Map();
 
 Meteor.methods({
 	/**
@@ -21,7 +22,11 @@ Meteor.methods({
 			price: Number,
 			menuCategory: Match.Optional(String),
 			available: Match.Optional(Boolean),
+			isHalal: Match.Optional(Boolean),
+			isVegetarian: Match.Optional(Boolean),
+			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
@@ -55,6 +60,9 @@ Meteor.methods({
 	*   	price?: number, 
 	*   	menuCategory?: string,
 	*   	available?: boolean,
+	*   	isHalal?: boolean,
+	*   	isVegetarian?: boolean,
+	*   	isGlutenFree?: boolean,
 	*   	ingredients?: string[]
 	* }} menuItem
     */
@@ -66,7 +74,11 @@ Meteor.methods({
 			price: Match.Optional(Number),
 			menuCategory: Match.Optional(String),
 			available: Match.Optional(Boolean),
+			isHalal: Match.Optional(Boolean),
+			isVegetarian: Match.Optional(Boolean),
+			isGlutenFree: Match.Optional(Boolean),
 			ingredients: Match.Optional([String]),
+			schedule: Match.Optional(Object),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
@@ -92,15 +104,54 @@ Meteor.methods({
 		return await Menu.updateAsync({ _id }, { $set: menuItemDoc });
 	},
 
-	/**
-	 * Remove a menu item by Id.
-	 * @param {string} _id
-	 */
 	async 'menu.remove'(_id) {
 		check(_id, String);
-
-		return await Menu.removeAsync(_id);
-	},
+		
+		console.log(`[SERVER] Starting removal of item: ${_id}`);
+		
+		if (ongoingDeletions.has(_id)) {
+		  console.log(`[SERVER] Item ${_id} is already being deleted, waiting...`);
+		  return await ongoingDeletions.get(_id);
+		}
+		
+		const deletionPromise = (async () => {
+		  try {
+			const item = await Menu.findOneAsync({ _id });
+			if (!item) {
+			  console.log(`[SERVER] Item ${_id} not found - may have been already deleted`);
+			  return { removed: 0, alreadyDeleted: true };
+			}
+			
+			// Perform the deletion
+			const result = await Menu.removeAsync({ _id });
+			console.log(`[SERVER] Successfully removed ${_id}, result:`, result);
+			
+			// Verify deletion
+			const stillExists = await Menu.findOneAsync({ _id });
+			if (stillExists) {
+			  console.error(`[SERVER] WARNING: Item ${_id} still exists after deletion!`);
+			  throw new Meteor.Error('deletion-failed', 'Item was not properly deleted');
+			}
+			
+			return result;
+		  } catch (error) {
+			console.error(`[SERVER] Error removing ${_id}:`, error);
+			throw error;
+		  } finally {
+			ongoingDeletions.delete(_id);
+		  }
+		})();
+		
+		ongoingDeletions.set(_id, deletionPromise);
+		
+		return await deletionPromise;
+	  },
+	
+	  async 'menu.count'() {
+		const count = await Menu.find().countAsync();
+		console.log(`[SERVER] Current menu item count: ${count}`);
+		return count;
+	  },
 
 	async 'menu.getAll'() {
 		return await Menu.find().fetch();

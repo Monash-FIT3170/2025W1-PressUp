@@ -6,6 +6,7 @@ import { MenuCategories } from "/imports/api/menu-categories/menu-categories-col
 import { Menu } from "/imports/api/menu/menu-collection";
 import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
+import '/imports/api/menu-categories/menu-categories-methods';
 import "/imports/api/menu/menu-methods";
 
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
@@ -14,6 +15,10 @@ import "../imports/api/inventory/inventory-methods";
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+
+import { OrdersCollection } from '../imports/api/orders/orders-collection';
+import "../imports/api/orders/orders-methods";
+import "../imports/api/orders/orders-publications";
 
 Meteor.startup(async () => {
   // Testing menu and categories.
