@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
-import { IngredientSearchBar } from "../IngredientTable/ingredientSearchBar.jsx";
-import { PageHeader } from "../PageHeader/PageHeader.jsx";
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
 import './MenuControls.css'

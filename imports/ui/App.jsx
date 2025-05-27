@@ -120,9 +120,7 @@ export const App = () => {
                     <PageHeader
                       isSidebarOpen={isSidebarOpen}
                       setIsSidebarOpen={setIsSidebarOpen}
-                      searchBar={
-                        <SearchBar onSearch={handleSearch} />
-                      }
+                      searchBar={<SearchBar onSearch={handleSearch} />}
                     />
                     <POSMenuControls
                       showPopup={showPopup}
@@ -136,17 +134,21 @@ export const App = () => {
                       addToOrder={addToOrder}
                     />
                   </div>
-                  {checkout ? (<OrderSummary 
-                  orderID={checkoutID}
-                  setCheckout={setCheckout}
-                  />) : (<OrderPanel
-                    orderItems={orderItems}
-                    removeFromOrder={removeFromOrder}
-                    updateQuantity={updateQuantity}
-                    clearOrder={clearOrder}
-                    setCheckout={setCheckout}
-                    setCheckoutID={setCheckoutID}
-                  />)}
+                  {checkout ? (
+                    <OrderSummary
+                      orderID={checkoutID}
+                      setCheckout={setCheckout}
+                    />
+                  ) : (
+                    <OrderPanel
+                      orderItems={orderItems}
+                      removeFromOrder={removeFromOrder}
+                      updateQuantity={updateQuantity}
+                      clearOrder={clearOrder}
+                      setCheckout={setCheckout}
+                      setCheckoutID={setCheckoutID}
+                    />
+                  )}
                 </div>
               }
             />
@@ -183,36 +185,40 @@ export const App = () => {
                 </>
               }
             />
-            <Route path="/menu" element={
-              <>
-                <PageHeader
+            <Route
+              path="/menu"
+              element={
+                <>
+                  <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<IngredientSearchBar onSearch={handleSearch}/>}
-                    addButton={<MenuControls
+                    searchBar={<SearchBar onSearch={handleSearch} />}
+                    addButton={
+                      <MenuControls
                         showPopup={showPopup}
                         setShowPopup={setShowPopup}
                         selectedCategory={selectedCategory}
                         setSelectedCategory={setSelectedCategory}
                         compact={true} // Only render the button
-                      />}
+                      />
+                    }
                   />
                   <div className="menu-layout">
-                <MenuControls
-                  showPopup={showPopup}
-                  setShowPopup={setShowPopup}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                />
-                <MenuCards
-                  menuItems={menuItems}
-                  selectedCategory={selectedCategory}
-                  updateMenuItem={updateMenuItem}
-                  setMenuItems={setMenuItems}
-                />
+                    <MenuControls
+                      showPopup={showPopup}
+                      setShowPopup={setShowPopup}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                    />
+                    <MenuCards
+                      menuItems={menuItems}
+                      selectedCategory={selectedCategory}
+                      updateMenuItem={updateMenuItem}
+                      setMenuItems={setMenuItems}
+                    />
                   </div>
-              </>
-            }
+                </>
+              }
             />
             <Route
               path="/scheduling"
