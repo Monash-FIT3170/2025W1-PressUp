@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Sidebar } from "./Components/Sidebar.jsx";
-import { IngredientSearchBar } from "./Components/IngredientTable/ingredientSearchBar.jsx";
 import { IngredientTable } from "./Components/IngredientTable/IngredientTable.jsx";
 import { SupplierTable } from "./Components/SupplierTable/SupplierTable.jsx";
 import { MenuControls } from "./Components/Menu/MenuControls.jsx";
@@ -12,10 +11,12 @@ import { POSMenuControls } from "./Components/POS/POSMenuControls.jsx";
 import { POSMenuCards } from "./Components/POS/POSMenuCards.jsx";
 import { OrderPanel } from "./Components/POS/OrderPanel.jsx";
 import "./Components/POS/OrderPanel.css";
+import { MenuItemSearchBar } from "./Components/Menu/menuItemSearchBar.jsx";
 
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
+import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 
 export const App = () => {
@@ -28,6 +29,7 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
   const [checkout, setCheckout] = useState(false);
   const [checkoutID, setCheckoutID] = useState(null);
@@ -59,8 +61,26 @@ export const App = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
+        setOpenOverlay(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [overlayRef]);
+
   const handleSearch = (term) => {
     setSearchTerm(term);
+  };
+
+  const handleMenuItemSearch = (term) => {
+    setMenuItemSearchTerm(term);
   };
 
   // Function to add an item to the order
@@ -120,9 +140,7 @@ export const App = () => {
                     <PageHeader
                       isSidebarOpen={isSidebarOpen}
                       setIsSidebarOpen={setIsSidebarOpen}
-                      searchBar={
-                        <IngredientSearchBar onSearch={handleSearch} />
-                      }
+                      searchBar={<SearchBar onSearch={handleSearch} />}
                     />
                     <POSMenuControls
                       showPopup={showPopup}
@@ -137,17 +155,21 @@ export const App = () => {
                       searchTerm={searchTerm}
                     />
                   </div>
-                  {checkout ? (<OrderSummary 
-                  orderID={checkoutID}
-                  setCheckout={setCheckout}
-                  />) : (<OrderPanel
-                    orderItems={orderItems}
-                    removeFromOrder={removeFromOrder}
-                    updateQuantity={updateQuantity}
-                    clearOrder={clearOrder}
-                    setCheckout={setCheckout}
-                    setCheckoutID={setCheckoutID}
-                  />)}
+                  {checkout ? (
+                    <OrderSummary
+                      orderID={checkoutID}
+                      setCheckout={setCheckout}
+                    />
+                  ) : (
+                    <OrderPanel
+                      orderItems={orderItems}
+                      removeFromOrder={removeFromOrder}
+                      updateQuantity={updateQuantity}
+                      clearOrder={clearOrder}
+                      setCheckout={setCheckout}
+                      setCheckoutID={setCheckoutID}
+                    />
+                  )}
                 </div>
               }
             />
@@ -158,7 +180,7 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<IngredientSearchBar onSearch={handleSearch} />}
+                    searchBar={<SearchBar onSearch={handleSearch} />}
                   />
 
                   <InventoryViewModeDropdown
@@ -184,36 +206,32 @@ export const App = () => {
                 </>
               }
             />
-            <Route path="/menu" element={
-              <>
-                <PageHeader
+            <Route
+              path="/menu"
+              element={
+                <>
+                  <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
-                    searchBar={<IngredientSearchBar onSearch={handleSearch}/>}
-                    addButton={<MenuControls
-                        showPopup={showPopup}
-                        setShowPopup={setShowPopup}
-                        selectedCategory={selectedCategory}
-                        setSelectedCategory={setSelectedCategory}
-                        compact={true} // Only render the button
-                      />}
+                    searchBar={
+                      <MenuItemSearchBar onSearch={handleMenuItemSearch} />
+                    }
                   />
-                  <div className="menu-layout">
-                <MenuControls
-                  showPopup={showPopup}
-                  setShowPopup={setShowPopup}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                />
-                <MenuCards
-                  menuItems={menuItems}
-                  selectedCategory={selectedCategory}
-                  updateMenuItem={updateMenuItem}
-                  setMenuItems={setMenuItems}
-                />
-                  </div>
-              </>
-            }
+                  <MenuControls
+                    showPopup={showPopup}
+                    setShowPopup={setShowPopup}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                  />
+                  <MenuCards
+                    menuItems={menuItems}
+                    selectedCategory={selectedCategory}
+                    updateMenuItem={updateMenuItem}
+                    setMenuItems={setMenuItems}
+                    searchTerm={menuItemSearchTerm}
+                  />
+                </>
+              }
             />
             <Route
               path="/scheduling"

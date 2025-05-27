@@ -131,7 +131,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="close-button" onClick={onClose}>X</button>
+        <button className="action-button" onClick={onClose}>X</button>
         <h2>{mode === 'update' ? 'Update Menu Item' : 'Add New Menu Item'}</h2>
 
         <form onSubmit={handleSubmit}>

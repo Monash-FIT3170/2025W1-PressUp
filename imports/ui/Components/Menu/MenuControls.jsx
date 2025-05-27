@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
-import { IngredientSearchBar } from "../IngredientTable/ingredientSearchBar.jsx";
-import { PageHeader } from "../PageHeader/PageHeader.jsx";
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
 import './MenuControls.css'
@@ -23,7 +21,6 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
   const categories = useTracker(() => {
     Meteor.subscribe('menuCategories.all');
     const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
-    console.log('Fetched categories:', dbCategories);
     return [{ _id: 'all', name: 'All' }, ...dbCategories.map(c => ({ _id: c._id, name: c.category }))];
   });
 
@@ -43,22 +40,14 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
     });
   };
 
-  const createButton = (
-    <>
-      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ Create Menu Item</button>
-      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
-    </>
-  );
-
-  if (compact) {
-    return createButton;
-  }
-  
   return (
     <>
+      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ New Menu Item</button>
+      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create' />}
       <div className="filter-bar">
         {/* {categories.map((category) => (
           <button
+            class="filter-bubble"
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`filter-bubble ${selectedCategory === category ? 'active' : ''}`}
@@ -76,7 +65,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
             {name.charAt(0).toUpperCase() + name.slice(1)}
           </button>
         ))}
-        <button onClick={() => setShowCategoryManager(true)}>
+        <button onClick={() => setShowCategoryManager(true)} className='add-category-button'>
           ✏️
         </button>
       </div>

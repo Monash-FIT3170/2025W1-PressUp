@@ -1,92 +1,114 @@
 // imports/ui/Components/IngredientTable/IngredientForm.jsx
-import React, { useState, useEffect } from 'react';
-import './IngredientForm.css';
-import { Meteor } from 'meteor/meteor';
+import React, { useState, useEffect } from "react";
+import "./IngredientForm.css";
+import { Meteor } from "meteor/meteor";
 
-export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = null, onIngredientUpdated }) => {
-  const [name, setName] = useState('');
+export const IngredientForm = ({
+  onClose,
+  mode = "add",
+  existingIngredient = null,
+}) => {
+  const [name, setName] = useState("");
   const [quantity, setQuantity] = useState(0);
-  const [units, setUnits] = useState('');
-  const [price, setPrice] = useState('');
-  const [suppliers, setSuppliers] = useState('');
-  
+  const [units, setUnits] = useState("");
+  const [price, setPrice] = useState("");
+  const [suppliers, setSuppliers] = useState("");
+
   // Error states
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
-    if (mode === 'edit' && existingIngredient) {
-      setName(existingIngredient.name || '');
+    if (mode === "edit" && existingIngredient) {
+      setName(existingIngredient.name || "");
       setQuantity(existingIngredient.quantity || 0);
-      setUnits(existingIngredient.units || 'unit(s)');
-      setPrice(existingIngredient.price || '');
-      setSuppliers(existingIngredient.suppliers ? existingIngredient.suppliers.join(', ') : '');
+      setUnits(existingIngredient.units || "unit(s)");
+      setPrice(existingIngredient.price || "");
+      setSuppliers(
+        existingIngredient.suppliers
+          ? existingIngredient.suppliers.join(", ")
+          : ""
+      );
     } else {
       // Reset form for "add" mode or if no existing ingredient
-      setName('');
+      setName("");
       setQuantity(0);
-      setUnits('');
-      setPrice('');
-      setSuppliers('');
+      setUnits("");
+      setPrice("");
+      setSuppliers("");
     }
     // Clear errors when mode or ingredient changes
     setErrors({});
-    setSubmitError('');
+    setSubmitError("");
   }, [mode, existingIngredient]);
 
   const validateForm = () => {
     const newErrors = {};
-    
-    console.log('Validating form with values:', { name: name.trim(), quantity, units: units.trim(), price }); // Debug log
+
+    console.log("Validating form with values:", {
+      name: name.trim(),
+      quantity,
+      units: units.trim(),
+      price,
+    }); // Debug log
 
     // Name validation
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
 
     // Quantity validation
     if (!quantity || quantity <= 0) {
-      newErrors.quantity = 'Quantity must be greater than 0';
+      newErrors.quantity = "Quantity must be greater than 0";
     }
 
     // Units validation
     if (!units.trim()) {
-      newErrors.units = 'Units are required';
+      newErrors.units = "Units are required";
     }
 
     // Price validation
     if (!price || Number(price) < 0) {
-      newErrors.price = 'Price must be 0 or greater';
+      newErrors.price = "Price must be 0 or greater";
     }
 
-    console.log('Validation errors:', newErrors); // Debug log
+    console.log("Validation errors:", newErrors); // Debug log
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    console.log('Form submitted!'); // Debug log
-    console.log('Current form values:', { name, quantity, units, price, suppliers }); // Debug log
+
+    console.log("Form submitted!"); // Debug log
+    console.log("Current form values:", {
+      name,
+      quantity,
+      units,
+      price,
+      suppliers,
+    }); // Debug log
 
     // Clear previous errors
     setErrors({});
-    setSubmitError('');
+    setSubmitError("");
 
     // Validate form
     const isValid = validateForm();
-    console.log('Form is valid:', isValid); // Debug log
-    
+    console.log("Form is valid:", isValid); // Debug log
+
     if (!isValid) {
-      console.log('Validation failed, not submitting'); // Debug log
+      console.log("Validation failed, not submitting"); // Debug log
       return;
     }
 
     setIsSubmitting(true);
 
-    const suppliersArray = suppliers.split(',').map(supplier => supplier.trim()).filter(supplier => supplier);
+    const suppliersArray = suppliers
+      .split(",")
+      .map((supplier) => supplier.trim())
+      .filter((supplier) => supplier);
     const ingredientData = {
       name: name.trim(),
       quantity: Number(quantity),
@@ -96,24 +118,28 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
     };
 
     try {
-      if (mode === 'edit' && existingIngredient?._id) {
-        await Meteor.callAsync("inventory.update", { name: existingIngredient.name, inventoryItem: { $set: ingredientData } });
-        alert('Ingredient updated successfully!');
-        if (onIngredientUpdated) onIngredientUpdated();
+      if (mode === "edit" && existingIngredient?._id) {
+        await Meteor.callAsync("inventory.update", {
+          name: existingIngredient.name,
+          inventoryItem: { $set: ingredientData },
+        });
+        alert("Ingredient updated successfully!");
       } else {
         await Meteor.callAsync("inventory.insert", ingredientData);
-        alert('Ingredient added successfully!');
+        alert("Ingredient added successfully!");
         // Reset form for next entry
-        setName('');
+        setName("");
         setQuantity(1);
-        setUnits('unit(s)');
-        setPrice('');
-        setSuppliers('');
+        setUnits("unit(s)");
+        setPrice("");
+        setSuppliers("");
       }
       onClose();
     } catch (error) {
       console.error("Error processing ingredient:", error);
-      setSubmitError(error.message || 'Failed to save ingredient. Please try again.');
+      setSubmitError(
+        error.message || "Failed to save ingredient. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -123,22 +149,27 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
     <div className="modal-overlay">
       <div className="modal-content ingredient-form-container">
         <div className="ingredient-form-header">
-          <div className="title">{mode === 'edit' ? 'Edit Ingredient' : 'Add New Ingredient'}</div>
+          <div className="title">
+            {mode === "edit" ? "Edit Ingredient" : "Add New Ingredient"}
+          </div>
         </div>
-        
+
         {submitError && (
           <div className="submit-error-popup">
             <div className="error-icon">⚠️</div>
             <div className="error-text">{submitError}</div>
-            <button 
+            <button
               className="error-close-btn"
-              onClick={() => setSubmitError('')}
+              onClick={() => setSubmitError("")}
             >
               ×
             </button>
           </div>
         )}
-        <form className="ingredient-form-input-container" onSubmit={handleSubmit}>
+        <form
+          className="ingredient-form-input-container"
+          onSubmit={handleSubmit}
+        >
           {/* Name */}
           <div className="ingredient-form-input">
             <div className="Name field"></div>
@@ -147,7 +178,7 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
               name="name"
               placeholder="Ingredient name"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
@@ -160,7 +191,7 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
               type="number"
               placeholder="Quantity"
               value={quantity}
-              onChange={e => setQuantity(e.target.value)}
+              onChange={(e) => setQuantity(e.target.value)}
               min="0"
               step="1"
               required
@@ -174,7 +205,7 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
               name="units"
               placeholder="e.g., kg, liters, pieces"
               value={units}
-              onChange={e => setUnits(e.target.value)}
+              onChange={(e) => setUnits(e.target.value)}
             />
           </div>
           {/* Price */}
@@ -186,7 +217,7 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
               type="number"
               placeholder="Price per unit"
               value={price}
-              onChange={e => setPrice(e.target.value)}
+              onChange={(e) => setPrice(e.target.value)}
               min="0"
               step="0.50"
             />
@@ -199,7 +230,7 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
               name="suppliers"
               placeholder="Suppliers (comma-separated)"
               value={suppliers}
-              onChange={e => setSuppliers(e.target.value)}
+              onChange={(e) => setSuppliers(e.target.value)}
             />
           </div>
         </form>
@@ -213,11 +244,19 @@ export const IngredientForm = ({ onClose, mode = 'add', existingIngredient = nul
           </button>
           <button
             type="submit"
-            className={`ingredient-form-button done ${isSubmitting ? 'submitting' : ''}`}
+            className={`ingredient-form-button done ${
+              isSubmitting ? "submitting" : ""
+            }`}
             disabled={isSubmitting}
             onClick={handleSubmit}
           >
-            <div className="button-text">{isSubmitting ? 'Saving...' : (mode === 'edit' ? 'Save Changes' : 'Add')}</div>
+            <div className="button-text">
+              {isSubmitting
+                ? "Saving..."
+                : mode === "edit"
+                ? "Save Changes"
+                : "Add"}
+            </div>
           </button>
         </div>
       </div>
