@@ -65,8 +65,8 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
             {name.charAt(0).toUpperCase() + name.slice(1)}
           </button>
         ))}
-        <button onClick={() => setShowCategoryManager(true)}>
-          ✏️
+        <button onClick={() => setShowCategoryManager(true)} className='add-category-button'>
+          + New Category
         </button>
       </div>
       {showCategoryManager && <CategoryManager onClose={() => setShowCategoryManager(false)} />}
