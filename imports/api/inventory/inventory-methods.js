@@ -17,5 +17,9 @@ Meteor.methods({
 
     async 'inventory.remove'(name) {
         return await InventoryCollection.removeAsync({name:name});
-    }
+    },
+
+    async 'inventory.clear'() {
+        return await InventoryCollection.removeAsync({});
+    },
 });
