@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './MenuSearchBar.css';
+import './menuItemSearchBar.css';
 
-export const MenuSearchBar = ({ onSearch }) => {
+export const MenuItemSearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleChange = (e) => {
@@ -16,7 +16,7 @@ export const MenuSearchBar = ({ onSearch }) => {
       <input
         type="text"
         className="search-input"
-        placeholder="Search"
+        placeholder="Search Menu Items"
         value={searchTerm}
         onChange={handleChange}
       />

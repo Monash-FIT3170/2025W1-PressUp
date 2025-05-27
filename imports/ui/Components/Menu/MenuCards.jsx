@@ -4,7 +4,7 @@ import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js";
 
-export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenuItems }) => {
+export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenuItems, searchTerm }) => {
   const [existingItem, setExistingItem] = useState(false);
   const [deletingItems, setDeletingItems] = useState(new Set());
   const deletionQueueRef = useRef([]);
@@ -105,9 +105,11 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
     console.log('[CLIENT] Current menu items in UI:', menuItems.length);
   }, [menuItems]);
 
-  const filteredItems = menuItems.filter(item => 
-    selectedCategory === 'all' || item.menuCategory === selectedCategory
-  );
+  const itemsToDisplay = menuItems.filter(item => {
+    const categoryMatch = selectedCategory === 'all' || item.menuCategory?.toLowerCase() === selectedCategory.toLowerCase();
+    const searchMatch = !searchTerm || item.name?.toLowerCase().includes(searchTerm.toLowerCase());
+    return categoryMatch && searchMatch;
+  });
 
   return (
     <div className="card-container">
@@ -119,10 +121,11 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
           addMenuItem={updateMenuItem}
         />
       )}
-      {filteredItems.length === 0 ? (
-        <p>No menu items available.</p>
+      {console.log(selectedCategory)}
+      {itemsToDisplay.length === 0 ? (
+        <p>No items matching this search available</p>
       ) : (
-        filteredItems.map(item => (
+        itemsToDisplay.map(item => (
           <Card
             key={item._id}
             title={item.name}

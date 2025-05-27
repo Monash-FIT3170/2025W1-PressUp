@@ -12,6 +12,7 @@ import { POSMenuControls } from "./Components/POS/POSMenuControls.jsx";
 import { POSMenuCards } from "./Components/POS/POSMenuCards.jsx";
 import { OrderPanel } from "./Components/POS/OrderPanel.jsx";
 import "./Components/POS/OrderPanel.css";
+import { MenuItemSearchBar } from "./Components/Menu/menuItemSearchBar.jsx";
 
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
@@ -27,6 +28,7 @@ export const App = () => {
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
 
   // State for order management
@@ -58,6 +60,10 @@ export const App = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+  };
+
+  const handleMenuItemSearch = (term) => {
+    setMenuItemSearchTerm(term);
   };
 
   // Function to add an item to the order
@@ -182,6 +188,7 @@ export const App = () => {
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
+                    searchBar={<MenuItemSearchBar onSearch={handleMenuItemSearch} />}
                   />
                   <MenuControls
                     showPopup={showPopup}
@@ -194,6 +201,7 @@ export const App = () => {
                     selectedCategory={selectedCategory}
                     updateMenuItem={updateMenuItem}
                     setMenuItems={setMenuItems}
+                    searchTerm={menuItemSearchTerm}
                   />
                 </>
               }
