@@ -17,12 +17,13 @@ import { MenuItemSearchBar } from "./Components/Menu/menuItemSearchBar.jsx";
 // Import Meteor for data operations
 import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
+import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
-  const [categories, setCategories] = useState(["All"]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategories] = useState(["all"]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
@@ -30,6 +31,8 @@ export const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
+  const [checkout, setCheckout] = useState(false);
+  const [checkoutID, setCheckoutID] = useState(null);
 
   // State for order management
   const [orderItems, setOrderItems] = useState([]);
@@ -139,12 +142,17 @@ export const App = () => {
                       addToOrder={addToOrder}
                     />
                   </div>
-                  <OrderPanel
+                  {checkout ? (<OrderSummary 
+                  orderID={checkoutID}
+                  setCheckout={setCheckout}
+                  />) : (<OrderPanel
                     orderItems={orderItems}
                     removeFromOrder={removeFromOrder}
                     updateQuantity={updateQuantity}
                     clearOrder={clearOrder}
-                  />
+                    setCheckout={setCheckout}
+                    setCheckoutID={setCheckoutID}
+                  />)}
                 </div>
               }
             />
@@ -181,11 +189,9 @@ export const App = () => {
                 </>
               }
             />
-            <Route
-              path="/menu"
-              element={
-                <>
-                  <PageHeader
+            <Route path="/menu" element={
+              <>
+                <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                     searchBar={<MenuItemSearchBar onSearch={handleMenuItemSearch} />}

@@ -1,0 +1,32 @@
+.button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.button {
+    display: flex;
+    padding: 20px;
+    width: 517px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 16px;
+    background: #FCD581; 
+    cursor: pointer;
+    transition: background-color 0.2s;  
+    color: #000;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+.button:hover {
+    background-color: #ffc107;   /* Optional: subtle hover effect */
+  }
+
+.link {
+    text-decoration: none;
+}

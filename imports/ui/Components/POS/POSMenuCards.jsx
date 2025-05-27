@@ -51,7 +51,7 @@ export const POSMenuCards = ({ menuItems, selectedCategory, addToOrder }) => {
         <p>No menu items available.</p>
       ) : (
         sortedItems
-          .filter(item => selectedCategory === 'All' || item.menuCategory === selectedCategory)
+          .filter(item => selectedCategory === 'all' || item.menuCategory === selectedCategory)
           .map(item => {
             const isCurrentlyAvailable = getIsCurrentlyAvailable(item);
             return (
