@@ -12,7 +12,7 @@ export const MenuItemSearchBar = ({ onSearch }) => {
 
   return (
     <div className="search-container">
-      <span className="search-icon">🔍</span>
+      <img src="/images/SearchIcon.svg" alt="Search" id="search-icon" />
       <input
         type="text"
         className="search-input"
