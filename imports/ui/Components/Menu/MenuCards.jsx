@@ -3,6 +3,7 @@ import { Card } from './Card.jsx';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { Meteor } from 'meteor/meteor';
 import "/imports/api/menu/menu-methods.js";
+import "./MenuCards.css";
 
 export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenuItems, searchTerm }) => {
   const [existingItem, setExistingItem] = useState(false);

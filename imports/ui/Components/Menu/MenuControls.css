@@ -7,6 +7,7 @@
   right: 50px;
   height: 40px;
   width: 150px;
+  font-weight: 500;
 }
 
 .create-menu-item-button:hover {
@@ -21,7 +22,7 @@
   transition: background-color 0.2s, border-color 0.2s;
   min-width: 69px;
   height: 69px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .filter-bubble.active {
@@ -44,7 +45,7 @@
   right: 50px;
   height: 69px;
   width: 150px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .add-category-button:hover {

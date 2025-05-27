@@ -1,7 +1,7 @@
 /* Card.css */
 .card {
   width: 150px;
-  height: 100px;
+  height: 80px;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -18,6 +18,8 @@
 
 .card-content {
   margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .card-title {
@@ -40,6 +42,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .trash-icon-button {
@@ -66,4 +69,8 @@
 
 .edit-button:hover {
   background: none;
+}
+
+.card-info {
+  flex-grow: 1;
 }
