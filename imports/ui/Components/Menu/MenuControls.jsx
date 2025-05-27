@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
-
+import { IngredientSearchBar } from "../IngredientTable/ingredientSearchBar.jsx";
+import { PageHeader } from "../PageHeader/PageHeader.jsx";
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
+import './MenuControls.css'
 
 
-export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup }) => {
+export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
   console.log('selectedCategory:', selectedCategory);
   console.log('setSelectedCategory:', setSelectedCategory);
 
@@ -40,12 +42,20 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
       return updatedItems;
     });
   };
+
+  const createButton = (
+    <>
+      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ Create Menu Item</button>
+      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
+    </>
+  );
+
+  if (compact) {
+    return createButton;
+  }
   
   return (
     <>
-      <button onClick={() => setShowPopup(true)}>Create Menu Item</button>
-      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create'/>}
-
       <div className="filter-bar">
         {/* {categories.map((category) => (
           <button
@@ -63,7 +73,7 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
             onClick={() => setSelectedCategory(_id)}
             className={`filter-bubble ${selectedCategory === _id ? 'active' : ''}`}
           >
-            {name}
+            {name.charAt(0).toUpperCase() + name.slice(1)}
           </button>
         ))}
         <button onClick={() => setShowCategoryManager(true)}>

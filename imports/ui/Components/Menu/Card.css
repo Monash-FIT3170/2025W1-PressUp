@@ -47,3 +47,14 @@
     font-size: 22px;
     cursor: pointer;
   }
+
+  .edit-button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  background-color: #fde9bf;
+  border-radius: 16px;
+}
+
+.edit-button:hover {
+  background-color: #ffd966;
+}

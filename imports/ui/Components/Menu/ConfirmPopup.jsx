@@ -7,8 +7,8 @@ export const ConfirmPopup = ({ message, onConfirm, onCancel }) => {
       <div className="confirm-modal">
         <p>{message}</p>
         <div className="confirm-buttons">
-          <button className="confirm" onClick={onConfirm}>Confirm</button>
-          <button className="cancel" onClick={onCancel}>Cancel</button>
+          <button className="confirm-button" onClick={onConfirm}>Confirm</button>
+          <button className="cancel-button" onClick={onCancel}>Cancel</button>
         </div>
       </div>
     </div>

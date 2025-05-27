@@ -16,18 +16,21 @@ import "./Components/POS/OrderPanel.css";
 import { Meteor } from "meteor/meteor";
 import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdown/InventoryViewModeDropdown.jsx";
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
+import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
-  const [categories, setCategories] = useState(["All"]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategories] = useState(["all"]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
+  const [checkout, setCheckout] = useState(false);
+  const [checkoutID, setCheckoutID] = useState(null);
 
   // State for order management
   const [orderItems, setOrderItems] = useState([]);
@@ -133,12 +136,17 @@ export const App = () => {
                       addToOrder={addToOrder}
                     />
                   </div>
-                  <OrderPanel
+                  {checkout ? (<OrderSummary 
+                  orderID={checkoutID}
+                  setCheckout={setCheckout}
+                  />) : (<OrderPanel
                     orderItems={orderItems}
                     removeFromOrder={removeFromOrder}
                     updateQuantity={updateQuantity}
                     clearOrder={clearOrder}
-                  />
+                    setCheckout={setCheckout}
+                    setCheckoutID={setCheckoutID}
+                  />)}
                 </div>
               }
             />
@@ -175,28 +183,36 @@ export const App = () => {
                 </>
               }
             />
-            <Route
-              path="/menu"
-              element={
-                <>
-                  <PageHeader
+            <Route path="/menu" element={
+              <>
+                <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
+                    searchBar={<IngredientSearchBar onSearch={handleSearch}/>}
+                    addButton={<MenuControls
+                        showPopup={showPopup}
+                        setShowPopup={setShowPopup}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        compact={true} // Only render the button
+                      />}
                   />
-                  <MenuControls
-                    showPopup={showPopup}
-                    setShowPopup={setShowPopup}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                  />
-                  <MenuCards
-                    menuItems={menuItems}
-                    selectedCategory={selectedCategory}
-                    updateMenuItem={updateMenuItem}
-                    setMenuItems={setMenuItems}
-                  />
-                </>
-              }
+                  <div className="menu-layout">
+                <MenuControls
+                  showPopup={showPopup}
+                  setShowPopup={setShowPopup}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                />
+                <MenuCards
+                  menuItems={menuItems}
+                  selectedCategory={selectedCategory}
+                  updateMenuItem={updateMenuItem}
+                  setMenuItems={setMenuItems}
+                />
+                  </div>
+              </>
+            }
             />
             <Route
               path="/scheduling"

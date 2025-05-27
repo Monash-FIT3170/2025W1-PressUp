@@ -132,3 +132,43 @@
     height: 300px;
   }
 }
+
+.menu-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;  /* 👈 spacing between filter bar and cards */
+  padding: 1rem;
+}
+
+
+.menu-page-content {
+  display: flex;
+  flex-direction: column; /* stack controls then cards vertically */
+  gap: 1rem;              /* add spacing between controls and cards */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  width: 100%;   /* fill container width */
+  box-sizing: border-box;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  position: relative;
+  z-index: 2;
+  justify-content: center; /* 👈 center horizontally */
+  width: 100%;             /* optional, ensures it spans parent */
+}
+
+
