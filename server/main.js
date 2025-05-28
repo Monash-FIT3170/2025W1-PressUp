@@ -34,8 +34,8 @@ Meteor.startup(async () => {
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
   await initializeUsers();
-
   const nPromotions = await PromotionsCollection.find().countAsync();
+  
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );

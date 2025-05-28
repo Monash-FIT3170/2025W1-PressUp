@@ -26,9 +26,6 @@ import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
 
 
-// Import Meteor for data operations
-import { Meteor } from 'meteor/meteor';
-
 export const App = () => {
   // Authentication tracking
   const { user, isLoading } = useTracker(() => {
@@ -327,10 +324,14 @@ export const App = () => {
                   <PromotionPage />
                 </>
               }
-            />
-          </Routes>
-        </div>
-      </div>
+                    />
+                  </Routes>
+                </div>
+              </div>
+            )
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 };

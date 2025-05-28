@@ -54,8 +54,9 @@ export const POSMenuCards = ({
     isCurrentlyAvailable: getIsCurrentlyAvailable(item),
   }));
 
+  // 4) fetch discounts
   useEffect(() => {
-    if (!menuItems || menuItems.length === 0) {
+    if (!itemsWithAvailability || itemsWithAvailability.length === 0) {
       setItemsWithDiscount([]);
       return;
     }
@@ -71,7 +72,7 @@ export const POSMenuCards = ({
 
       // Map each menu item to its discounted data
       const updatedItems = await Promise.all(
-        menuItems.map(async (item) => {
+        itemsWithAvailability.map(async (item) => {
           try {
             const discountResult = await getDiscountedPrice(item.name, item.menuCategory, item.price);
             return {
@@ -100,20 +101,18 @@ export const POSMenuCards = ({
     fetchDiscounts();
   }, [menuItems]);
 
-  const itemsToRender = (itemsWithDiscount.length > 0 ? itemsWithDiscount : menuItems).map(item => ({
+  const itemsToRender = (itemsWithDiscount.length > 0 ? itemsWithDiscount : itemsWithAvailability).map(item => ({
     ...item,
     isCurrentlyAvailable: getIsCurrentlyAvailable(item),
   }));
 
-  const sortedItems = [...itemsToRender].sort((a, b) => {
-    return (a.isCurrentlyAvailable === b.isCurrentlyAvailable)
-      ? 0
-      : a.isCurrentlyAvailable
-      ? -1
-      : 1;
+  // 5) Sort available items first
+  const sortedItems = itemsToRender.sort((a, b) => {
+    if (a.isCurrentlyAvailable === b.isCurrentlyAvailable) return 0;
+    return a.isCurrentlyAvailable ? -1 : 1;
   });
 
-  // 5) Render cards
+  // 6) Render cards
   return (
     <div className="card-container">
       {sortedItems.length === 0 ? (
