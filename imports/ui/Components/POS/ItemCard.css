@@ -1,37 +1,104 @@
-.card-container {
-  display: flex;        
-  align-items: flex-start;  
+/* ItemCard.css – fully self-contained, no dependencies on card.css */
+
+/* 1. ROOT OVERRIDES: beat `.card { … }` from card.css */
+.item-card {
+  /* reset any inherited box, border, background */
+  align-self: flex-start;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  /* spacing & sizing */
+  width: 16rem;    /* your preferred card width */
+  padding: 1rem;
+  margin: 0.5rem;
+
+  /* interactions */
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+.item-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.card-description {
+.item-card {
+  transition:
+    box-shadow 0.2s ease,
+    /* animate height changes */
+    height 0.2s ease;
+}
+
+
+/* 2. HEADER: title + “+” button on one line */
+.item-card .card-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  font-size: 1rem;
-  color: #555;
+  margin-bottom: 0.75rem;
 }
 
-.card-description .price {
-  margin-right: 1rem;
+/* 3. ADD BUTTON (override any .add-to-order-btn / btn styles) */
+.item-card .add-button {
+  background: #ffde7d;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+.item-card .add-button:focus {
+  outline: 2px solid #ffa;
 }
 
-.add-button {
-  margin-left: auto;
-  /* you can keep any other existing button styles here */
+/* 4. DESCRIPTION BLOCK: price, badges, ingredients */
+.item-card .card-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.item-card .price {
+  margin: 0;
+  font-weight: bold;
+}
+.item-card .diet-badges {
+  display: flex;
+  gap: 0.5rem;
+}
+.item-card .badge {
+  background: #f2f2f2;
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+.item-card .ingredients {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #666;
 }
 
-.card-ingredients {
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 0.5rem;
+/* 5. EXTRA INFORMATION: toggled open state */
+.item-card .extraInformation {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #444;
+  /* you can add borders/padding here if you like */
 }
 
-/* the rest of your existing styles… */
+.item-card.card-disabled {
+  /* lighten everything to give a “disabled” look */
+  opacity: 0.5;
+  filter: grayscale(100%);
+  /* indicate it’s not interactive */
+  cursor: not-allowed;
+}
 
-
-  .card-disabled {
-    background-color: #f0f0f0;
-    opacity: 0.6;
-    pointer-events: none;
-    border: 1px solid #ccc;
-  }
-  
+/* dim the “+” button even more */
+.item-card.card-disabled .add-button {
+  background: #ccc;
+  cursor: not-allowed;
+}

@@ -19,7 +19,7 @@ const Card = ({ title, description, onDelete, onEdit }) => {
   //     }
   //   });
   // }, [title]);
-  
+
 
   const handleUpdate = (id, updatedData) => {
     setItem(prev => ({ ...prev, ...updatedData }));
@@ -34,7 +34,7 @@ const Card = ({ title, description, onDelete, onEdit }) => {
     setShowConfirm(false);
     onDelete();
   };
-  
+
   const cancelDelete = () => {
     setShowConfirm(false);
   };
@@ -42,22 +42,25 @@ const Card = ({ title, description, onDelete, onEdit }) => {
   return (
     <div className="card">
       <div className="card-content">
-        <div className="card-header">
+        <div className="card-info">
           <h3 className="card-title">{title}</h3>
+          <p className="card-description">{description}</p>
+        </div>
+        <div className="card-actions-header">
+          <button onClick={onEdit} className="edit-button" title="Edit"><img src="/images/EditIcon.svg" alt="Edit" /></button>
           <button onClick={handleDeleteClick} className="trash-icon-button" title="Delete">
             🗑
           </button>
         </div>
-        <p className="card-description">{description}</p>
-        <button onClick={onEdit}>Edit Menu</button>
-        {showConfirm && (
-          <ConfirmPopup
-            message="Are you sure you want to delete this item?"
-            onConfirm={confirmDelete}
-            onCancel={cancelDelete}
-          />
-        )}
-        {/* {console.log("HI") && item && (
+      </div>
+      {showConfirm && (
+        <ConfirmPopup
+          message="Are you sure you want to delete this item?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
+      {/* {console.log("HI") && item && (
           <MenuItemPopUp
             mode="update"
             onClose={() => setShowPopup(false)}
@@ -65,7 +68,6 @@ const Card = ({ title, description, onDelete, onEdit }) => {
             onUpdate={handleUpdate}
           />
         )} */}
-      </div>
     </div>
   );
 };

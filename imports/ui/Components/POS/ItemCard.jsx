@@ -1,46 +1,48 @@
 import React, { useState } from "react";
-import './ItemCard.css';
-import { Meteor } from 'meteor/meteor';
+import "./ItemCard.css";
+import { Meteor } from "meteor/meteor";
 
-const ItemCard = ({ name, price, discountedPrice = null, ingredients, onButtonClick, isHalal, isVegetarian, isGlutenFree, onAddToOrder, available = true }) => {
+const ItemCard = ({
+  name,
+  price,
+  discountedPrice = null,
+  ingredients,
+  isHalal,
+  isVegetarian,
+  isGlutenFree,
+  onAddToOrder,
+  available = true
+}) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [item, setItem] = useState(null);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const cardClass = `card ${available ? '' : 'card-disabled'}`;
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
 
-  const handleUpdate = (id, updatedData) => {
-    setItem(prev => ({ ...prev, ...updatedData }));
-  };
-
-  const handleDeleteClick = () => {
-    setShowConfirm(true);
-  };
-
-  const confirmDelete = () => {
-    setShowConfirm(false);
-    if (onDelete) onDelete();
-  };
-  
-  const cancelDelete = () => {
-    setShowConfirm(false);
-  };
-  
-  const handleAddToOrder = () => {
-    if (onAddToOrder) {
-      onAddToOrder();
-    }
+  const handleAddToOrder = (e) => {
+    e.stopPropagation();
+    if (onAddToOrder) onAddToOrder();
   };
 
   return (
-    <div className={cardClass} onClick={toggleExtraInfo}>
-      <div className="card-content">
-        <div className="card-header">
-          <h3 className="card-title">{name}</h3>
-        </div>
-        <p className="card-description">
+    <div
+      className={`item-card ${available ? "" : "card-disabled"}`}
+      onClick={toggleExtraInfo}
+    >
+      {/* HEADER: title + add-button */}
+      <div className="card-header">
+        <h3>{name}</h3>
+        <button
+          className="add-button"
+          onClick={handleAddToOrder}
+          disabled={!available}
+          aria-disabled={!available}
+        >
+          +
+        </button>
+      </div>
+
+      {/* DESCRIPTION: price only */}
+      <div className="card-description">
+        <p className="price">
           Price:{" "}
             {discountedPrice !== null && discountedPrice < price ? (
               <>
@@ -54,23 +56,22 @@ const ItemCard = ({ name, price, discountedPrice = null, ingredients, onButtonCl
             ) : (
               <span>${price.toFixed(2)}</span>
             )}
-          <button 
-            className="add-to-order-btn" 
-            onClick={handleAddToOrder}
-          >+</button>
         </p>
-        {showExtraInfo && (<>
-            <div className="card-dietary">
-              {isHalal && <strong>H </strong>}
-              {isVegetarian && <strong>V </strong>}
-              {isGlutenFree && <strong>GF </strong>}
-            </div>
-            <p className="card-ingredients">
-              {ingredients.join(", ")}
-            </p>
-          </>
-        )}
       </div>
+
+      {/* EXTRA INFO: dietary badges + ingredients */}
+      {showExtraInfo && (
+        <div className="extraInformation">
+          <div className="diet-badges">
+            {isHalal       && <span className="badge">H</span>}
+            {isVegetarian && <span className="badge">V</span>}
+            {isGlutenFree && <span className="badge">GF</span>}
+          </div>
+          <p className="ingredients">
+            {ingredients.join(", ")}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

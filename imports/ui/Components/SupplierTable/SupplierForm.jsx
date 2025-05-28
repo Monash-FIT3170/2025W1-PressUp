@@ -1,8 +1,9 @@
-// SupplierForm.jsx
-import React, { useState } from 'react';
+// imports/ui/Components/SupplierTable/SupplierForm.jsx
+import React, { useState, useEffect } from 'react';
 import './SupplierForm.css';
+import { Meteor } from 'meteor/meteor';
 
-export const SupplierForm = ({ onClose }) => {
+export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, onSupplierUpdated }) => {
   const [name, setName] = useState('');
   const [abn, setAbn] = useState('');
   const [products, setProducts] = useState('');
@@ -12,37 +13,74 @@ export const SupplierForm = ({ onClose }) => {
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
 
+  useEffect(() => {
+    if (mode === 'edit' && existingSupplier) {
+      setName(existingSupplier.name || '');
+      setAbn(existingSupplier.abn || '');
+      setProducts(existingSupplier.products ? existingSupplier.products.join(', ') : '');
+      setContact(existingSupplier.contact || '');
+      setEmail(existingSupplier.email || '');
+      setPhone(existingSupplier.phone || '');
+      setAddress(existingSupplier.address || '');
+      setNotes(existingSupplier.notes ? existingSupplier.notes.join(', ') : '');
+    } else {
+      // Reset form for "add" mode or if no existing supplier
+      setName('');
+      setAbn('');
+      setProducts('');
+      setContact('');
+      setEmail('');
+      setPhone('');
+      setAddress('');
+      setNotes('');
+    }
+  }, [mode, existingSupplier]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!abn) return;
 
-    await Meteor.callAsync("suppliers.insert", {
+    const notesArray = notes.split(',').map(note => note.trim()).filter(note => note);
+    const productsArray = products.split(',').map(product => product.trim()).filter(product => product);
+    const supplierData = {
       name: name.trim(),
       abn: abn.trim(),
-      products: products.split(',').map(item => item.trim()),
+      products: productsArray, 
       contact: contact.trim(),
       email: email.trim(),
       phone: phone.trim(),
       address: address.trim(),
-      notes: notes.split(',').map(item => item.trim()),
-    });
+      notes: notesArray, 
+    };
 
-    // reset all fields
-    setName('')
-    setAbn('');
-    setProducts('');
-    setContact('');
-    setEmail('');
-    setPhone('');
-    setAddress('');
-    setNotes('');
+    try {
+      if (mode === 'edit' && existingSupplier?._id) {
+        await Meteor.callAsync("suppliers.update", existingSupplier._id, supplierData);
+        alert('Supplier updated successfully!');
+        if (onSupplierUpdated) onSupplierUpdated(); 
+      } else {
+        await Meteor.callAsync("suppliers.insert", supplierData);
+        alert('Supplier added successfully!');
+        setName('');
+        setAbn('');
+        setProducts('');
+        setContact('');
+        setEmail('');
+        setPhone('');
+        setAddress('');
+        setNotes('');
+      }
+      onClose(); 
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+      console.error("Error processing supplier:", error);
+    }
   };
 
-  return ( // implement the pop-up functionality in a lil-bit
+  return (// implement the pop-up functionality in a lil-bit
     <div className="modal-overlay">
       <div className="modal-content supplier-form-container">
         <div className="supplier-form-header">
-          <div className="title">Add New Supplier</div>
+          <div className="title">{mode === 'edit' ? 'Edit Supplier' : 'Add New Supplier'}</div>
         </div>
         <div className="supplier-form-input-container">
           {/* Name */}
@@ -153,7 +191,7 @@ export const SupplierForm = ({ onClose }) => {
             className="supplier-form-button done"
             onClick={handleSubmit}
           >
-            <div className="button-text">Add</div>
+            <div className="button-text">{mode === 'edit' ? 'Save Changes' : 'Add'}</div>
           </div>
         </div>
       </div>

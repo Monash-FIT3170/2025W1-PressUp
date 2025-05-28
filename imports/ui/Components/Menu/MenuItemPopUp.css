@@ -18,8 +18,8 @@
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
+  min-width: 600px;     
+  max-width: 90%;       
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
@@ -93,7 +93,7 @@ input[type="checkbox"] {
   margin-top: 5px;
 }
 
-button {
+.action-button {
   padding: 10px;
   background-color: #FCD581;
   color: black;
@@ -120,3 +120,22 @@ select:focus {
   border-color: #fcd581;
   outline: none;
 }
+
+/* Button styling */
+button[type="submit"] {
+  padding: 12px 24px;
+  background-color: #fcd581;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #fcca5f;
+}
+

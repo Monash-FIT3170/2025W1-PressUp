@@ -90,7 +90,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         if (error) {
           alert('Failed to add menu item: ' + error.reason);
         } else {
-          alert('Menu item added successfully!');
+          // alert('Menu item added successfully!');
           addMenuItem(newMenuItem);
           setName('');
           setPrice('');
@@ -104,7 +104,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
-          alert('Menu item updated successfully!');
+          // alert('Menu item updated successfully!');
           onUpdate?.(existingItem._id, itemData);
           onClose();
         }
@@ -131,7 +131,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="close-button" onClick={onClose}>X</button>
+        <button className="action-button" onClick={onClose}>X</button>
         <h2>{mode === 'update' ? 'Update Menu Item' : 'Add New Menu Item'}</h2>
 
         <form onSubmit={handleSubmit}>

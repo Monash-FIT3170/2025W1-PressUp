@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
 import '/imports/api/promotions/promotions-methods.js';
 
-export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder }) => {
+export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder , setCheckout, setCheckoutID}) => {
   // State for tracking table number and checkout status
   const [tableNumber, setTableNumber] = useState('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -77,7 +77,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
 
 	if (!tableNumber) {
 		setCheckoutError("Please enter a table number");
-		setTimeout(() => setCheckoutError(null), 3000);
+		setTimeout(() => 
+      setCheckoutError(null), 3000);
 		return;
 	}
 
@@ -99,6 +100,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         };
       }),
       createdAt: new Date(),
+      recievedPayment: 0
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -114,10 +116,10 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       } else {
         console.log("Order created successfully with ID:", result);
         setCheckoutSuccess(true);
-        
+        setCheckoutID(result);
+        setCheckout(true);
         // Reset checkout success message after delay and clear the order
         setTimeout(() => {
-          setCheckoutSuccess(false);
           if (clearOrder) clearOrder();
         }, 2000);
       }

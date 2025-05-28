@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import './ingredientSearchBar.css';
+import React, { useState } from "react";
+import "./SearchBar.css";
 
-export const IngredientSearchBar = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+export const SearchBar = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -12,7 +12,7 @@ export const IngredientSearchBar = ({ onSearch }) => {
 
   return (
     <div className="search-container">
-      <span className="search-icon">🔍</span>
+      <img src="/images/SearchIcon.svg" alt="Search" id="search-icon" />
       <input
         type="text"
         className="search-input"

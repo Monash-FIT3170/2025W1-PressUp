@@ -10,25 +10,6 @@
   gap: 20px;
 }
 
-.filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px; /* space between bubbles */
-  margin-bottom: 10px;
-  padding-top: 10px;
-}
-
-.filter-bubble {
-  padding: 8px 16px;
-  border-radius: 20px;
-  background-color: #fcd58180;
-  cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.filter-bubble.active {
-  background-color: #fcd581;
-}
 
 .header-text {
   display: inline-block;
@@ -57,7 +38,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   gap: 20px;
   flex: 1;
   align-self: stretch;
@@ -65,56 +46,22 @@
 }
 
 .toggle-view-btn {
-  padding: 0.5rem 1rem;           /* keep your existing padding */
-  background-color: #fff;         /* white background */
-  border: 1px solid #ddd;         /* light gray border */
-  border-radius: 0.375rem;        /* same rounded-corner pill shape */
-  display: inline-block;          /* inline so it stays left-aligned */
-  margin-bottom: 1rem;            /* vertical spacing only */
+  padding: 0.5rem 1rem; /* keep your existing padding */
+  background-color: #fff; /* white background */
+  border: 1px solid #ddd; /* light gray border */
+  border-radius: 0.375rem; /* same rounded-corner pill shape */
+  display: inline-block; /* inline so it stays left-aligned */
+  margin-bottom: 1rem; /* vertical spacing only */
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: background-color .2s, box-shadow .2s;
-  color: #111;                    /* dark text for contrast */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s, box-shadow 0.2s;
+  color: #111; /* dark text for contrast */
 }
 
 .toggle-view-btn:hover {
   background-color: #f9f9f9;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.view-mode-container {
-  display: flex;
-  justify-content: flex-start; 
-  align-items: center ; 
-  padding-left: 16px;           
-  margin-bottom: 1rem;   
-  align-self: start;
-}
-
-.view-mode-dropdown {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.6rem 1rem;
-  border-radius: 0.8rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
-  background-color: #fff;
-}
-
-.view-mode-dropdown select {
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.view-mode-dropdown .view-icon {
-  width: 20px;
-  height: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .pos-layout {
@@ -122,6 +69,7 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  gap: 20px;
 }
 
 .pos-content {
@@ -138,6 +86,7 @@
   gap: 8px;
   background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
+  width: 97%;
 }
 
 .filter-bubble {
@@ -160,9 +109,46 @@
   .pos-layout {
     flex-direction: column;
   }
-  
+
   .order-panel {
     width: 100%;
     height: 300px;
   }
+}
+
+.menu-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 👈 spacing between filter bar and cards */
+  padding: 1rem;
+}
+
+.menu-page-content {
+  display: flex;
+  flex-direction: column; /* stack controls then cards vertically */
+  gap: 1rem; /* add spacing between controls and cards */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  width: 100%; /* fill container width */
+  box-sizing: border-box;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: white;
+  position: relative;
+  z-index: 2;
+  justify-content: center; /* 👈 center horizontally */
+  width: 100%; /* optional, ensures it spans parent */
 }

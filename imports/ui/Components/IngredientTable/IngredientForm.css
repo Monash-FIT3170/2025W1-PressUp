@@ -1,0 +1,227 @@
+/* imports/ui/Components/IngredientTable/IngredientForm.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .ingredient-form-container {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .ingredient-form-header {
+    margin-bottom: 24px;
+  }
+  
+  .ingredient-form-header .title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  
+  .ingredient-form-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .ingredient-form-input {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .ingredient-form-input label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin-left: 4px;
+  }
+  
+  .ingredient-form-input input {
+    padding: 12px 16px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.2s ease;
+    background: #fafafa;
+  }
+  
+  .ingredient-form-input input:focus {
+    outline: none;
+    border-color: #007bff;
+    background: white;
+  }
+  
+  .ingredient-form-input input.error {
+    border-color: #dc3545;
+    background: #fff5f5;
+  }
+  
+  .ingredient-form-input input.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+  }
+  
+  .error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  
+  .submit-error-popup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff5f5;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    position: relative;
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  .submit-error-popup .error-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  
+  .submit-error-popup .error-text {
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 500;
+    flex-grow: 1;
+  }
+  
+  .submit-error-popup .error-close-btn {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+  }
+  
+  .submit-error-popup .error-close-btn:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+  }
+  
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .ingredient-form-input input::placeholder {
+    color: #999;
+  }
+  
+  .ingredient-form-input img {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 12px; /* Adjust for label height */
+    opacity: 0.6;
+  }
+  
+  .ingredient-form-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .ingredient-form-button {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 44px;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+  
+  .ingredient-form-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .ingredient-form-button.cancel {
+    background-color: white;
+    border: 1px solid #f59e0b;
+  }
+  
+  .ingredient-form-button.cancel:hover {
+    background-color: #f59e0b;
+    color: white;
+  }
+  
+  .ingredient-form-button.done {
+    background-color: #f59e0b;
+    color: white;
+    border: 1px solid #f59e0b;
+  }
+  
+  .ingredient-form-button.done:hover {
+    background-color: white;
+    border: 1px solid #f59e0b;
+    color: black;
+  }
+  
+  .button-text {
+    text-align: center;
+    color: black;
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .ingredient-form-button.done .button-text {
+    color: white;
+  }
+  
+  .ingredient-form-button.done:hover .button-text {
+    color: black;
+  }
