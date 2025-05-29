@@ -14,6 +14,9 @@ import "../imports/api/inventory/inventory-methods";
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+import { TablesCollection } from '../imports/api/tables/TablesCollection';
+import "../imports/api/tables/TablesMethods";
+import "../imports/api/tables/TablesPublications";
 
 Meteor.startup(async () => {
   // Testing menu and categories.
