@@ -23,6 +23,7 @@ export default function TableMap() {
         table_height: 100,
         table_xpos: 50,
         table_ypos: 50,
+        table_rotation: 0,
         table_status: 'available',
       }, (error) => {
         if (error) {
@@ -63,6 +64,7 @@ export default function TableMap() {
             tableId={table._id}
             initialPosition={[table.table_xpos, table.table_ypos]}
             initialSize={[table.table_width, table.table_height]}
+            initialRotation={table.table_rotation || 0}
             color={table.table_status === 'available' ? 'lightgreen' : 'lightcoral'}
             label={`Table ${table.table_number}`}
           />
