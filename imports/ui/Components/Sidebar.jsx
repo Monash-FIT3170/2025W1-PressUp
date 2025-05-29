@@ -90,6 +90,24 @@ export const Sidebar = ({ isOpen, setIsOpen }) => {
                 />
                 Scheduling
               </NavLink>
+              <NavLink
+                to="/tables"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+              >
+                <img
+                  src="/images/TableIcon.png"
+                  alt="Tables"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Tables
+              </NavLink>
             </div>
           </>
         )}
