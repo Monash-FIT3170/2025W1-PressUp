@@ -30,4 +30,19 @@ Meteor.methods({
       throw new Meteor.Error('remove-failed', 'Failed to remove the table.');
     }
   },
+
+  'tables.updateLayout'(tableId, newX, newY, newWidth, newHeight, newRotation) {
+    const result = TablesCollection.updateAsync(tableId, {
+      $set: {
+        table_xpos: newX,
+        table_ypos: newY,
+        table_width: newWidth,
+        table_height: newHeight,
+        table_rotation: newRotation,
+      },
+    });
+
+    console.log(`Table updated: ${tableId}`);
+
+  }
 });
