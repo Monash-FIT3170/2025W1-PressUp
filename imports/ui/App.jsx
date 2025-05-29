@@ -10,6 +10,7 @@ import "./AppStyle.css";
 import { PageHeader } from "./Components/PageHeader/PageHeader.jsx";
 import { POSMenuControls } from './Components/POS/POSMenuControls.jsx';
 import { POSMenuCards } from './Components/POS/POSMenuCards.jsx';
+import TableMap from "./Components/Tables/TableMap.jsx";
 
 export const App = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -158,6 +159,18 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                </>
+              }
+            />
+            <Route
+              path="/tables"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <TableMap />
                 </>
               }
             />
