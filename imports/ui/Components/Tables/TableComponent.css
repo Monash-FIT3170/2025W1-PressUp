@@ -71,3 +71,8 @@
   margin-top: 10px;
   text-transform: capitalize;
 }
+
+.table.available {
+  /* keep same width & style, just swap the color */
+  border-color: #F7C948;
+}

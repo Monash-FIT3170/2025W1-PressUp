@@ -53,7 +53,9 @@ export function TableComponent({
       {/* Main table box */}
       <div
         ref={ref}
-        className="table"
+        className={
+          `table${table.table_status === 'available' ? ' available' : ''}`
+        }
         style={{
           width:  `${frame.width}px`,
           height: `${frame.height}px`,
