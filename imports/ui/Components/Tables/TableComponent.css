@@ -1,5 +1,3 @@
-/* TableComponent.css */
-
 .table {
   position: absolute;
   background: #fff;
@@ -11,7 +9,7 @@
 /* Lengthened seat */
 .seat {
   position: absolute;
-  width: 60px;    /* was 24px, now a bit longer */
+  width: 60px;
   height: 12px;
   background: #ddd;
   border-radius: 4px;
@@ -19,20 +17,21 @@
 
 /* Offset seats completely outside the 4px border */
 .seat--top {
-  top:    -16px;  /* -(seat height + border width) */
+  top:    -16px;
 }
 .seat--bottom {
   bottom: -16px;
 }
 .seat--left {
-  left:   -16px;
+  left:     -16px;
   transform: rotate(90deg);
 }
 .seat--right {
-  right:  -16px;
+  right:    -16px;
   transform: rotate(90deg);
 }
 
+/* Delete button */
 .delete-table-button {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -46,4 +45,29 @@
   font-size: 12px;
   pointer-events: auto;
   white-space: pre;
+}
+
+/* New: table label */
+.table-label {
+  position: absolute;
+  top:  50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none; /* so clicks “pass through” to the table */
+}
+
+.table-label .table-number {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+  line-height: 1;
+}
+
+.table-label .table-status {
+  font-size: 14px;
+  color: #333;
+  line-height: 1;
+  margin-top: 10px;
+  text-transform: capitalize;
 }

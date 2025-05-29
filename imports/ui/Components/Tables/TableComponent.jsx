@@ -2,6 +2,8 @@
 import React, { useRef, useState } from 'react';
 import Moveable from 'react-moveable';
 import { Meteor } from 'meteor/meteor';
+import { useTracker } from 'meteor/react-meteor-data';
+import { TablesCollection } from "../../../api/tables/TablesCollection.js";
 import './TableComponent.css';
 
 export function TableComponent({
@@ -18,6 +20,12 @@ export function TableComponent({
     height:    initialSize[1],
     rotate:    initialRotation,
   });
+
+  // reactively fetch the table doc
+  const table = useTracker(
+    () => TablesCollection.findOne(tableId) || {},
+    [tableId]
+  );
 
   const saveFrameToDb = (updatedFrame) => {
     Meteor.call(
@@ -55,20 +63,15 @@ export function TableComponent({
         }}
       >
         {(() => {
-          // Determine orientation and length
+          // Determine orientation & how many seats to draw
           const isHorizontal = frame.width >= frame.height;
           const longest      = isHorizontal ? frame.width : frame.height;
-          // One seat per ~100px
           const seatCount    = Math.max(1, Math.floor(longest / 100));
-          // **MATCH THIS** to your CSS .seat { width: 60px; }
-          const seatLength   = 60;
+          const seatLength   = 60; // match .seat width
 
           return Array.from({ length: seatCount }).flatMap((_, i) => {
-            // center position along the side
             const centerPos      = ((i + 1) / (seatCount + 1)) * longest;
-            // shift back by half the seat's length
             const adjustedOffset = centerPos - seatLength / 2;
-            // apply to x (left) or y (top)
             const style = isHorizontal
               ? { left: `${adjustedOffset}px` }
               : { top:  `${adjustedOffset}px` };
@@ -91,23 +94,31 @@ export function TableComponent({
             ];
           });
         })()}
+
+        {/* Only when not editing, show the table number & status */}
+        {!editMode && table.table_number != null && (
+          <div className="table-label">
+            <div className="table-number">T{table.table_number}</div>
+            <div className="table-status">{table.table_status}</div>
+          </div>
+        )}
       </div>
 
-      {/* Delete button */}
+      {/* Delete button (edit mode) */}
       {editMode && (
         <button
           onClick={deleteTable}
-          className = "delete-table-button"
+          className="delete-table-button"
           style={{
-            top:       `${frame.translate[1] + frame.height  / 2}px`,
-            left:      `${frame.translate[0] + frame.width   / 2}px`,
+            top:  `${frame.translate[1] + frame.height  / 2}px`,
+            left: `${frame.translate[0] + frame.width   / 2}px`,
           }}
         >
           Delete&nbsp;&nbsp;Table
         </button>
       )}
 
-      {/* Moveable handlers */}
+      {/* Moveable controls (edit mode) */}
       {editMode && (
         <Moveable
           target={ref}
@@ -115,13 +126,11 @@ export function TableComponent({
           resizable
           rotatable
           renderRotator={() => null}
-
           onDragStart={({ set }) => set(frame.translate)}
           onDrag={({ beforeTranslate }) =>
             setFrame(prev => ({ ...prev, translate: beforeTranslate }))
           }
           onDragEnd={() => saveFrameToDb(frame)}
-
           onResizeStart={({ setOrigin, dragStart }) => {
             setOrigin(['%', '%']);
             dragStart?.set(frame.translate);
@@ -135,7 +144,6 @@ export function TableComponent({
             }));
           }}
           onResizeEnd={() => saveFrameToDb(frame)}
-
           onRotateStart={({ set }) => set(frame.rotate)}
           onRotate={({ beforeRotate }) =>
             setFrame(prev => ({ ...prev, rotate: beforeRotate }))
