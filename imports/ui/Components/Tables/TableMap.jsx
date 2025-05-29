@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 import { TableComponent } from './TableComponent.jsx';
 import { TablesCollection } from '../../../api/tables/TablesCollection.js';
+import './TableMap.css';   // ← new import
 
 export default function TableMap() {
   const [editMode, setEditMode] = useState(false);
@@ -16,7 +18,6 @@ export default function TableMap() {
 
   const createNewTable = () => {
     const newTableNumber = tables.length + 1;
-
     Meteor.call('tables.insert', {
       table_number: newTableNumber,
       table_capacity: 4,
@@ -27,11 +28,13 @@ export default function TableMap() {
       table_rotation: 0,
       table_status: 'available',
     }, (error) => {
-      if (error) {
-        alert('Insert failed: ' + error.reason);
-      }
+      if (error) alert('Insert failed: ' + error.reason);
     });
   };
+
+  {/* Keeping track of current table status's. LETS GOO*/ }
+  const availableCount = tables.filter(t => t.table_status === 'available').length;
+  const checkedInCount = tables.filter(t => t.table_status === 'checked-in').length;
 
   return (
     <div
@@ -44,7 +47,7 @@ export default function TableMap() {
         overflow: 'hidden',
       }}
     >
-      {/* Toggle Edit Mode always visible */}
+      {/* Edit‐mode toggle */}
       <button
         onClick={toggleEditMode}
         style={{
@@ -59,7 +62,7 @@ export default function TableMap() {
         {editMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
       </button>
 
-      {/* Only show Add Table button in edit mode */}
+      {/* Add‐table (edit mode only) */}
       {editMode && (
         <button
           onClick={createNewTable}
@@ -75,7 +78,19 @@ export default function TableMap() {
           + Add Table
         </button>
       )}
+      {/* Status counter */}
+      <div className="status-counter">
+        <div className="status-counter__item status-counter__available">
+          <div className="status-counter__dot" />
+          <span>Available: {availableCount}</span>
+        </div>
+        <div className="status-counter__item status-counter__checked-in">
+          <div className="status-counter__dot" />
+          <span>Checked-in: {checkedInCount}</span>
+        </div>
+      </div>
 
+      {/* Render each table */}
       {tables.map((table) => (
         <TableComponent
           key={table._id}
@@ -84,8 +99,6 @@ export default function TableMap() {
           initialSize={[table.table_width, table.table_height]}
           initialRotation={table.table_rotation || 0}
           editMode={editMode}
-          color={table.table_status === 'available' ? 'lightgreen' : 'lightcoral'}
-          label={`Table ${table.table_number}`}
         />
       ))}
     </div>

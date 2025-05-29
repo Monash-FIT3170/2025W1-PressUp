@@ -5,14 +5,14 @@ import './TableActionPopup.css';
 export function TableActionPopup({ tableId, onClose }) {
   // now inside the popup we know the tableId
   const handleCheckIn = () => {
-    Meteor.call('tables.updateStatus', tableId, 'available', (err) => {
+    Meteor.call('tables.updateStatus', tableId, 'checked-in', (err) => {
       if (err) alert(err.reason);
       onClose();
     });
   };
 
   const handleCheckOut = () => {
-    Meteor.call('tables.updateStatus', tableId, 'checked-in', (err) => {
+    Meteor.call('tables.updateStatus', tableId, 'available', (err) => {
       if (err) alert(err.reason);
       onClose();
     });
