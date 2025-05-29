@@ -22,7 +22,7 @@ export const AddPromotionForm = ({ onClose }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     const data = {
@@ -38,23 +38,23 @@ export const AddPromotionForm = ({ onClose }) => {
       expiresAt: new Date(form.expiresAt),
     };
 
-    Meteor.call('promotions.insert', data, (err) => {
-      if (err) alert(err.reason);
-      else {
-        alert('Promotion added!');
-        setForm({
-          name: '',
-          type: 'flat',
-          amount: '',
-          scopeType: 'all',
-          scopeValue: '',
-          code: '',
-          requiresCode: false,
-          expiresAt: '',
-        });
-        onClose?.(); // Automatically close form if `onClose` is provided
-      }
-    });
+    try {
+      await Meteor.callAsync('promotions.insert', data);
+      alert('Promotion added!');
+      setForm({
+        name: '',
+        type: 'flat',
+        amount: '',
+        scopeType: 'all',
+        scopeValue: '',
+        code: '',
+        requiresCode: false,
+        expiresAt: '',
+      });
+      onClose?.(); // Automatically close form if `onClose` is provided
+    } catch (err) {
+      alert(err.reason || 'An error occurred while adding the promotion.');
+    }
   };
 
   return (

@@ -12,14 +12,13 @@ export const PromotionPage = () => {
     fetchPromotions(); // Refresh after form closes
   };
 
-  const fetchPromotions = () => {
-    Meteor.call('promotions.getActive', (error, result) => {
-      if (error) {
-        console.error('Failed to fetch promotions:', error);
-      } else {
-        setPromotions(result);
-      }
-    });
+  const fetchPromotions = async () => {
+    try {
+      const result = await Meteor.callAsync('promotions.getActive');
+      setPromotions(result);
+    } catch (error) {
+      console.error('Failed to fetch promotions:', error);
+    }
   };
 
   useEffect(() => {
@@ -28,8 +27,6 @@ export const PromotionPage = () => {
 
   return (
     <div className="promotion-page" style={{ overflow: 'visible' }}>
-      <h1>Promotions</h1>
-
       {/* + Button */}
       <button className="add-promotion-btn" onClick={() => setShowForm(true)}>
         +

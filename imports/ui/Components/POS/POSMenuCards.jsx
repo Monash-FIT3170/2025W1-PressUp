@@ -62,39 +62,38 @@ export const POSMenuCards = ({
     }
 
     const fetchDiscounts = async () => {
-      const getDiscountedPrice = (itemName, category, basePrice) =>
-        new Promise((resolve, reject) => {
-          Meteor.call('promotions.getDiscountedPrice', itemName, category, basePrice, null, (err, res) => {
-            if (err) reject(err);
-            else resolve(res);
-          });
-        });
+      const getDiscountedPrice = async (itemName, category, basePrice) => {
+        return await Meteor.callAsync(
+          'promotions.getDiscountedPrice',
+          itemName,
+          category,
+          basePrice,
+          null
+        );
+      };
 
       // Map each menu item to its discounted data
-      const updatedItems = await Promise.all(
-        itemsWithAvailability.map(async (item) => {
-          try {
+      const updatedItems = [];
+      for (const item of itemsWithAvailability){
+        try {
             const discountResult = await getDiscountedPrice(item.name, item.menuCategory, item.price);
-            return {
+            updatedItems.push({
               ...item,
               discountedPrice: discountResult.finalPrice,
               discountAmount: discountResult.discount,
               appliedPromotion: discountResult.appliedPromotion,
               isCurrentlyAvailable: getIsCurrentlyAvailable(item),
-            };
+            });
           } catch (error) {
-            // If error, fallback to original price, mark available
-            return {
+            updatedItems.push({
               ...item,
               discountedPrice: item.price,
               discountAmount: 0,
               appliedPromotion: null,
               isCurrentlyAvailable: getIsCurrentlyAvailable(item),
-            };
+            });
           }
-        })
-      );
-
+      }
       setItemsWithDiscount(updatedItems);
     };
 
@@ -129,10 +128,10 @@ export const POSMenuCards = ({
                 discountedPrice={item.discountedPrice}
                 available={isCurrentlyAvailable}
                 ingredients = {item.ingredients}
-              isGlutenFree={item.isGlutenFree}
-              isHalal={item.isHalal}
-              isVegetarian={item.isVegetarian}
-              onAddToOrder={() => handleAddToOrder(item)}
+                isGlutenFree={item.isGlutenFree}
+                isHalal={item.isHalal}
+                isVegetarian={item.isVegetarian}
+                onAddToOrder={() => handleAddToOrder(item)}
               />
             );
           })

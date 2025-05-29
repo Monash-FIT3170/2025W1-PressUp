@@ -20,28 +20,28 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       for (let i = 0; i < orderItems.length; i++) {
         const item = orderItems[i];
         const itemKey = item._id || i;
-  
-        await new Promise((resolve) => {
-          Meteor.call(
+
+        try {
+          const result = await Meteor.callAsync(
             'promotions.getDiscountedPrice',
             item.name || '',
             item.menuCategory || 'general',
             item.price,
-            appliedPromoCode,
-            (err, result) => {
-              if (!err && result) {
-                updatedDiscounts[itemKey] = result;
-              } else {
-                updatedDiscounts[itemKey] = {
-                  finalPrice: item.price,
-                  discount: 0,
-                  appliedPromotion: null
-                };
-              }
-              resolve();
-            }
+            appliedPromoCode
           );
-        });
+
+          updatedDiscounts[itemKey] = result || {
+            finalPrice: item.price,
+            discount: 0,
+            appliedPromotion: null
+          };
+        } catch (err) {
+          updatedDiscounts[itemKey] = {
+            finalPrice: item.price,
+            discount: 0,
+            appliedPromotion: null
+          };
+        }
       }
   
       setDiscountedItems(updatedDiscounts);
