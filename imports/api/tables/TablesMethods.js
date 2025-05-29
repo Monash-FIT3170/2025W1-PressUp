@@ -20,6 +20,15 @@ Meteor.methods({
     }
   },
 
+  async 'tables.updateStatus'(tableId, newStatus) {
+    try {
+    TablesCollection.updateAsync(tableId, { $set: { table_status: newStatus } });
+    } catch (error) {
+      console.error(`Error updating table status ${tableId}:`, error);
+      throw new Meteor.Error('updateStatus-failed', 'Failed to update the availability.');
+    }
+  },
+
   async 'tables.remove'(tableId) {
 
     try {

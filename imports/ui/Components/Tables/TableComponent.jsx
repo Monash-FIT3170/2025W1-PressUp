@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { TablesCollection } from "../../../api/tables/TablesCollection.js";
 import './TableComponent.css';
+import { TableActionPopup } from './TableActionPopup.jsx';
 
 export function TableComponent({
   tableId,
@@ -20,6 +21,8 @@ export function TableComponent({
     height:    initialSize[1],
     rotate:    initialRotation,
   });
+
+  const [showPopup, setShowPopup] = useState(false);
 
   // reactively fetch the table doc
   const table = useTracker(
@@ -63,6 +66,7 @@ export function TableComponent({
                       rotate(${frame.rotate}deg)`,
           touchAction: 'none',
         }}
+        onClick={() => !editMode && setShowPopup(true)}
       >
         {(() => {
           // Determine orientation & how many seats to draw
@@ -105,6 +109,13 @@ export function TableComponent({
           </div>
         )}
       </div>
+
+      {!editMode && showPopup && (
+        <TableActionPopup
+          tableId = {tableId} 
+          onClose={()=>setShowPopup(false)}
+        />
+      )}
 
       {/* Delete button (edit mode) */}
       {editMode && (
