@@ -29,6 +29,10 @@ Meteor.startup(async () => {
 					bsonType: 'objectId',
 					description: 'An id of a menu category.'
 				},
+				// menuSubCategory: {
+				// 	bsonType: 'objectId',
+				// 	description: 'An id of a menu sub category.'
+				// },
 				ingredients: {
 					bsonType: 'array',
 					items: { bsonType: 'objectId' },
@@ -40,6 +44,32 @@ Meteor.startup(async () => {
 					description: 
 						'Whether the menu item is available to be ordered.'
 				},
+				schedule: {
+					bsonType: 'array',
+					description: 'A list of available times by day.',
+					items: {
+						bsonType: 'object',
+						required: ['day', 'from', 'to'],
+						properties: {
+							day: {
+								bsonType: 'string',
+								enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+								description: 'Day of the week'
+							},
+							from: {
+								bsonType: 'string',
+								pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$',
+								description: 'Start time in HH:mm format'
+							},
+							to: {
+								bsonType: 'string',
+								pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$',
+								description: 'End time in HH:mm format'
+							}
+						}
+					}
+				},
+				
 				isHalal: {
 					bsonType: 'bool',
 					description: 

@@ -6,6 +6,7 @@ import { MenuCategories } from "/imports/api/menu-categories/menu-categories-col
 import { Menu } from "/imports/api/menu/menu-collection";
 import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
+import '/imports/api/menu-categories/menu-categories-methods';
 import "/imports/api/menu/menu-methods";
 
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
@@ -14,16 +15,29 @@ import "../imports/api/inventory/inventory-methods";
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+import { OrdersCollection } from "../imports/api/orders/orders-collection";
+import "../imports/api/orders/orders-methods";
+import "../imports/api/orders/orders-publications";
+import '../imports/api/users/users-methods';
+import '../imports/api/users/users-publications';
+import { initializeUsers } from '../imports/api/users/users-initialization';
+
+import { PromotionsCollection } from '/imports/api/promotions/promotions-collection.js';
+import '/imports/api/promotions/promotions-methods.js';
+import '/imports/api/promotions/promotions-publications.js';
 import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
-
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
   const nMenuItems = await Menu.find().countAsync();
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
+  const nOrders = await OrdersCollection.find().countAsync();
+  await initializeUsers();
+  const nPromotions = await PromotionsCollection.find().countAsync();
+  
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );
@@ -57,6 +71,28 @@ Meteor.startup(async () => {
       next();
     }
   });
+  if (nOrders === 0) {
+    console.log("No order items found. Initializing with default items.");
+    const defaultItems = [
+      {
+        table:1,
+        status:"closed",
+        items:[{menu_item:"Espresso",quantity:2,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
+        recievedPayment:15
+      },
+      {
+        table:3,
+        status:"closed",
+        items:[{menu_item:"Espresso",quantity:1,price:4.2},{menu_item:"latte",quantity:1,price:4.2}],
+        discount:2,
+      }
+    ];
+    defaultItems.forEach(
+      (item) => {
+        Meteor.call("orders.insert",OrdersCollection.schema.clean(item));
+      }
+    );
+  }
 
   if (nIngredients === 0) {
     console.log("No inventory items found. Initializing with default items.");
@@ -123,4 +159,18 @@ Meteor.startup(async () => {
       async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
+  if (nPromotions === 0) {
+    PromotionsCollection.insertAsync({
+      name: 'Promotion',
+      code: 'TESTCODE',
+      type: 'flat',
+      amount: 1,
+      scope: { type: 'all', value: null },
+      requiresCode: false,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), 
+      isActive: true,
+      createdAt: new Date()
+    });
+    console.log('[Server] Inserted test promotion');
+  }  
 });

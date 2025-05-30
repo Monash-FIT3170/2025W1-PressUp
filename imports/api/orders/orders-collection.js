@@ -18,5 +18,13 @@ OrdersCollection.schema = new SimpleSchema({
   createdAt: { 
     type: Date, 
     defaultValue: new Date() 
+  },
+  recievedPayment: { 
+    type: Number, 
+    defaultValue: 0
+  },
+  discount: { 
+    type: Number, 
+    optional: true 
   }
 });

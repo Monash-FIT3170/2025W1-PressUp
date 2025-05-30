@@ -1,6 +1,6 @@
 .sidebar {
   padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 16px;
   z-index: 1000;
   box-sizing: border-box;
@@ -14,6 +14,8 @@
   opacity: 0;
   pointer-events: none;
   flex: 0 0 25%;
+  max-height: calc(100vh - 40px); /* Account for parent padding */
+  overflow-y: auto; /* Add scroll if content is too tall */
 }
 
 .sidebar.closed {
@@ -81,4 +83,37 @@
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
+  flex: 1; /* Make content area grow to fill available space */
+}
+
+.sidebar-logout {
+  margin-top: auto; /* Push to bottom */
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0; /* Updated border color to match your theme */
+  width: 100%; /* Ensure full width */
+}
+
+.logout-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer; /* Add cursor pointer */
+}
+
+.logout-btn:hover {
+  background-color: #fde9bf; /* Match other button hovers */
+}
+
+/* If you don't have a logout icon, you can use this emoji-based version */
+.logout-icon-emoji {
+  font-size: 24px;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  margin-right: 8px;
+  vertical-align: -4px;
 }

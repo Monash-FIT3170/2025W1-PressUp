@@ -3,11 +3,13 @@ import './MenuItemPopUp.css';
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
+import '/imports/api/menu-categories/menu-categories-methods.js';
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
+  const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState('');
   const [isHalal, setIsHalal] = useState(false);
@@ -15,17 +17,41 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const [schedule, setSchedule] = useState(
+    daysOfWeek.reduce((acc, day) => {
+      acc[day] = { available: false, start: '', end: '' };
+      return acc;
+    }, {})
+  );
 
   useEffect(() => {
+
+    Meteor.call('menuCategories.getCategories', (error, result) => {
+    if (error) {
+      console.error('Failed to fetch categories:', error);
+    } else {
+      // console.log('Fetched categories:', result);
+      setMenuCategories(result); // assuming result is an array of category strings
+    }
+  });
+
+
     if (mode === 'update' && existingItem) {
       setName(existingItem.name || '');
       setPrice(existingItem.price || '');
       setMenuCategory(existingItem.menuCategory || '');
-      setAvailable(existingItem.available || true);
+      setAvailable(existingItem.available ?? true);
       setIsHalal(existingItem.isHalal || false);
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
       setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
+      if (existingItem.schedule) {
+        setSchedule(prev => ({
+          ...prev,
+          ...existingItem.schedule
+        }));
+      }
     }
   }, [existingItem, mode]);
 
@@ -56,6 +82,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       isVegetarian,
       isGlutenFree,
       ingredients: ingredients.split(',').map(i => i.trim()),
+      schedule,
     };
 
     if (mode === 'create') {
@@ -63,7 +90,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         if (error) {
           alert('Failed to add menu item: ' + error.reason);
         } else {
-          alert('Menu item added successfully!');
+          // alert('Menu item added successfully!');
           addMenuItem(newMenuItem);
           setName('');
           setPrice('');
@@ -77,7 +104,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
-          alert('Menu item updated successfully!');
+          // alert('Menu item updated successfully!');
           onUpdate?.(existingItem._id, itemData);
           onClose();
         }
@@ -104,7 +131,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="close-button" onClick={onClose}>X</button>
+        <button className="action-button" onClick={onClose}>X</button>
         <h2>{mode === 'update' ? 'Update Menu Item' : 'Add New Menu Item'}</h2>
 
         <form onSubmit={handleSubmit}>
@@ -122,7 +149,17 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
 
           <div>
             <label>Menu Category</label>
-            <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} />
+            {/* <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} /> */}
+            <select value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)}>
+            <option value="">-- Select a category --</option>
+            {
+            // console.log('menuCategories:', menuCategories)
+            menuCategories.map((cat, index) => (
+              // <option key={index} value={cat}>{cat}</option>
+              <option key={cat._id} value={cat._id}>{cat.category}</option>
+            ))
+            }
+          </select>
             {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>
 
@@ -168,6 +205,60 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             <label>Ingredients</label>
             <input type="text" value={ingredients} onChange={(e) => setIngredients(e.target.value)} />
             {errors.ingredients && <span className="error">{errors.ingredients}</span>}
+          </div>
+
+          <div className="schedule-section">
+            <h4>Availability Schedule</h4>
+            {daysOfWeek.map((day) => (
+              <div key={day} className="schedule-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={schedule[day].available}
+                    onChange={(e) =>
+                      setSchedule({
+                        ...schedule,
+                        [day]: {
+                          ...schedule[day],
+                          available: e.target.checked
+                        }
+                      })
+                    }
+                  />
+                  {day}
+                </label>
+                {schedule[day].available && (
+                  <>
+                    <input
+                      type="time"
+                      value={schedule[day].start}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          [day]: {
+                            ...schedule[day],
+                            start: e.target.value
+                          }
+                        })
+                      }
+                    />
+                    <input
+                      type="time"
+                      value={schedule[day].end}
+                      onChange={(e) =>
+                        setSchedule({
+                          ...schedule,
+                          [day]: {
+                            ...schedule[day],
+                            end: e.target.value
+                          }
+                        })
+                      }
+                    />
+                  </>
+                )}
+              </div>
+            ))}
           </div>
 
           <button type="submit">{mode === 'update' ? 'Update Menu Item' : 'Add Menu Item'}</button>
