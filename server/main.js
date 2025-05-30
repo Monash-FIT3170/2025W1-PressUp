@@ -25,7 +25,9 @@ import { initializeUsers } from '../imports/api/users/users-initialization';
 import { PromotionsCollection } from '/imports/api/promotions/promotions-collection.js';
 import '/imports/api/promotions/promotions-methods.js';
 import '/imports/api/promotions/promotions-publications.js';
-
+import { TablesCollection } from '../imports/api/tables/TablesCollection';
+import "../imports/api/tables/TablesMethods";
+import "../imports/api/tables/TablesPublications";
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();

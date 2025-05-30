@@ -1,0 +1,64 @@
+.table {
+  position: absolute;
+  background: #fff;
+  border: 4px solid #5A2D12;   /* dark‐brown border */
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+/* Lengthened seat */
+.seat {
+  position: absolute;
+  width: 60px;
+  height: 12px;
+  background: #ddd;
+  border-radius: 4px;
+}
+
+/* Offset seats completely outside the 4px border */
+.seat--top    { top:    -16px; }
+.seat--bottom { bottom: -16px; }
+
+/* Delete button */
+.delete-table-button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: transparent;
+  color: red;
+  border: 2px solid red;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+  pointer-events: auto;
+  white-space: pre;
+}
+
+/* Table label */
+.table-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.table-label .table-number {
+  font-weight: bold;
+  font-size: 14px;
+  color: #000;
+  line-height: 1;
+}
+.table-label .table-status {
+  font-size: 14px;
+  color: #333;
+  line-height: 1;
+  margin-top: 10px;
+  text-transform: capitalize;
+}
+
+/* Available tables get a yellow border */
+.table.available {
+  border-color: #F7C948;
+}

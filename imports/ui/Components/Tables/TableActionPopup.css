@@ -1,0 +1,53 @@
+/* Overlay behind the popup */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* White popup box */
+.popup-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-sizing: border-box;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Row of two primary buttons */
+.popup-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Base styling for every button */
+.popup-button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* “Check in” & “Check out” */
+.popup-button--primary {
+  background: #F7C948;
+  border: none;
+  color: #000;
+}
+
+/* “Cancel” */
+.popup-button--cancel {
+  background: #fff;
+  border: 2px solid #F7C948;
+  color: #000;
+  width: 100%;
+}

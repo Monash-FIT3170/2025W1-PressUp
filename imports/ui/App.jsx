@@ -18,6 +18,7 @@ import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdow
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
+import TableMap from "./Components/Tables/TableMap.jsx";
 
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 
@@ -325,6 +326,18 @@ export const App = () => {
                 </>
               }
                     />
+            <Route
+              path="/tables"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <TableMap />
+                </>
+              }
+            />
                   </Routes>
                 </div>
               </div>
