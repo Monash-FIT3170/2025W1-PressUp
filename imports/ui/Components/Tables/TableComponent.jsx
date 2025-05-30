@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Moveable from 'react-moveable';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
-import { TablesCollection } from "../../../api/tables/TablesCollection.js";
+import { TablesCollection } from '../../../api/tables/TablesCollection.js';
 import './TableComponent.css';
 import { TableActionPopup } from './TableActionPopup.jsx';
 
@@ -10,7 +10,7 @@ export function TableComponent({
   tableId,
   initialPosition = [0, 0],
   initialSize     = [50, 50],
-  initialRotation =   0,
+  initialRotation = 0,
   editMode        = false,
 }) {
   const ref = useRef(null);
@@ -21,9 +21,14 @@ export function TableComponent({
     rotate:    initialRotation,
   });
 
-  const [showPopup, setShowPopup] = useState(false);
+  // Track live frame values without rerendering
+  const frameRef = useRef(frame);
+  useEffect(() => { frameRef.current = frame; }, [frame]);
 
-  // reactively fetch the table doc
+  const [showPopup, setShowPopup] = useState(false);
+  const [isTransforming, setIsTransforming] = useState(false);
+
+  // Reactive table data
   const table = useTracker(
     () => TablesCollection.findOne(tableId) || {},
     [tableId]
@@ -38,9 +43,7 @@ export function TableComponent({
       updatedFrame.width,
       updatedFrame.height,
       updatedFrame.rotate,
-      (err) => {
-        if (err) alert('Failed to update table layout: ' + err.reason);
-      }
+      (err) => { if (err) alert('Failed to update table layout: ' + err.reason); }
     );
   };
 
@@ -55,9 +58,7 @@ export function TableComponent({
       {/* Main table box */}
       <div
         ref={ref}
-        className={
-          `table${table.table_status === 'available' ? ' available' : ''}`
-        }
+        className={`table${table.table_status === 'available' ? ' available' : ''}`}
         style={{
           width:  `${frame.width}px`,
           height: `${frame.height}px`,
@@ -66,31 +67,20 @@ export function TableComponent({
         }}
         onClick={() => !editMode && setShowPopup(true)}
       >
-        {(() => {
-          // Always render seats only on top and bottom; rotate the table element for side seats
-          const seatCount  = Math.max(1, Math.floor(frame.width / 100));
+        {/* Seats top & bottom */}
+        {Array.from({ length: Math.max(1, Math.floor(frame.width / 100)) }).map((_, i) => {
           const seatLength = 60;
+          const centerPos  = ((i + 1) / (Math.max(1, Math.floor(frame.width / 100)) + 1)) * frame.width;
+          const offset     = centerPos - seatLength / 2;
+          return (
+            <React.Fragment key={i}>
+              <div className="seat seat--top"    style={{ left: `${offset}px` }} />
+              <div className="seat seat--bottom" style={{ left: `${offset}px` }} />
+            </React.Fragment>
+          );
+        })}
 
-          return Array.from({ length: seatCount }).map((_, i) => {
-            const centerPos      = ((i + 1) / (seatCount + 1)) * frame.width;
-            const adjustedOffset = centerPos - seatLength / 2;
-
-            return (
-              <React.Fragment key={`seat-${i}`}>
-                <div
-                  className="seat seat--top"
-                  style={{ left: `${adjustedOffset}px` }}
-                />
-                <div
-                  className="seat seat--bottom"
-                  style={{ left: `${adjustedOffset}px` }}
-                />
-              </React.Fragment>
-            );
-          });
-        })()}
-
-        {/* Only when not editing, show the table number & status */}
+        {/* Label if not editing */}
         {!editMode && table.table_number != null && (
           <div className="table-label">
             <div className="table-number">T{table.table_number}</div>
@@ -99,58 +89,93 @@ export function TableComponent({
         )}
       </div>
 
+      {/* Popup in view mode */}
       {!editMode && showPopup && (
-        <TableActionPopup
-          tableId = {tableId} 
-          onClose={()=>setShowPopup(false)}
-        />
+        <TableActionPopup tableId={tableId} onClose={() => setShowPopup(false)} />
       )}
 
-      {/* Delete button (edit mode) */}
-      {editMode && (
+      {/* Delete button in edit mode (hidden during transform) */}
+      {editMode && !isTransforming && (
         <button
           onClick={deleteTable}
           className="delete-table-button"
           style={{
-            top:  `${frame.translate[1] + frame.height  / 2}px`,
-            left: `${frame.translate[0] + frame.width   / 2}px`,
+            top:  `${frame.translate[1] + frame.height / 2}px`,
+            left: `${frame.translate[0] + frame.width  / 2}px`,
           }}
         >
           Delete&nbsp;&nbsp;Table
         </button>
       )}
 
-      {/* Moveable controls (edit mode) */}
+      {/* Moveable controls */}
       {editMode && (
         <Moveable
           target={ref}
           draggable
           resizable
           rotatable
-          renderRotator={() => null}
-          onDragStart={({ set }) => set(frame.translate)}
-          onDrag={({ beforeTranslate }) =>
-            setFrame(prev => ({ ...prev, translate: beforeTranslate }))
-          }
-          onDragEnd={() => saveFrameToDb(frame)}
+          onDragStart={({ set }) => {
+            setIsTransforming(true);
+            set(frameRef.current.translate);
+          }}
+          onDrag={({ beforeTranslate }) => {
+            frameRef.current.translate = beforeTranslate;
+            const [x, y] = beforeTranslate;
+            ref.current.style.transform =
+              `translate(${x}px, ${y}px) rotate(${frameRef.current.rotate}deg)`;
+          }}
+          onDragEnd={() => {
+            const updated = { ...frameRef.current };
+            setFrame(updated);
+            saveFrameToDb(updated);
+            setIsTransforming(false);
+          }}
           onResizeStart={({ setOrigin, dragStart }) => {
+            setIsTransforming(true);
             setOrigin(['%', '%']);
-            dragStart?.set(frame.translate);
+            dragStart.set(frameRef.current.translate);
           }}
           onResize={({ width, height, drag }) => {
-            setFrame(prev => ({
-              ...prev,
+            frameRef.current.width = width;
+            frameRef.current.height = height;
+            frameRef.current.translate = drag.beforeTranslate;
+            const [x, y] = drag.beforeTranslate;
+            ref.current.style.width  = `${width}px`;
+            ref.current.style.height = `${height}px`;
+            ref.current.style.transform =
+              `translate(${x}px, ${y}px) rotate(${frameRef.current.rotate}deg)`;
+          }}
+          onResizeEnd={({ lastEvent }) => {
+            const { width, height, drag } = lastEvent;
+            const [x, y] = drag.beforeTranslate;
+            const updated = {
+              ...frameRef.current,
               width,
               height,
-              translate: drag.beforeTranslate,
-            }));
+              translate: [x, y],
+            };
+            setFrame(updated);
+            saveFrameToDb(updated);
+            setIsTransforming(false);
           }}
-          onResizeEnd={() => saveFrameToDb(frame)}
-          onRotateStart={({ set }) => set(frame.rotate)}
-          onRotate={({ beforeRotate }) =>
-            setFrame(prev => ({ ...prev, rotate: beforeRotate }))
-          }
-          onRotateEnd={() => saveFrameToDb(frame)}
+          onRotateStart={({ set }) => {
+            setIsTransforming(true);
+            set(frameRef.current.rotate);
+          }}
+          onRotate={({ beforeRotate }) => {
+            frameRef.current.rotate = beforeRotate;
+            const [x, y] = frameRef.current.translate;
+            ref.current.style.transform =
+              `translate(${x}px, ${y}px) rotate(${beforeRotate}deg)`;
+          }}
+          onRotateEnd={({ lastEvent }) => {
+            const { beforeRotate } = lastEvent;
+            const updated = { ...frameRef.current, rotate: beforeRotate };
+            setFrame(updated);
+            saveFrameToDb(updated);
+            setIsTransforming(false);
+          }}
         />
       )}
     </div>
