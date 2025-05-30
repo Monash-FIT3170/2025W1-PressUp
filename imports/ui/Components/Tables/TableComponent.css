@@ -18,8 +18,6 @@
 /* Offset seats completely outside the 4px border */
 .seat--top    { top:    -16px; }
 .seat--bottom { bottom: -16px; }
-.seat--left   { left:   -16px; transform: rotate(90deg); }
-.seat--right  { right:  -16px; transform: rotate(90deg); }
 
 /* Delete button */
 .delete-table-button {

@@ -1,4 +1,3 @@
-// TableComponent.jsx
 import React, { useRef, useState } from 'react';
 import Moveable from 'react-moveable';
 import { Meteor } from 'meteor/meteor';
@@ -62,42 +61,32 @@ export function TableComponent({
         style={{
           width:  `${frame.width}px`,
           height: `${frame.height}px`,
-          transform: `translate(${frame.translate[0]}px, ${frame.translate[1]}px)
-                      rotate(${frame.rotate}deg)`,
+          transform: `translate(${frame.translate[0]}px, ${frame.translate[1]}px) rotate(${frame.rotate}deg)`,
           touchAction: 'none',
         }}
         onClick={() => !editMode && setShowPopup(true)}
       >
         {(() => {
-          // Determine orientation & how many seats to draw
-          const isHorizontal = frame.width >= frame.height;
-          const longest      = isHorizontal ? frame.width : frame.height;
-          const seatCount    = Math.max(1, Math.floor(longest / 100));
-          const seatLength   = 60; // match .seat width
+          // Always render seats only on top and bottom; rotate the table element for side seats
+          const seatCount  = Math.max(1, Math.floor(frame.width / 100));
+          const seatLength = 60;
 
-          return Array.from({ length: seatCount }).flatMap((_, i) => {
-            const centerPos      = ((i + 1) / (seatCount + 1)) * longest;
+          return Array.from({ length: seatCount }).map((_, i) => {
+            const centerPos      = ((i + 1) / (seatCount + 1)) * frame.width;
             const adjustedOffset = centerPos - seatLength / 2;
-            const style = isHorizontal
-              ? { left: `${adjustedOffset}px` }
-              : { top:  `${adjustedOffset}px` };
 
-            return [
-              <div
-                key={`seat-${i}-1`}
-                className={`seat ${
-                  isHorizontal ? 'seat--top' : 'seat--left'
-                }`}
-                style={style}
-              />,
-              <div
-                key={`seat-${i}-2`}
-                className={`seat ${
-                  isHorizontal ? 'seat--bottom' : 'seat--right'
-                }`}
-                style={style}
-              />
-            ];
+            return (
+              <React.Fragment key={`seat-${i}`}>
+                <div
+                  className="seat seat--top"
+                  style={{ left: `${adjustedOffset}px` }}
+                />
+                <div
+                  className="seat seat--bottom"
+                  style={{ left: `${adjustedOffset}px` }}
+                />
+              </React.Fragment>
+            );
           });
         })()}
 
