@@ -173,3 +173,13 @@
 .table-number-input {
   appearance: textfield;
 }
+
+.line-through {
+  text-decoration: line-through;
+  color: gray;
+  margin-right: 8px;
+}
+
+.discounted-price {
+  font-weight: bold;
+}

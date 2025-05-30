@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
+import '/imports/api/promotions/promotions-methods.js';
 
 export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder , setCheckout, setCheckoutID}) => {
   // State for tracking table number and checkout status
@@ -8,11 +9,54 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutError, setCheckoutError] = useState(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
+  const [discountedItems, setDiscountedItems] = useState({});
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromoCode, setAppliedPromoCode] = useState('');
+
+  useEffect(() => {
+    const fetchDiscounts = async () => {
+      const updatedDiscounts = {};
+  
+      for (let i = 0; i < orderItems.length; i++) {
+        const item = orderItems[i];
+        const itemKey = item._id || i;
+
+        try {
+          const result = await Meteor.callAsync(
+            'promotions.getDiscountedPrice',
+            item.name || '',
+            item.menuCategory || 'general',
+            item.price,
+            appliedPromoCode
+          );
+
+          updatedDiscounts[itemKey] = result || {
+            finalPrice: item.price,
+            discount: 0,
+            appliedPromotion: null
+          };
+        } catch (err) {
+          updatedDiscounts[itemKey] = {
+            finalPrice: item.price,
+            discount: 0,
+            appliedPromotion: null
+          };
+        }
+      }
+  
+      setDiscountedItems(updatedDiscounts);
+    };
+  
+    fetchDiscounts();
+  }, [orderItems, appliedPromoCode]);
+  
   
   // Calculate subtotal
-  const subtotal = orderItems.reduce((sum, item) => {
-    return sum + (item.price * item.quantity);
-  }, 0);
+  const subtotal = orderItems.reduce((sum, item, index) => {
+    const itemKey = item._id || index;
+    const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
+    return sum + finalPrice * item.quantity;
+  }, 0);  
   
   // Function to handle table number changes
   const handleTableChange = (e) => {
@@ -41,17 +85,25 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
     setIsCheckingOut(true);
     
     // Format order data according to the schema
+    console.log("Discounted Items:", discountedItems);
+
     const orderData = {
       table: tableNumber,
       status: "open",
-      items: orderItems.map(item => ({
-        menu_item: item.name,
-        quantity: item.quantity,
-        price: item.price
-      })),
+      items: orderItems.map((item, index) => {
+        const itemKey = item._id || index;
+        const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
+        return {
+          menu_item: item.name,
+          quantity: item.quantity,
+          price: finalPrice,
+        };
+      }),
       createdAt: new Date(),
       recievedPayment: 0
     };
+
+    console.log("Order Data being submitted:", orderData);
     
     // Call the Meteor method to insert the order
     Meteor.call('orders.insert', orderData, (error, result) => {
@@ -116,7 +168,18 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
                 </div>
               </div>
               <div className="order-item-price">
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <>
+                {discountedItems[item._id || index]?.discount > 0 ? (
+                  <>
+                    <span className="line-through">${(item.price * item.quantity).toFixed(2)}</span>{' '}
+                    <span className="discounted-price">
+                      ${(discountedItems[item._id || index]?.finalPrice * item.quantity).toFixed(2)}
+                    </span>
+                  </>
+                ) : (
+                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                )}
+              </>
                 <button 
                   className="remove-btn"
                   onClick={() => removeFromOrder(item._id || index)}
@@ -137,6 +200,31 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         {checkoutSuccess && (
           <div className="checkout-success">Order placed successfully!</div>
         )}
+
+        <div className="promo-code-section">
+          <label htmlFor="promo-code">Promo Code:</label>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input
+              id="promo-code"
+              type="text"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Enter promo code"
+              className="promo-code-input"
+            />
+            <button
+              onClick={() => setAppliedPromoCode(promoCode)}
+              className="apply-promo-btn"
+            >
+              Apply
+            </button>
+          </div>
+          {appliedPromoCode && (
+            <div className="applied-promo-msg">
+              Applied code: <strong>{appliedPromoCode}</strong>
+            </div>
+          )}
+        </div>
         
         <div className="subtotal">
           <span>Subtotal</span>

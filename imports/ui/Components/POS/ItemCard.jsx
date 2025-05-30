@@ -5,6 +5,7 @@ import { Meteor } from "meteor/meteor";
 const ItemCard = ({
   name,
   price,
+  discountedPrice = null,
   ingredients,
   isHalal,
   isVegetarian,
@@ -42,7 +43,19 @@ const ItemCard = ({
       {/* DESCRIPTION: price only */}
       <div className="card-description">
         <p className="price">
-          {`Price: $${parseFloat(price).toFixed(2)}`}
+          Price:{" "}
+            {discountedPrice !== null && discountedPrice < price ? (
+              <>
+                <span style={{ textDecoration: 'line-through', marginRight: 8 }}>
+                  ${price.toFixed(2)}
+                </span>
+                <span>
+                  ${discountedPrice.toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <span>${price.toFixed(2)}</span>
+            )}
         </p>
       </div>
 

@@ -22,6 +22,10 @@ import '../imports/api/users/users-methods';
 import '../imports/api/users/users-publications';
 import { initializeUsers } from '../imports/api/users/users-initialization';
 
+import { PromotionsCollection } from '/imports/api/promotions/promotions-collection.js';
+import '/imports/api/promotions/promotions-methods.js';
+import '/imports/api/promotions/promotions-publications.js';
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -30,7 +34,8 @@ Meteor.startup(async () => {
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
   await initializeUsers();
-
+  const nPromotions = await PromotionsCollection.find().countAsync();
+  
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
   );
@@ -152,4 +157,18 @@ Meteor.startup(async () => {
       async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
+  if (nPromotions === 0) {
+    PromotionsCollection.insertAsync({
+      name: 'Promotion',
+      code: 'TESTCODE',
+      type: 'flat',
+      amount: 1,
+      scope: { type: 'all', value: null },
+      requiresCode: false,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), 
+      isActive: true,
+      createdAt: new Date()
+    });
+    console.log('[Server] Inserted test promotion');
+  }  
 });

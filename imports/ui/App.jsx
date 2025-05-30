@@ -19,9 +19,12 @@ import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
 
+import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
+
 
 export const App = () => {
   // Authentication tracking
@@ -307,6 +310,18 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                </>
+              }
+            />
+            <Route
+              path="/promotions"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <PromotionPage />
                 </>
               }
                     />
