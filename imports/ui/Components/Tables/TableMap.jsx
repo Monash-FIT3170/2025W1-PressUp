@@ -50,14 +50,7 @@ export default function TableMap() {
       {/* Edit‐mode toggle */}
       <button
         onClick={toggleEditMode}
-        style={{
-          position: 'absolute',
-          top: 10,
-          left: 10,
-          zIndex: 1000,
-          padding: '8px 12px',
-          fontSize: '14px',
-        }}
+        className = 'tablemap__edit-toggle'
       >
         {editMode ? 'Exit Edit Mode' : 'Enter Edit Mode'}
       </button>
@@ -66,14 +59,7 @@ export default function TableMap() {
       {editMode && (
         <button
           onClick={createNewTable}
-          style={{
-            position: 'absolute',
-            top: 10,
-            left: 140,
-            zIndex: 1000,
-            padding: '8px 12px',
-            fontSize: '14px',
-          }}
+          className = 'tablemap__add-table'
         >
           + Add Table
         </button>

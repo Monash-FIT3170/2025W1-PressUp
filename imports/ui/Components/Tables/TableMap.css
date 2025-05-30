@@ -1,3 +1,5 @@
+
+
 .status-counter {
   position: absolute;
   top: 10px;
@@ -31,4 +33,31 @@
 
 .status-counter__checked-in .status-counter__dot {
   background: #5A2D12;
+}
+
+.tablemap__edit-toggle,
+.tablemap__add-table {
+  position: absolute;
+  top: 10px;
+  z-index: 1000;
+  padding: 8px 12px;
+  font-size: 14px;
+
+  /* yellow border + fill */
+  border: 2px solid #F7C948;
+  background-color: #F7C948;
+
+  /* rounded corners */
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+/* positions stay the same */
+.tablemap__edit-toggle {
+  left: 10px;
+}
+
+.tablemap__add-table {
+  left: 140px;
 }
