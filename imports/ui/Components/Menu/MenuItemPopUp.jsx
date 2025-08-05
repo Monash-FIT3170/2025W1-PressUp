@@ -13,7 +13,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [menuCategory, setMenuCategory] = useState('');
   const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
   const [available, setAvailable] = useState(true);
-  const [ingredients, setIngredients] = useState('');
+  const [ingredients, setIngredients] = useState([]);
   const [isHalal, setIsHalal] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
@@ -51,7 +51,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setIsHalal(existingItem.isHalal || false);
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
-      setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
+      setIngredients(existingItem.ingredients || []);
       if (existingItem.schedule) {
         setSchedule(prev => ({
           ...prev,
@@ -66,7 +66,10 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     if (!name.trim()) newErrors.name = 'Item name is required';
     if (!price || isNaN(price) || parseFloat(price) <= 0) newErrors.price = 'Please enter a valid price greater than 0';
     if (!menuCategory.trim()) newErrors.menuCategory = 'Menu category is required';
-    if (ingredients && !Array.isArray(ingredients.split(','))) newErrors.ingredients = 'Ingredients must be a comma-separated list';
+    if (!Array.isArray(ingredients) || ingredients.length === 0) {
+  newErrors.ingredients = 'Please select at least one ingredient';
+}
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -87,7 +90,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       isHalal,
       isVegetarian,
       isGlutenFree,
-      ingredients: ingredients.split(',').map(i => i.trim()),
+      ingredients,
       schedule,
     };
 
@@ -101,7 +104,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           setName('');
           setPrice('');
           setMenuCategory('');
-          setIngredients('');
+          setIngredients([]);
           onClose();  // Close the popup after successful submission
         }
       });
@@ -209,19 +212,27 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
 
           <div>
             <label>Ingredients</label>
-            {/* <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} /> */}
-            <select value={ingredients} onChange={(e) => setIngredients(e.target.value)}>
-            <option value="">-- Select Ingredient --</option>
-            {
-            // console.log('menuCategories:', menuCategories)
-            findIngredients.map((ing, index) => (
-              // <option key={index} value={cat}>{cat}</option>
-              <option key={ing._id} value={ing._id}>{ing.name}</option>
-            ))
-            }
-          </select>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
+              {findIngredients.map((ing, index) => (
+                <label key={ing._id} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <input
+                    type="checkbox"
+                    value={ing._id}
+                    checked={ingredients.includes(ing._id)}
+                    onChange={(e) => {
+                      const newIngredients = e.target.checked
+                        ? [...ingredients, ing._id]
+                        : ingredients.filter(id => id !== ing._id);
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  {ing.name}
+                </label>
+              ))}
+            </div>
             {errors.ingredients && <span className="error">{errors.ingredients}</span>}
           </div>
+
 
           <div className="schedule-section">
             <h4>Availability Schedule</h4>
