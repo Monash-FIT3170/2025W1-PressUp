@@ -34,13 +34,13 @@ export const App = () => {
     const user = Meteor.user();
 
     if (user) {
-      console.log('=== USER DEBUG ===');
-      console.log('Full user object:', user);
-      console.log('Username:', user.username);
-      console.log('isAdmin value:', user.isAdmin);
-      console.log('Type of isAdmin:', typeof user.isAdmin);
-      console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
-      console.log('=================');
+      // console.log('=== USER DEBUG ===');
+      // console.log('Full user object:', user);
+      // console.log('Username:', user.username);
+      // console.log('isAdmin value:', user.isAdmin);
+      // console.log('Type of isAdmin:', typeof user.isAdmin);
+      // console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
+      // console.log('=================');
     }
     
     return {
