@@ -174,11 +174,30 @@ export const App = () => {
       <Routes>
         {/* Login route */}
         <Route 
-          path="/login" 
-          element={
-            user ? <Navigate to="/" replace /> : <Login />
-          } 
-        />
+        path="/login" 
+        element={
+          user ? <Navigate to="/" replace /> : (
+            <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+              <Sidebar 
+                isOpen={isSidebarOpen} 
+                setIsOpen={setIsSidebarOpen}
+                isAdmin={false} // Since the user is not logged in, no admin check
+              />
+              <div className="main-content">
+                <div className="pos-layout">
+                  <div className="pos-content">
+                  <PageHeader
+                      isSidebarOpen={isSidebarOpen}
+                      setIsSidebarOpen={setIsSidebarOpen}
+                    />
+                    <Login />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      />
         
         {/* Protected routes */}
         <Route
