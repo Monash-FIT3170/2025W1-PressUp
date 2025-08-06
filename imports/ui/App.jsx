@@ -55,7 +55,7 @@ export const App = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(["all"]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
@@ -181,7 +181,32 @@ export const App = () => {
               <Sidebar 
                 isOpen={isSidebarOpen} 
                 setIsOpen={setIsSidebarOpen}
-                isAdmin={false} // Since the user is not logged in, no admin check
+                isAdmin={false}
+              />
+              <div className="main-content">
+                <div className="pos-layout">
+                  <div className="pos-content">
+                  <PageHeader
+                      isSidebarOpen={isSidebarOpen}
+                      setIsSidebarOpen={setIsSidebarOpen}
+                    />
+                    <Login />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      />
+      <Route 
+        path="/enquiries" 
+        element={
+          user ? <Navigate to="/" replace /> : (
+            <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+              <Sidebar 
+                isOpen={isSidebarOpen} 
+                setIsOpen={setIsSidebarOpen}
+                isAdmin={false}
               />
               <div className="main-content">
                 <div className="pos-layout">
@@ -211,6 +236,7 @@ export const App = () => {
                   isOpen={isSidebarOpen} 
                   setIsOpen={setIsSidebarOpen}
                   isAdmin={user.isAdmin} 
+                  isLoggedIn={user}
                 />
                 <div className="main-content">
                   <Routes>
