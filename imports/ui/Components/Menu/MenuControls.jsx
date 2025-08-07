@@ -7,8 +7,8 @@ import './MenuControls.css'
 
 
 export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
-  console.log('selectedCategory:', selectedCategory);
-  console.log('setSelectedCategory:', setSelectedCategory);
+  // console.log('selectedCategory:', selectedCategory);
+  // console.log('setSelectedCategory:', setSelectedCategory);
 
   const [showCategoryManager, setShowCategoryManager] = useState(false);
 
