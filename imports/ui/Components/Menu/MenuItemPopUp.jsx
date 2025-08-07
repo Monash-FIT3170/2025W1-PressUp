@@ -272,6 +272,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                 )}
               </div>
             ))}
+
+          {errors.ingredients && <span className="error">{errors.ingredients}</span>}
           </div>
 
 
