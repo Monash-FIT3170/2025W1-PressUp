@@ -1,0 +1,27 @@
+.kitchen-order-card {
+  transition: all 0.2s ease;
+}
+
+.kitchen-order-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.kitchen-order-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kitchen-order-card .status-badge {
+  font-weight: 500;
+}
+
+.kitchen-order-card .items-list {
+  list-style-type: disc;
+  padding-left: 1rem;
+}
+
+.kitchen-order-card .status-buttons button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
