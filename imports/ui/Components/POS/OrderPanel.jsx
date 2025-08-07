@@ -107,19 +107,14 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       table: tableNumber,
       status: "open",
       items: orderItems.map((item, index) => {
-        console.log('item', item);
         const itemKey = item._id || index;
         const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
-        const ingredients = item.ingredients || []; // list of ingredients in each order item i would 
-        // like to search for the full ingedient data in the collection using each id
-        console.log('ingredients', ingredients);
+        
+        const ingredients = item.ingredients || [];
         const fullIngredientData = ingredients.map(id => inventoryMap[id]).filter(Boolean);
-        console.log("Full Ingredient Data", fullIngredientData);
-        //for each item we will calculate the cost based on the ingredients (trim the leading $ from the price and turn into a number)
         const finalCost = fullIngredientData.reduce((total, ingredient) => {
-          return total + (parseFloat(ingredient.price.replace(/^\$/, '')) || 0);
+          return total + (ingredient.price || 0);
         }, 0);
-        console.log("Final Cost", finalCost);
 
         return {
           menu_item: item.name,
