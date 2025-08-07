@@ -21,6 +21,7 @@ import { Login } from "./Components/Login/Login.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+import { Dashboard } from './Components/Analytics/Dashboard.jsx';
 
 // Styles
 import "./AppStyle.css";
@@ -335,6 +336,18 @@ export const App = () => {
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <TableMap />
+                </>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Dashboard />
                 </>
               }
             />
