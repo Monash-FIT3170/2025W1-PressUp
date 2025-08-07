@@ -94,6 +94,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         const itemKey = item._id || index;
         const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
         return {
+          id: item._id,
           menu_item: item.name,
           quantity: item.quantity,
           price: finalPrice,
