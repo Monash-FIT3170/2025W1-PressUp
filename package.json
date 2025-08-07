@@ -18,9 +18,9 @@
     "react-addons-pure-render-mixin": "^15.6.3",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
+    "react-meteor-data": "^0.2.11",
     "react-movable": "^3.4.1",
     "react-moveable": "^0.56.0",
-    "react-meteor-data": "^0.2.11",
     "react-router-dom": "^6.30.0",
     "simpl-schema": "^3.4.6"
   },
