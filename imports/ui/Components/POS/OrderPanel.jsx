@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './OrderPanel.css';
 import '/imports/api/promotions/promotions-methods.js';
+import { useTracker } from 'meteor/react-meteor-data';
+import { InventoryCollection } from '/imports/api/inventory/inventory-collection.js';
 
 export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearOrder , setCheckout, setCheckoutID}) => {
   // State for tracking table number and checkout status
@@ -12,6 +14,20 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromoCode, setAppliedPromoCode] = useState('');
+
+  const inventoryItems = useTracker(() => {
+    const handle = Meteor.subscribe('inventory.all');
+    if (!handle.ready()) {
+      return []; // wait until subscription is ready
+    }
+    return InventoryCollection.find().fetch();
+  }, []);
+
+
+  const inventoryMap = {};
+    inventoryItems.forEach(invItem => {
+    inventoryMap[invItem._id] = invItem;
+  });
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -93,10 +109,22 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
       items: orderItems.map((item, index) => {
         const itemKey = item._id || index;
         const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
+        
+        const ingredients = item.ingredients || [];
+        const fullIngredientData = ingredients.map(ingred => {
+          const inventoryItem = inventoryMap[ingred.id];
+          return inventoryItem  ? { ...inventoryItem, amount: ingred.amount } : null;
+        }).filter(Boolean);
+
+        const finalCost = fullIngredientData.reduce((total, ingredient) => {
+          return total + (ingredient.price || 0) * ingredient.amount;
+        }, 0);
+
         return {
           menu_item: item.name,
           quantity: item.quantity,
           price: finalPrice,
+          cost : finalCost,
         };
       }),
       createdAt: new Date(),
