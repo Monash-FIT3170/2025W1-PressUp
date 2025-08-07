@@ -236,6 +236,17 @@ export const App = () => {
                 </div>
               }
             />
+            <Route
+              path="/kitchen"
+              element={
+                <>
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                </>
+              }
+            />
             
             {/* Admin-only routes */}
             {user.isAdmin ? (
