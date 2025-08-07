@@ -53,14 +53,20 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setIsHalal(existingItem.isHalal || false);
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
-      setIngredients(existingItem.ingredients || []);
-      if (existingItem.schedule) {
-        setSchedule(prev => ({
-          ...prev,
-          ...existingItem.schedule
-        }));
+      // setIngredients(existingItem.ingredients || []);
+      setIngredients((existingItem.ingredients || []).map(ing => ing.id));
+      setIngredientAmounts((existingItem.ingredients || []).reduce((acc, ing) => {
+          acc[ing.id] = ing.amount;
+          return acc;
+        }, {}));
+
+        if (existingItem.schedule) {
+          setSchedule(prev => ({
+            ...prev,
+            ...existingItem.schedule
+          }));
+        }
       }
-    }
   }, [existingItem, mode]);
 
   const validateForm = () => {
@@ -69,8 +75,15 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     if (!price || isNaN(price) || parseFloat(price) <= 0) newErrors.price = 'Please enter a valid price greater than 0';
     if (!menuCategory.trim()) newErrors.menuCategory = 'Menu category is required';
     if (!Array.isArray(ingredients) || ingredients.length === 0) {
-  newErrors.ingredients = 'Please select at least one ingredient';
-}
+      newErrors.ingredients = 'Please select at least one ingredient';
+    }
+    ingredients.forEach(id => {
+      const amount = parseFloat(ingredientAmounts[id]);
+      if (isNaN(amount) || amount <= 0) {
+        newErrors.ingredients = 'Each selected ingredient must have a valid amount';
+      }
+    });
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -216,29 +229,6 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             </label>
           </div>
 
-          {/* <div>
-            <label>Ingredients</label>
-            <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-              {findIngredients.map((ing, index) => (
-                <label key={ing._id} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                  <input
-                    type="checkbox"
-                    value={ing._id}
-                    checked={ingredients.includes(ing._id)}
-                    onChange={(e) => {
-                      const newIngredients = e.target.checked
-                        ? [...ingredients, ing._id]
-                        : ingredients.filter(id => id !== ing._id);
-                      setIngredients(newIngredients);
-                    }}
-                  />
-                  {ing.name}
-                </label>
-              ))}
-            </div>
-            {errors.ingredients && <span className="error">{errors.ingredients}</span>}
-          </div> */}
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
             {findIngredients.map((ing) => (
               <div key={ing._id} style={{ display: 'flex', gap: '10px' }}>
@@ -259,13 +249,6 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                         delete updatedAmounts[ing._id];
                         setIngredientAmounts(updatedAmounts);
                       }
-
-                      ingredients.forEach(id => {
-                        const amount = parseFloat(ingredientAmounts[id]);
-                        if (isNaN(amount) || amount <= 0) {
-                          newErrors.ingredients = 'Each selected ingredient must have a valid amount';
-                        }
-                      });
 
                       setIngredients(newIngredients);
                     }}
