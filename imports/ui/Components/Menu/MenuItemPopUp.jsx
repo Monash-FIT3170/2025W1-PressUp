@@ -22,6 +22,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const searchTerm = "";
   const isInventoryReady  = useSubscribe("inventory.nameIncludes", searchTerm);
   const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
+  const [ingredientAmounts, setIngredientAmounts] = useState({});
+
   // const findIngredients = useFind(() => InventoryCollection.find({}));
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [schedule, setSchedule] = useState(
@@ -90,7 +92,11 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       isHalal,
       isVegetarian,
       isGlutenFree,
-      ingredients,
+      // ingredients,
+      ingredients: ingredients.map(id => ({
+        id,
+        amount: parseFloat(ingredientAmounts[id]) || 0
+      })),
       schedule,
     };
 
@@ -210,7 +216,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             </label>
           </div>
 
-          <div>
+          {/* <div>
             <label>Ingredients</label>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
               {findIngredients.map((ing, index) => (
@@ -231,6 +237,58 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
               ))}
             </div>
             {errors.ingredients && <span className="error">{errors.ingredients}</span>}
+          </div> */}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+            {findIngredients.map((ing) => (
+              <div key={ing._id} style={{ display: 'flex', gap: '10px' }}>
+                <label style={{ display: 'flex', gap: '5px' }}>
+                  <input
+                    type="checkbox"
+                    value={ing._id}
+                    checked={ingredients.includes(ing._id)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newIngredients = checked
+                        ? [...ingredients, ing._id]
+                        : ingredients.filter(id => id !== ing._id);
+
+                      // Clean up amount if unchecked
+                      if (!checked) {
+                        const updatedAmounts = { ...ingredientAmounts };
+                        delete updatedAmounts[ing._id];
+                        setIngredientAmounts(updatedAmounts);
+                      }
+
+                      ingredients.forEach(id => {
+                        const amount = parseFloat(ingredientAmounts[id]);
+                        if (isNaN(amount) || amount <= 0) {
+                          newErrors.ingredients = 'Each selected ingredient must have a valid amount';
+                        }
+                      });
+
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  {ing.name}
+                </label>
+
+                {/* Show input for amount if checked */}
+                {ingredients.includes(ing._id) && (
+                  <input
+                    type="number"
+                    placeholder="Amount (e.g. 100g)"
+                    value={ingredientAmounts[ing._id] || ''}
+                    onChange={(e) =>
+                      setIngredientAmounts({
+                        ...ingredientAmounts,
+                        [ing._id]: e.target.value
+                      })
+                    }
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
 
