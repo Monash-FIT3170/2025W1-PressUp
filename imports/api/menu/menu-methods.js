@@ -25,7 +25,13 @@ Meteor.methods({
 			isHalal: Match.Optional(Boolean),
 			isVegetarian: Match.Optional(Boolean),
 			isGlutenFree: Match.Optional(Boolean),
-			ingredients: Match.Optional([String]),
+			// ingredients: Match.Optional([String]),
+			ingredients: Match.Optional([
+				{
+					id: String,
+					amount: Number
+				}
+				]),
 			schedule: Match.Optional(Object),
 		});
 
@@ -77,7 +83,13 @@ Meteor.methods({
 			isHalal: Match.Optional(Boolean),
 			isVegetarian: Match.Optional(Boolean),
 			isGlutenFree: Match.Optional(Boolean),
-			ingredients: Match.Optional([String]),
+			// ingredients: Match.Optional([String]),
+			ingredients: Match.Optional([
+				{
+					id: String,
+					amount: Number
+				}
+				]),
 			schedule: Match.Optional(Object),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
