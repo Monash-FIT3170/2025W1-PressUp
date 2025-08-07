@@ -111,9 +111,13 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
         
         const ingredients = item.ingredients || [];
-        const fullIngredientData = ingredients.map(id => inventoryMap[id]).filter(Boolean);
+        const fullIngredientData = ingredients.map(ingred => {
+          const inventoryItem = inventoryMap[ingred.id];
+          return inventoryItem  ? { ...inventoryItem, amount: ingred.amount } : null;
+        }).filter(Boolean);
+
         const finalCost = fullIngredientData.reduce((total, ingredient) => {
-          return total + (ingredient.price || 0);
+          return total + (ingredient.price || 0) * ingredient.amount;
         }, 0);
 
         return {
