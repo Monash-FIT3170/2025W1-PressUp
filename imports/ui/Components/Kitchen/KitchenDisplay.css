@@ -1,27 +1,37 @@
-.kitchen-order-card {
-  transition: all 0.2s ease;
-}
-
-.kitchen-order-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.kitchen-order-card .card-header {
+.kitchen-page {
+  height: 100vh;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  overflow-y: hidden;
+  background: #ffffff; /* pure white */
 }
 
-.kitchen-order-card .status-badge {
-  font-weight: 500;
+.kitchen-header {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #ffffff;
+}
+.kitchen-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
 }
 
-.kitchen-order-card .items-list {
-  list-style-type: disc;
-  padding-left: 1rem;
+.kitchen-cards-row {
+  flex: 1 1 auto;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 16px;
+  padding: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: start;
 }
 
-.kitchen-order-card .status-buttons button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
+.kitchen-empty {
+  padding: 24px 16px;
+  color: #666;
 }
