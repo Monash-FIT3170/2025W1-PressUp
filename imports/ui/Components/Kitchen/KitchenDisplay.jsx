@@ -5,7 +5,11 @@ import KitchenOrderCard from './KitchenOrderCard.jsx';
 import { OrdersCollection } from '/imports/api/orders/orders-collection';
 import './KitchenDisplay.css';
 
-export const KitchenDisplay = () => {
+/**
+ * Props:
+ * - sidebarOpen?: boolean  (optional; nice-to-have)
+ */
+export const KitchenDisplay = ({ sidebarOpen }) => {
   const viewportRef = useRef(null);
   const probeGridRef = useRef(null);
   const probeCardRef = useRef(null);
@@ -20,7 +24,7 @@ export const KitchenDisplay = () => {
     return { orders: data, isLoading: loading };
   });
 
-  // Compute how many cards fit on screen from a single probe card
+  // ---- layout measurement (pure) -------------------------------------------
   const computePageSize = () => {
     const viewport = viewportRef.current;
     const probeGrid = probeGridRef.current;
@@ -30,45 +34,43 @@ export const KitchenDisplay = () => {
     const vpRect = viewport.getBoundingClientRect();
     const style = window.getComputedStyle(probeGrid);
 
-    // grid paddings (we subtract them from available height/width)
+    // paddings
     const padX =
-      parseFloat(style.paddingLeft || '0') + parseFloat(style.paddingRight || '0');
+      (parseFloat(style.paddingLeft || '0') +
+        parseFloat(style.paddingRight || '0')) || 0;
     const padY =
-      parseFloat(style.paddingTop || '0') + parseFloat(style.paddingBottom || '0');
+      (parseFloat(style.paddingTop || '0') +
+        parseFloat(style.paddingBottom || '0')) || 0;
 
-    // flex gap (single value used for both axes in our CSS)
-    // fallback to 16 if gap can’t be parsed for any reason
+    // gap
     const gapRaw = style.gap || style.rowGap || '16px';
     const gap =
       (gapRaw.endsWith('px') ? parseFloat(gapRaw) : parseFloat(gapRaw)) || 16;
 
-    // card size
+    // card size (measure a real card)
     const cardRect = probeCard.getBoundingClientRect();
     const cardW = Math.ceil(cardRect.width);
     const cardH = Math.ceil(cardRect.height);
-
-    if (cardW === 0 || cardH === 0) return; // layout not ready yet
+    if (cardW === 0 || cardH === 0) return;
 
     const availW = Math.max(0, Math.floor(vpRect.width - padX));
     const availH = Math.max(0, Math.floor(vpRect.height - padY));
 
     const cols = Math.max(1, Math.floor((availW + gap) / (cardW + gap)));
     const rows = Math.max(1, Math.floor((availH + gap) / (cardH + gap)));
-
     const size = Math.max(1, cols * rows);
 
-    setPageIndex(0); // reset to first page when layout changes
+    // IMPORTANT: do not touch pageIndex here
     setPageSize(size);
   };
 
-  // Recompute when orders change (structure) or on resize
+  // when orders count changes, re-measure after paint
   useEffect(() => {
-    // Give DOM a tick to paint before measuring
     const id = requestAnimationFrame(() => setTimeout(computePageSize, 0));
     return () => cancelAnimationFrame(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders.length]);
 
+  // window resize + ResizeObserver on viewport
   useEffect(() => {
     const onResize = () => computePageSize();
     window.addEventListener('resize', onResize);
@@ -82,10 +84,51 @@ export const KitchenDisplay = () => {
       window.removeEventListener('resize', onResize);
       if (ro) ro.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Build pages from pageSize
+  // recompute on sidebar prop changes (if the parent passes it)
+  useEffect(() => {
+    if (typeof sidebarOpen === 'undefined') return;
+    computePageSize();
+    const t = setTimeout(computePageSize, 0);
+    return () => clearTimeout(t); // fixed cleanup
+  }, [sidebarOpen]);
+
+  // ALSO listen for custom events + transition end (works even without the prop)
+  useEffect(() => {
+    const onPing = () => computePageSize();
+
+    const onTransitionEnd = (e) => {
+      const p = e.propertyName || '';
+      if (
+        p.includes('width') ||
+        p.includes('left') ||
+        p.includes('right') ||
+        p.includes('transform') ||
+        p.includes('padding') ||
+        p.includes('margin')
+      ) {
+        computePageSize();
+      }
+    };
+
+    window.addEventListener('layout:sidebar-toggled', onPing);
+    document.addEventListener('transitionend', onTransitionEnd, true);
+
+    return () => {
+      window.removeEventListener('layout:sidebar-toggled', onPing);
+      document.removeEventListener('transitionend', onTransitionEnd, true);
+    };
+  }, []);
+
+  // Clamp pageIndex ONLY when it becomes out of range
+  useEffect(() => {
+    if (!pageSize) return;
+    const pagesNow = Math.max(1, Math.ceil(orders.length / pageSize));
+    setPageIndex((prev) => (prev > pagesNow - 1 ? pagesNow - 1 : prev));
+  }, [pageSize, orders.length]);
+
+  // ---- paging ---------------------------------------------------------------
   const pages = useMemo(() => {
     if (!pageSize || pageSize <= 0) return orders.length ? [orders] : [];
     const out = [];
@@ -106,6 +149,7 @@ export const KitchenDisplay = () => {
   const goNext = () => setPageIndex((p) => Math.min(p + 1, maxPageIndex));
   const goPrev = () => setPageIndex((p) => Math.max(p - 1, 0));
 
+  // ---- render ---------------------------------------------------------------
   return (
     <div className="kitchen-page">
       <header className="kitchen-header">
@@ -118,7 +162,7 @@ export const KitchenDisplay = () => {
         <div className="kitchen-empty">No open orders.</div>
       ) : (
         <div className="kitchen-cards-flex-wrapper" ref={viewportRef}>
-          {/* PROBE GRID: hidden, 1 card, used only for measuring */}
+          {/* HIDDEN PROBE: used only for sizing a single card in a real grid context */}
           <div
             ref={probeGridRef}
             className="kitchen-cards-flex"
@@ -129,7 +173,6 @@ export const KitchenDisplay = () => {
               inset: 0,
             }}
           >
-            {/* If we have at least one order, render exactly one card to measure */}
             {orders[0] && (
               <div ref={probeCardRef}>
                 <KitchenOrderCard order={orders[0]} />
@@ -137,7 +180,6 @@ export const KitchenDisplay = () => {
             )}
           </div>
 
-          {/* If pageSize not ready, just render first page worth by estimate (no slide yet) */}
           {!pageSize ? (
             <div className="kitchen-cards-flex">
               {orders.slice(0, 12).map((o) => (
@@ -146,7 +188,6 @@ export const KitchenDisplay = () => {
             </div>
           ) : (
             <>
-              {/* Sliding rail with fixed-width pages */}
               <div
                 className="kitchen-rail"
                 style={{ transform: `translateX(-${pageIndex * 100}%)` }}
@@ -162,11 +203,8 @@ export const KitchenDisplay = () => {
                 ))}
               </div>
 
-              {/* Pager */}
               <div className="kitchen-pager">
-                <button onClick={goPrev} disabled={pageIndex === 0}>
-                  ← Back
-                </button>
+                <button onClick={goPrev} disabled={pageIndex === 0}>← Back</button>
                 {remainingAfterThisPage > 0 && (
                   <button onClick={goNext}>+{remainingAfterThisPage} orders</button>
                 )}

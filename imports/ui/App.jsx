@@ -245,7 +245,7 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <KitchenDisplay/>
+                  <KitchenDisplay isSidebarOpen = {isSidebarOpen}/>
                 </>
               }
             />

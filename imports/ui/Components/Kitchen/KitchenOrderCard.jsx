@@ -1,5 +1,6 @@
 import React from 'react';
 import './KitchenOrderCard.css';
+import OrderActionButton from './OrderActionButton.jsx';
 
 function formatAEST(date) {
   try {
@@ -17,7 +18,7 @@ function formatAEST(date) {
 }
 
 const KitchenOrderCard = ({ order }) => {
-  const { table, items = [], createdAt } = order;
+  const { _id, table, items = [], createdAt } = order;
 
   return (
     <div className="kitchen-order-card">
@@ -34,6 +35,22 @@ const KitchenOrderCard = ({ order }) => {
           </li>
         ))}
       </ul>
+
+      {/* Actions */}
+      <div className="koc-actions">
+        <OrderActionButton
+          orderId={_id}
+          methodName="orders.markClosed"
+          label="Complete Order"
+          className="complete"
+        />
+        <OrderActionButton
+          orderId={_id}
+          methodName="orders.markCancelled"
+          label="Cancel Order"
+          className="cancel"
+        />
+      </div>
     </div>
   );
 };
