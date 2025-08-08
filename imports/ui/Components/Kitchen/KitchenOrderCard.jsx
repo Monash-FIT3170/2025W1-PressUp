@@ -23,7 +23,7 @@ const KitchenOrderCard = ({ order }) => {
     <div className="kitchen-order-card">
       <div className="koc-head">
         <h3 className="koc-title">Table {table}</h3>
-        <span className="koc-time">{formatAEST(new Date(createdAt))}</span>
+        <span className="koc-time">Ordered at: {formatAEST(new Date(createdAt))}</span>
       </div>
 
       <ul className="koc-items">
