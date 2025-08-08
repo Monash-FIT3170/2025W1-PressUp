@@ -6,5 +6,5 @@ Meteor.publish("enquiries.all", () => {
 });
 
 Meteor.publish("enquiries.active", () => {
-    return EnquiriesCollection.find({active: true});
+    return EnquiriesCollection.find({active: true},{sort: {date_created: -1}});
   });
