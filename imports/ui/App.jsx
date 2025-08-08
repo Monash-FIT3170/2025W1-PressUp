@@ -21,7 +21,7 @@ import { Login } from "./Components/Login/Login.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
-import { Dashboard } from './Components/Analytics/Dashboard.jsx';
+import Dashboard from './Components/Analytics/Dashboard.jsx';
 
 // Styles
 import "./AppStyle.css";
