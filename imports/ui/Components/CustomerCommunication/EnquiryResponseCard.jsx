@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { useSubscribe, useFind } from "meteor/react-meteor-data";
 import { EnquiriesCollection } from "../../../api/enquiries/enquiries-collection";
-import { LoadingIndicator } from "../OrderSummary/LoadingIndicator/LoadingIndicator.jsx";
+import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import './EnquiryResponseCard.css';
 
 
@@ -10,8 +10,9 @@ export const EnquiryResponseCard = ({
     enquiryID
 }) => {
     const isLoading = useSubscribe("enquiries.id", enquiryID);
-    const enquiry = useFind(()=>EnquiriesCollection.find({ enquiryID }),[enquiryID]);
-    enquiry = enquiry[0]
+    var enquiry = useFind(()=>EnquiriesCollection.find({_id: enquiryID}),[enquiryID]);]
+    enquiry = enquiry[0];
+    
     const [response,setResponse] = useState(enquiry.response)
 
     if (isLoading()) {
