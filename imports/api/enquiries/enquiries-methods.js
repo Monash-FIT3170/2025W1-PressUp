@@ -15,7 +15,6 @@ Meteor.methods({
     console.log(enquiry)
     const result = await EnquiriesCollection.insertAsync(enquiry);
     const nenquiry = EnquiriesCollection.find();
-    console.log(nenquiry);
     const message = await Email.sendAsync({to:enqContact,from:"donotreply.pressup@gmail.com",subject:"Your Enquiry: "+ result,html:`
     <h1>We have received your enquiry and will get back to you as soon as possible.</h1>
     <p><strong>Enquiry ID: </strong><em>` + result +`</em></p>
@@ -32,10 +31,8 @@ Meteor.methods({
   async "enquiry.respond"(id,answer) {
     const enquiry = await EnquiriesCollection.findOneAsync({_id:id});
     if(enquiry.confirmationMessageId) {
-      console.log("hello")
       Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry: " +id,html:`
-        <p></b> a member of our team has provided the following response to your question <b></p>
-        <p><em>`+answer+`</em></p>
+        <p>`+answer+`</p>
         <footer>
             <p>Best regards,</p>
             <p>the PressUp Team</p>
@@ -43,8 +40,7 @@ Meteor.methods({
         `});
     } else {
       Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"Re: Your Enquiry: "+id,html:`
-        <p></b> a member of our team has provided the following response to your question <b></p>
-        <p><em>`+answer+`</em></p>
+        <p>`+answer+`</p>
         <footer>
             <p>Best regards,</p>
             <p>the PressUp Team</p>
@@ -58,7 +54,7 @@ Meteor.methods({
       );
   },
   async "enquiry.draft"(id,draftAnswer) {
-    enquiry = await EnquiriesCollection.find({_id:id})
+    const enquiry = await EnquiriesCollection.find({_id:id})
     return await EnquiriesCollection.updateAsync(
         { _id:id },
         {$set: {"response": draftAnswer}}

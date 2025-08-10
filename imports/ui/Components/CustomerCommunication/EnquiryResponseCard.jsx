@@ -21,14 +21,14 @@ export const EnquiryResponseCard = ({
     }
 
     const handleFocus = (e) => {
-        console.log("hello")
         e.preventDefault();
-        setInFocus(!inFocus);
+        setInFocus(true);
     }
 
     const handleSave = (e) => {
         e.preventDefault();
         Meteor.call("enquiry.draft",enquiryID,response);
+        setInFocus(false)
     }
 
     const handleSubmit = (e) => {
@@ -60,6 +60,7 @@ export const EnquiryResponseCard = ({
                 <button 
                         type="submit"
                     >answer</button>
+                <button onClick={handleSave}>Save Draft</button>
             </form> 
             </div>
         )

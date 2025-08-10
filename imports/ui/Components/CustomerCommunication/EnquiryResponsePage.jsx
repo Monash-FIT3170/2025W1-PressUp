@@ -14,6 +14,21 @@ export const EnquiryResponsePage = (() => {
         return <LoadingIndicator />;
     }
 
+    const existsActive = () => {
+        var exists = false;
+        for (i = 0;i < enquiries.length;i++) {
+            if (enquiries[i].active) {
+                exists = true;
+            }
+        }
+        return exists;
+    }
+
+    if (enquiries.length == 0 || !existsActive) {
+        return (<div>
+            All Customer Questions Answered!
+        </div>)
+    }
     return (
         <div>
             {enquiries.map((enquiry)=>(
