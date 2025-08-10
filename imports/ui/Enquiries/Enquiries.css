@@ -1,0 +1,31 @@
+.enquiries-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+    position: relative;
+    top:25%;
+    background-color: #ffffff;
+  }
+
+  .enquiries-form {
+    display: flex;
+    gap: 20px;
+  }
+
+  .enquiries-input-group {
+    display: flex;
+    width: 65vw;
+    position: relative;
+    left: 0px;
+    gap: 5px;
+  }
+
+  .enquiries-text-box {
+    height: 150px;
+    padding: 6px 10px;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  
