@@ -20,23 +20,30 @@ Meteor.methods({
       <p>Best regards,</p>
       <p>the PressUp Team</p>
     </footer>
-  `})
+  `});
     
-    return result
+    return result;
   },
   async "enquiry.respond"(id,answer) {
-    enquiry = await EnquiriesCollection.find({_id:id})
+    enquiry = await EnquiriesCollection.find({_id:id});
     Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"In response to your recent enquiry (ID: " +enquiry._id+")",html:`
-        <p></b> one of our team have provided the following response to your question <b></p>
+        <p></b> a member of our team has provided the following response to your question <b></p>
         <p><em>`+answer+`</em></p>
         <footer>
             <p>Best regards,</p>
             <p>the PressUp Team</p>
         </footer>    
-        `})
+        `});
     return await EnquiriesCollection.updateAsync(
         { _id:id },
         { active: false, response: answer}
+      );
+  },
+  async "enquiry.draft"(id,draftAnswer) {
+    enquiry = await EnquiriesCollection.find({_id:id})
+    return await EnquiriesCollection.updateAsync(
+        { _id:id },
+        { response: draftAnswer}
       );
   },
   async "enquiry.archive"(id) {
