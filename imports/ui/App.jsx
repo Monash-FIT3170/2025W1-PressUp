@@ -175,55 +175,11 @@ export const App = () => {
       <Routes>
         {/* Login route */}
         <Route 
-        path="/login" 
-        element={
-          user ? <Navigate to="/" replace /> : (
-            <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-              <Sidebar 
-                isOpen={isSidebarOpen} 
-                setIsOpen={setIsSidebarOpen}
-                isAdmin={false}
-              />
-              <div className="main-content">
-                <div className="pos-layout">
-                  <div className="pos-content">
-                  <PageHeader
-                      isSidebarOpen={isSidebarOpen}
-                      setIsSidebarOpen={setIsSidebarOpen}
-                    />
-                    <Login />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
-      />
-      <Route 
-        path="/enquiries" 
-        element={
-          user ? <Navigate to="/" replace /> : (
-            <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-              <Sidebar 
-                isOpen={isSidebarOpen} 
-                setIsOpen={setIsSidebarOpen}
-                isAdmin={false}
-              />
-              <div className="main-content">
-                <div className="pos-layout">
-                  <div className="pos-content">
-                  <PageHeader
-                      isSidebarOpen={isSidebarOpen}
-                      setIsSidebarOpen={setIsSidebarOpen}
-                    />
-                    <Enquiries />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
-      />
+          path="/login" 
+          element={
+            user ? <Navigate to="/" replace /> : <Login />
+          } 
+        />
         
         {/* Protected routes */}
         <Route
