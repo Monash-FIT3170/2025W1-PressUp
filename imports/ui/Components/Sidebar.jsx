@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Meteor } from 'meteor/meteor';
 import "./Sidebar.css";
 
-export const Sidebar = ({ isOpen, setIsOpen, isAdmin, isLoggedIn = false }) => {
+export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -30,49 +30,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin, isLoggedIn = false }) => {
             </div>
 
             <div className="sidebar-content">
-              {/*show to guests*/}
-              {!isLoggedIn && (<><NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `sidebar-btn ${isActive ? "active" : ""}`
-                }
-                end
-              >
-                <img
-                  src="/images/HomeIcon.png"
-                  alt="Login"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Login
-              </NavLink>
-
               <NavLink
-                to="/enquiries"
-                className={({ isActive }) =>
-                  `sidebar-btn ${isActive ? "active" : ""}`
-                }
-                end
-              >
-                <img
-                  src="/images/HomeIcon.png"
-                  alt="Enquiries"
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "-4px",
-                    marginRight: "8px",
-                  }}
-                />
-                Enquiries
-              </NavLink>
-            </>)}
-              {/*only show if user logged in*/}
-              {isLoggedIn && (<NavLink
                 to="/"
                 className={({ isActive }) =>
                   `sidebar-btn ${isActive ? "active" : ""}`
@@ -91,7 +49,8 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin, isLoggedIn = false }) => {
                 />
                 Home
               </NavLink>
-              )}
+              
+              {/* Only show these links if user is admin */}
               {isAdmin && (
                 <>
                   <NavLink
@@ -190,7 +149,8 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin, isLoggedIn = false }) => {
                   </NavLink>
                 </>
               )}
-              {isLoggedIn && (
+              
+              {/* Logout button */}
               <div className="sidebar-logout">
                 <button onClick={handleLogout} className="sidebar-btn logout-btn">
                 <img
@@ -205,9 +165,10 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin, isLoggedIn = false }) => {
                   />
                   Logout
                 </button>
-              </div>)
-            }
-            </div></>)}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
