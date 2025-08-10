@@ -13,12 +13,16 @@ export const CustomerNavbar = () => {
     navigate('/login');
   };
 
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
   return (
     <header className="customer-navbar">
       <div className="navbar-content">
         <div className="logo">
-          <img src="/images/PressUpLogo.png" id="logo" alt="Logo" />
-          <h1>PressUp</h1>
+          <img src="/images/PressUpLogo.png" id="logo" alt="Logo" onClick={handleHomeClick}/>
+          <h1 onClick={handleHomeClick}>PressUp</h1>
         </div>
         <nav className="navbar-nav">
           <button onClick={handleLoyaltySignup} className="nav-link">
