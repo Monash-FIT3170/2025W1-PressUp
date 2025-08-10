@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 export const Enquiries = () => {
     const [contact,setContact] = useState("");
     const [content,setContent] = useState("");
+    const [name,setName] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const Enquiries = () => {
         setIsLoading(true);
         e.preventDefault();
         if (checkIsEmail(contact) && content != '') {
-            Meteor.call("enquiry.insert",contact,content,(err) => {
+            Meteor.call("enquiry.insert",contact,content,name,(err) => {
                 setIsLoading(false)
             });
             setContact('');
@@ -55,6 +56,17 @@ export const Enquiries = () => {
                             onChange={(e) => setContact(e.target.value)}
                             placeholder="example@email.com"
                             required
+                            disabled={isLoading}
+                        />
+                    </div>
+                    <div className="enquiries-input-group">
+                        <label htmlFor="name">Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Your Full Name"
                             disabled={isLoading}
                         />
                     </div>

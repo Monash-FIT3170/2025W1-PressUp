@@ -8,6 +8,7 @@ EnquiriesCollection.schema = new SimpleSchema({
   contact: { type: String },
   date: {type: Date},
   confirmationMessageId: {type: String},
+  name: {type: String},
   active: {type: Boolean, defaultValue: true},
   response: {type: String, optional: true}
 })

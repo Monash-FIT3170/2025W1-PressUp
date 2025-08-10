@@ -3,10 +3,11 @@ import { Email } from "meteor/email";
 import { EnquiriesCollection } from "./enquiries-collection";
 
 Meteor.methods({
-  async "enquiry.insert"(enqContact,enqContent) {
+  async "enquiry.insert"(enqContact,enqContent,enqName) {
     const enquiry = {
         content: enqContent,
         contact:enqContact,
+        name:enqName,
         date:Date.now(),
         active: true,
         response: '',
@@ -29,9 +30,10 @@ Meteor.methods({
     return result;
   },
   async "enquiry.respond"(id,answer) {
-    enquiry = await EnquiriesCollection.findOneAsync({_id:id});
+    const enquiry = await EnquiriesCollection.findOneAsync({_id:id});
     if(enquiry.confirmationMessageId) {
-      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry",html:`
+      console.log("hello")
+      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry: " +id,html:`
         <p></b> a member of our team has provided the following response to your question <b></p>
         <p><em>`+answer+`</em></p>
         <footer>
@@ -40,7 +42,7 @@ Meteor.methods({
         </footer>    
         `});
     } else {
-      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"Re: Your Enquiry",html:`
+      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"Re: Your Enquiry: "+id,html:`
         <p></b> a member of our team has provided the following response to your question <b></p>
         <p><em>`+answer+`</em></p>
         <footer>
