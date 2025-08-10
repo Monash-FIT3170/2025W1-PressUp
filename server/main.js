@@ -28,6 +28,10 @@ import '/imports/api/promotions/promotions-publications.js';
 import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
+
+import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
+import "../imports/api/enquiries/enquiries-methods";
+import "../imports/api/enquiries/enquiries-publications";
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();

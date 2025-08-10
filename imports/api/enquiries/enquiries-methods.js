@@ -12,7 +12,7 @@ Meteor.methods({
         response: '',
     };
     const result = await EnquiriesCollection.insertAsync(enquiry);
-    Email.sendAsync({to:enqContact,from:"donotreply.pressup@gmail.com",subject:"Thank you for reaching out",html:`
+    const message = await Email.sendAsync({to:enqContact,from:"donotreply.pressup@gmail.com",subject:"Your Enquiry: "+ result,html:`
     <h1>We have received your enquiry and will get back to you as soon as possible.</h1>
     <p><strong>Enquiry ID: </strong><em>` + result +`</em></p>
     <p>Your enquiry: </p><p><em>`+enqContent+`</em></p>
@@ -21,12 +21,13 @@ Meteor.methods({
       <p>the PressUp Team</p>
     </footer>
   `});
-    
+    //so we can reply to this later
+    EnquiriesCollection.updateAsync({_id:result},{confirmationMessageId: message.messageId})
     return result;
   },
   async "enquiry.respond"(id,answer) {
-    enquiry = await EnquiriesCollection.find({_id:id});
-    Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"In response to your recent enquiry (ID: " +enquiry._id+")",html:`
+    enquiry = await EnquiriesCollection.findOneAsync({_id:id});
+    Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry",html:`
         <p></b> a member of our team has provided the following response to your question <b></p>
         <p><em>`+answer+`</em></p>
         <footer>
