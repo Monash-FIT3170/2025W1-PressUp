@@ -25,6 +25,7 @@ import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
+import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
 
 
 export const App = () => {
@@ -215,7 +216,7 @@ export const App = () => {
                       isSidebarOpen={isSidebarOpen}
                       setIsSidebarOpen={setIsSidebarOpen}
                     />
-                    <Login />
+                    <Enquiries />
                   </div>
                 </div>
               </div>
