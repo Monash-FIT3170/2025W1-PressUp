@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { useSubscribe, useFind } from "meteor/react-meteor-data";
+import { useSubscribe, useFind, useTracker } from "meteor/react-meteor-data";
 import { EnquiriesCollection } from "../../../api/enquiries/enquiries-collection";
-import { LoadingIndicator } from "../OrderSummary/LoadingIndicator/LoadingIndicator.jsx";
+import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import './EnquiryResponseCard.css';
 import { EnquiryResponseCard } from './EnquiryResponseCard.jsx';
 
 export const EnquiryResponsePage = (() => {
     const isLoading = useSubscribe("enquiries.active");
-    const enquiries = useFind(()=>EnquiriesCollection.find({ active }),[true]);
+    const enquiries = useTracker(()=> EnquiriesCollection.find({}).fetch());
+    
+    if (isLoading()) {
+        return <LoadingIndicator />;
+    }
 
     return (
         <div>
             {enquiries.map((enquiry)=>(
                 <EnquiryResponseCard 
                     enquiryID={enquiry._id}
+                    key = {enquiry._id}
                 />
             ))}
         </div>
