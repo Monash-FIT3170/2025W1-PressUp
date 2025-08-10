@@ -1,23 +1,64 @@
+.pre-login-container {
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+.support-card {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0e0e0;
+}
+
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #ffffff;
+  border: 1px solid #FCD581;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: #E5E7EB;
+}
+
+.enquiries-header {
+  background: #FCD581;
+  color: #000;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
+
 .enquiries-container {
-    min-height: 100vh;
+    max-width: 900px;
     display: flex;
-    justify-content: center;
-    border-collapse: collapse;
-    position: relative;
-    top:25%;
     background-color: #ffffff;
+    padding: 40px 20px;
   }
 
   .enquiries-form {
     display: flex;
+    max-width: 90%;
+    position: relative;
+    left: 5%;
     gap: 20px;
+    padding: 5px;
   }
 
   .enquiries-input-group {
     display: flex;
-    width: 65vw;
     position: relative;
-    left: 0px;
     gap: 5px;
   }
 
