@@ -32,6 +32,9 @@ import "../imports/api/tables/TablesPublications";
 import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
 import "../imports/api/enquiries/enquiries-methods";
 import "../imports/api/enquiries/enquiries-publications";
+import { CustomersCollection } from '../imports/api/customers/customers-collection.js';
+import "../imports/api/customers/customers-publications.js";
+import "../imports/api/customers/customers-methods.js";
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();

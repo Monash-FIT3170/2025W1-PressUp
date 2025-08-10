@@ -31,7 +31,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
 
             <div className="sidebar-content">
               <NavLink
-                to="/"
+                to="/pos"
                 className={({ isActive }) =>
                   `sidebar-btn ${isActive ? "active" : ""}`
                 }
