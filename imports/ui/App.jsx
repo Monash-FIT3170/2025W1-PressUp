@@ -56,7 +56,7 @@ export const App = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [categories, setCategories] = useState(["all"]);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [existingItem, setExistingItem] = useState(null);
   const [openOverlay, setOpenOverlay] = useState(null);
   const overlayRef = useRef(null);
@@ -193,7 +193,6 @@ export const App = () => {
                   isOpen={isSidebarOpen} 
                   setIsOpen={setIsSidebarOpen}
                   isAdmin={user.isAdmin} 
-                  isLoggedIn={user}
                 />
                 <div className="main-content">
                   <Routes>
