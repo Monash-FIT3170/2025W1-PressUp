@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { check, Match } from "meteor/check";
-import { CustomersCollection } from "./CustomersCollection.js";
+import { CustomersCollection } from "./customers-collection.js";
 
 if (Meteor.isServer) {
   // Publish all customers (with optional limit and sort)
