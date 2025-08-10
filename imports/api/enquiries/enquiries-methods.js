@@ -11,7 +11,10 @@ Meteor.methods({
         active: true,
         response: '',
     };
+    console.log(enquiry)
     const result = await EnquiriesCollection.insertAsync(enquiry);
+    const nenquiry = EnquiriesCollection.find();
+    console.log(nenquiry);
     const message = await Email.sendAsync({to:enqContact,from:"donotreply.pressup@gmail.com",subject:"Your Enquiry: "+ result,html:`
     <h1>We have received your enquiry and will get back to you as soon as possible.</h1>
     <p><strong>Enquiry ID: </strong><em>` + result +`</em></p>
@@ -22,12 +25,13 @@ Meteor.methods({
     </footer>
   `});
     //so we can reply to this later
-    EnquiriesCollection.updateAsync({_id:result},{confirmationMessageId: message.messageId})
+    EnquiriesCollection.updateAsync({_id:result},{$set:{"confirmationMessageId": message.messageId}})
     return result;
   },
   async "enquiry.respond"(id,answer) {
     enquiry = await EnquiriesCollection.findOneAsync({_id:id});
-    Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry",html:`
+    if(enquiry.confirmationMessageId) {
+      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry",html:`
         <p></b> a member of our team has provided the following response to your question <b></p>
         <p><em>`+answer+`</em></p>
         <footer>
@@ -35,22 +39,33 @@ Meteor.methods({
             <p>the PressUp Team</p>
         </footer>    
         `});
+    } else {
+      Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",subject:"Re: Your Enquiry",html:`
+        <p></b> a member of our team has provided the following response to your question <b></p>
+        <p><em>`+answer+`</em></p>
+        <footer>
+            <p>Best regards,</p>
+            <p>the PressUp Team</p>
+        </footer>    
+        `});
+    }
+    
     return await EnquiriesCollection.updateAsync(
         { _id:id },
-        { active: false, response: answer}
+        {$set: { "active": false, "response": answer}}
       );
   },
   async "enquiry.draft"(id,draftAnswer) {
     enquiry = await EnquiriesCollection.find({_id:id})
     return await EnquiriesCollection.updateAsync(
         { _id:id },
-        { response: draftAnswer}
+        {$set: {"response": draftAnswer}}
       );
   },
   async "enquiry.archive"(id) {
     return await EnquiriesCollection.updateAsync(
         { _id:id },
-        { active: false}
+        {$set: { "active": false}}
       );
   }
 });
