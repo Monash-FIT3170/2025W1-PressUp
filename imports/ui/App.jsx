@@ -21,13 +21,13 @@ import { Login } from "./Components/Login/Login.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
-
+import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
-import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
+
 
 // Component to handle route protection and redirection logic
 const RouteHandler = ({ children }) => {
@@ -72,7 +72,7 @@ const RouteHandler = ({ children }) => {
   }
 
   // If no user and trying to access any other protected route, redirect to pre-login
-  if (!user && location.pathname !== '/login' && location.pathname !== '/pre-login' && location.pathname !== '/loyalty-signup') {
+  if (!user && location.pathname !== '/login' && location.pathname !== '/pre-login' && location.pathname !== '/loyalty-signup' && location.pathname !== '/enquiries') {
     return <Navigate to="/" replace />;
   }
 
@@ -218,6 +218,12 @@ export const App = () => {
           <Route 
             path="/loyalty-signup" 
             element={<LoyaltySignupPage />} 
+          />
+
+          {/* Customer Enquiries route */}
+          <Route
+            path="/enquiries"
+            element={<Enquiries />}
           />
           
           {/* Root route - handled by RouteHandler */}
