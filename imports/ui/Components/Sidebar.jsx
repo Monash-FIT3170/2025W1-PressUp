@@ -147,6 +147,24 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Promotions
                   </NavLink>
+                  <NavLink
+                    to="/customer-relations"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/PromotionIcon.png"
+                      alt="Customer Relations"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Customer Relations
+                  </NavLink>
                 </>
               )}
               

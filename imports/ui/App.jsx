@@ -23,6 +23,7 @@ import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New co
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
 import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
 
 // Styles
 import "./AppStyle.css";
@@ -397,6 +398,26 @@ export const App = () => {
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <PromotionPage />
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/customer-relations"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar 
+                  isOpen={isSidebarOpen} 
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin} 
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <EnquiryResponsePage />
                 </div>
               </div>
             }
