@@ -42,6 +42,7 @@
 
 .enquiries-container {
     max-width: 900px;
+    margin: auto;
     display: flex;
     background-color: #ffffff;
     padding: 40px 20px;
