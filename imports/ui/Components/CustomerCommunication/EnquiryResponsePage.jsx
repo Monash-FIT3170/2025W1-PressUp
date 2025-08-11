@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { useSubscribe, useFind, useTracker } from "meteor/react-meteor-data";
 import { EnquiriesCollection } from "../../../api/enquiries/enquiries-collection";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
-import './EnquiryResponseCard.css';
+import './EnquiryResponsePage.css';
 import { EnquiryResponseCard } from './EnquiryResponseCard.jsx';
 
 export const EnquiryResponsePage = (() => {
@@ -25,18 +25,28 @@ export const EnquiryResponsePage = (() => {
     }
 
     if (enquiries.length == 0 || !existsActive) {
-        return (<div>
-            All Customer Questions Answered!
-        </div>)
+        
+        return (<><div className='container'>
+            <h1>Customer Support Questions:</h1>
+            <div className='questions'><b><em>All Customer Questions Answered!</em></b></div>
+            
+        </div></>)
     }
     return (
-        <div>
+        <>
+        <div className='container'>
+        <h1>Customer Support Questions:</h1>
+        <div className='questions'>
             {enquiries.map((enquiry)=>(
+                <div key = {enquiry._id}>
                 <EnquiryResponseCard 
                     enquiryID={enquiry._id}
                     key = {enquiry._id}
                 />
+                </div>
             ))}
+            </div>
         </div>
+        </>
     )
 })

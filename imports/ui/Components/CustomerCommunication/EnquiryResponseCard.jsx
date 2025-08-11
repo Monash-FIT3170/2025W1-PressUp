@@ -43,8 +43,8 @@ export const EnquiryResponseCard = ({
 
     if (inFocus) {
         return (
-            <div>
-            <div> {enquiry.name ? enquiry.name : "Anonymous"} asked: <p>{enquiry.content} </p></div>
+            <div className='focused-container'>
+            <> <b>{enquiry.name ? enquiry.name : "Anonymous"} asked: </b><p><em>{enquiry.content} </em></p></>
             <form onSubmit={handleSubmit}>
                 <div className="enquiries-input-group">
                         <label htmlFor="response">Response</label>
@@ -55,19 +55,21 @@ export const EnquiryResponseCard = ({
                             placeholder='the response'
                             onChange={(e) => setResponse(e.target.value)}
                             required
+                            className='text-field'
                         />
                 </div>
+                <button onClick={handleSave} className='save-button'>Save Response</button>
                 <button 
                         type="submit"
                     >answer</button>
-                <button onClick={handleSave}>Save Draft</button>
             </form> 
             </div>
         )
     }
     return (
-        <div>
-        <button onClick={handleFocus}> {enquiry.name ? enquiry.name : "Anonymous"} asked: <p>{enquiry.content}</p></button>       
-        </div>
+        <>
+        <button className='initial-container' onClick={handleFocus}> <b>{enquiry.name ? enquiry.name : "Anonymous"} asked:</b> <p><em>{enquiry.content}</em></p></button>       
+        </>
     )
+
 }
