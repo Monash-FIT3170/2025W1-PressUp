@@ -1,5 +1,4 @@
 import { Meteor } from "meteor/meteor";
-import { EnquiriesCollection } from "./enquiries-collection";
 import { FeedbackCollection } from "./feedback-collection";
 
 Meteor.methods({
