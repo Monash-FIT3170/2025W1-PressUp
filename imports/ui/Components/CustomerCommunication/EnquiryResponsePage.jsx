@@ -23,8 +23,7 @@ export const EnquiryResponsePage = (() => {
         }
         return exists;
     }
-
-    if (enquiries.length == 0 || !existsActive) {
+    if (!existsActive()) {
         
         return (<><div className='container'>
             <h1>Customer Support Questions:</h1>

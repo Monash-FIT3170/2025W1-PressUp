@@ -30,6 +30,7 @@ Meteor.methods({
   },
   async "enquiry.respond"(id,answer) {
     const enquiry = await EnquiriesCollection.findOneAsync({_id:id});
+    answer = answer.replace(/\n/g,"<br />")
     if(enquiry.confirmationMessageId) {
       Email.sendAsync({to:enquiry.contact,from:"donotreply.pressup@gmail.com",inReplyTo: enquiry.confirmationMessageId,references:enquiry.confirmationMessageId,subject:"Re: Your Enquiry: " +id,html:`
         <p>`+answer+`</p>

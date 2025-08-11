@@ -1,8 +1,6 @@
 .container {
     background: #ffffff;
     font-family: 'Inter', sans-serif;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-    border: 1px solid #e0e0e0;
     width: 95%;
     height: fit-content;
     padding:10px 10px;
