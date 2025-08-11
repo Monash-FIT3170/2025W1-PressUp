@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './Feedback.css';
 import { CustomerNavbar } from '../PreLogin/CustomerNavbar.jsx';
+import { useFind } from "meteor/react-meteor-data";
 import { useNavigate } from 'react-router-dom';
+import { OrdersCollection } from '../../../api/orders/orders-collection.js';
 
 export const Feedback = () => {
     const [orderID,setOrderID] = useState("");
@@ -10,6 +12,7 @@ export const Feedback = () => {
     const [name,setName] = useState("");
     const [rating,setRating] = useState(5);
     const [isLoading, setIsLoading] = useState(false);
+    const [orderExists,setOrderExists] = useState(true);
 
     const navigate = useNavigate();
 
@@ -19,12 +22,15 @@ export const Feedback = () => {
     const handleSubmit = (e) => {
         setIsLoading(true);
         e.preventDefault();
-        Meteor.call("feedback.insert",orderID,rating,content,name,(err) => {
+        Meteor.call("feedback.insert",orderID,rating,content,name,(err,result) => {
+            if (result < 0) {
+                setOrderExists(false);
+            } else {
+                setOrderExists(true);
+                navigate('/');
+            }
             setIsLoading(false);
-            navigate('/');
         });
-        
-        
     }
 
     return (
@@ -41,6 +47,11 @@ export const Feedback = () => {
                     <p>We appreciate all Feedback!<br/><em>simply provide the order ID from your reciept and rate your experience</em></p>
                     
                 </div>
+                {!orderExists && (
+              <div className='message-error'>
+                Invalid Order ID. <br/>ensure Order ID matches your reciept.
+              </div>
+            )}
                 <form onSubmit={handleSubmit} className="feedback-form">
                     <div className="feedback-input-group">
                         <label htmlFor="orderID">Order ID*</label>
@@ -50,7 +61,7 @@ export const Feedback = () => {
                             type="text"
                             value={orderID}
                             onChange={(e) => setOrderID(e.target.value)}
-                            placeholder="uRc45CBRPiMRMN46w"
+                            placeholder="uRc45CB..."
                             required
                             className='feedback-order-input'
                             disabled={isLoading}

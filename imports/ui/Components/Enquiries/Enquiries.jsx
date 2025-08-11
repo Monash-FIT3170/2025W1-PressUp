@@ -29,7 +29,7 @@ export const Enquiries = () => {
             });
             setContact('');
             setContent('');
-            navigate('/')
+            navigate('/');
         }
     }
 
