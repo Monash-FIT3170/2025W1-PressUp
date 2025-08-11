@@ -32,6 +32,11 @@ import "../imports/api/tables/TablesPublications";
 import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
 import "../imports/api/enquiries/enquiries-methods";
 import "../imports/api/enquiries/enquiries-publications";
+
+import { FeedbackCollection } from "../imports/api/feedback/feedback-collection.js";
+import "../imports/api/feedback/feedback-methods.js";
+import "../imports/api/feedback/feedback-publication.js";
+
 import { CustomersCollection } from '../imports/api/customers/customers-collection.js';
 import "../imports/api/customers/customers-publications.js";
 import "../imports/api/customers/customers-methods.js";
