@@ -70,4 +70,13 @@
     font-family: 'Inter', sans-serif;
   }
 
+  .feedback-order-id {
+    display: inline;
+    width: 900px;
+  }
+
+  .feedback-order-input {
+    width: 780px;
+  }
+
   
