@@ -12,9 +12,7 @@ Meteor.methods({
         active: true,
         response: '',
     };
-    console.log(enquiry)
     const result = await EnquiriesCollection.insertAsync(enquiry);
-    const nenquiry = EnquiriesCollection.find();
     const message = await Email.sendAsync({to:enqContact,from:"donotreply.pressup@gmail.com",subject:"Your Enquiry: "+ result,html:`
     <h1>We have received your enquiry and will get back to you as soon as possible.</h1>
     <p><strong>Enquiry ID: </strong><em>` + result +`</em></p>
