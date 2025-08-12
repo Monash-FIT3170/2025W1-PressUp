@@ -47,6 +47,7 @@ export default function Dashboard() {
     const startMinutes = startH * 60 + startM;
     const endMinutes = endH * 60 + endM;
 
+    //console.log('J', Orders[70]);
     const filtered = Orders.filter(order => {
       const itemDate = order.createdAt; // Date object
 
@@ -64,7 +65,12 @@ export default function Dashboard() {
 
     const chartData = filtered.map((order) => ({
       name: order._id.substring(0,3),
+
+      // Total Sales per order:
       value: order.items.reduce((acc, item) => acc + (item.price || 0), 0),
+      // Cost per order:
+      cost: order.items.reduce((acc, item) => acc + (Math.round(item.cost, 4) || 0), 0),
+        
     }));
 
     setChartData(chartData);
@@ -91,7 +97,7 @@ export default function Dashboard() {
         </div>
         <button type="submit">Update Charts</button>
       </form>
-      <h1>Table 1 Orders</h1>
+      <h1>Orders</h1>
       <BarChart
         width={1000}
         height={300}
@@ -99,11 +105,12 @@ export default function Dashboard() {
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+        <XAxis dataKey="name"/>
+        <YAxis/>
         <Tooltip />
         <Legend />
         <Bar type="monotone" dataKey="value" fill="#8884d8" isAnimationActive={false} />
+        <Bar type="monotone" dataKey="cost" fill="#d76b1eff" isAnimationActive={false} />
       </BarChart>
     </div>
   );
