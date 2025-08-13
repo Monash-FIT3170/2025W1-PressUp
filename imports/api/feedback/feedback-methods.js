@@ -22,14 +22,15 @@ Meteor.methods({
     return -1;
   },
 
-  async "enquiry.priority"(id,priority) {
-    return await FeedbackCollection.updateAsync(
+  async "feedback.priority"(id,priority) {
+    await FeedbackCollection.updateAsync(
         { _id:id },
         {$set: { "important": priority}}
       );
+    return priority
   },
 
-  async "enquiry.resolve"(id) {
+  async "feedback.resolve"(id) {
     return await FeedbackCollection.updateAsync(
         { _id:id },
         {$set: { "resolved": true}}
