@@ -410,7 +410,7 @@ export const App = () => {
           />
 
           <Route
-            path="/customer-relations"
+            path="/inbox"
             element={
               <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
                 <Sidebar 
