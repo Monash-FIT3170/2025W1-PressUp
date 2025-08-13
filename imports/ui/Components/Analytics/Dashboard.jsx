@@ -9,16 +9,20 @@ import {
 
 
 export default function Dashboard() {
-  const formatDate = (date) => date.toISOString().split("T")[0];
-
-  const today = formatDate(new Date());
-  const lastWeek = formatDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const [chartData, setChartData] = useState([]);
-  const [startDate, setStartDate] = useState(lastWeek)
-  const [endDate, setEndDate] = useState(today);
-  const [startTime, setStartTime] = useState("09:00");
+  const [startDate, setStartDate] = useState(() => formatDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)));
+  const [endDate, setEndDate] = useState(() => formatDate(new Date()));
+  const [startTime, setStartTime] = useState("06:00");
   const [endTime, setEndTime] = useState("12:00");
+  const [bars, setBars] = useState("value");
+  const [filter, setFilter] = useState("Staff");
 
   const Orders = useTracker(() => {
     const handle = Meteor.subscribe('orders.all');
@@ -64,13 +68,23 @@ export default function Dashboard() {
     });
 
     const chartData = filtered.map((order) => ({
-      name: order._id.substring(0,3),
+      name: order._id.substring(0, 3),
 
       // Total Sales per order:
-      value: order.items.reduce((acc, item) => acc + (item.price || 0), 0),
+      value: Number(order.items.reduce((acc, item) => acc + (item.price || 0), 0)).toFixed(3),
       // Cost per order:
-      cost: order.items.reduce((acc, item) => acc + (Math.round(item.cost, 4) || 0), 0),
-        
+      cost: Number(order.items.reduce((acc, item) => acc + (item.cost || 0), 0)).toFixed(3),
+      // Profit per order:
+      profit: Number(order.items.reduce((acc, item) => {
+        const price = item.price || 0;
+        const cost = item.cost || 0;
+
+        if (cost === 0) {
+          return acc + price; // skip division if cost is zero
+        }
+
+        return acc + (price - cost);
+      }, 0)).toFixed(3),
     }));
 
     setChartData(chartData);
@@ -95,6 +109,19 @@ export default function Dashboard() {
           <label>End Time:</label>
           <input type='time' id='endTime' value={endTime} onChange={(e) => setEndTime(e.target.value)} />
         </div>
+        <div>
+          <label>Data Type:</label>
+          <select name="Bar type" onChange={(e) => setBars(e.target.value)}>
+            <option value="value">Sales</option>
+            <option value="cost">Cost</option>
+            <option value="profit">Profit</option>
+          </select>
+          <label>Filter Type:</label>
+          <select name="Filter type" onChange={(e) => setFilter(e.target.value)}>
+            <option value="Staff">Staff</option>
+            <option value="Table No.">Table Number</option>
+          </select>
+        </div>
         <button type="submit">Update Charts</button>
       </form>
       <h1>Orders</h1>
@@ -105,12 +132,11 @@ export default function Dashboard() {
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name"/>
-        <YAxis/>
+        <XAxis dataKey="name" />
+        <YAxis />
         <Tooltip />
         <Legend />
-        <Bar type="monotone" dataKey="value" fill="#8884d8" isAnimationActive={false} />
-        <Bar type="monotone" dataKey="cost" fill="#d76b1eff" isAnimationActive={false} />
+        <Bar type="monotone" dataKey={bars} fill="#8884d8" isAnimationActive={false} />
       </BarChart>
     </div>
   );
