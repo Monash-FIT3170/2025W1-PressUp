@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { useSubscribe, useFind, useTracker } from "meteor/react-meteor-data";
 import { FeedbackCollection } from '../../../api/feedback/feedback-collection.js';
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
-import './FeedbackResponsePage.css';
+import './FeedbackResponsePage.css'
 import { FeedbackResponseCard } from './FeedbackResponseCard.jsx';
 
 export const FeedbackResponsePage = (() => {
