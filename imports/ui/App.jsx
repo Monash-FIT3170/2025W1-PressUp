@@ -25,6 +25,9 @@ import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
 import { Feedback } from "./Components/Feedback/Feedback.jsx";
 import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
+import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
+import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
+
 
 // Styles
 import "./AppStyle.css";
@@ -99,6 +102,7 @@ export const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
+  const [inboxViewMode,setInboxViewMode] = useState("Support")
   const [checkout, setCheckout] = useState(false);
   const [checkoutID, setCheckoutID] = useState(null);
 
@@ -228,6 +232,8 @@ export const App = () => {
             element={<Enquiries />}
           />
 
+
+          {/* Customer feedback route */}
           <Route
             path="/feedback"
             element={<Feedback />}
@@ -423,7 +429,13 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <EnquiryResponsePage />
+                  <InboxViewModeDropdown 
+                    viewMode={inboxViewMode}
+                    setViewMode={setInboxViewMode}
+                  />
+                  {inboxViewMode === 'Support' && <EnquiryResponsePage/>}
+                  {inboxViewMode === 'Feedback' && <FeedbackResponsePage />}
+                  
                 </div>
               </div>
             }
