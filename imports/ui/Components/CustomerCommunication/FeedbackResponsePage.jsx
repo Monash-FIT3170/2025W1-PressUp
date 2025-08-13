@@ -24,10 +24,21 @@ export const FeedbackResponsePage = (() => {
 
     const existsActive = () => {
         var exists = false;
+        const indexToRemove = [];
         for (i = 0;i < feedback.length;i++) {
-            if (!feedback[i].resolved) {
+            if (!feedback) {
+                indexToRemove.push(i)
+            } else if (!feedback[i].resolved) {
                 exists = true;
+            } else {
+                indexToRemove.push(i)
             }
+        }
+        indexToRemove.forEach((element) => {
+            feedback.splice(element,1);
+        })
+        if (feedback.length < 1) {
+            return false
         }
         return exists;
     }

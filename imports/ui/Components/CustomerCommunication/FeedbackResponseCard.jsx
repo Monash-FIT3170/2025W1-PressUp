@@ -9,16 +9,30 @@ import './FeedbackResponseCard.css';
 export const FeedbackResponseCard = ({
     feedbackID
 }) => {
+    if (!feedbackID) {
+        return <></>
+    }
     const isLoading = useSubscribe("feedback.id", feedbackID);
     var feedback = useFind(()=>FeedbackCollection.find({_id: feedbackID}),[feedbackID]);
-    feedback = feedback[0];
-    const [important,setImportant] = useState(feedback.important)
+    if (feedback.length > 0) {
+        feedback = feedback[0];
+    } else {
+        feedback = {'important':false,'resolved':true};
+    }
+    
+    const [important,setImportant] = useState(feedback.important || false);
+
+    
     
 
     if (isLoading()) {
         return <LoadingIndicator />;
     }
 
+    if (feedback.resolved) {
+        return <></>
+    } 
+    
     const handlePrioritise = (e)=>{
         e.preventDefault();
         Meteor.call('feedback.priority',feedbackID,!important,(err,priority) => {
@@ -36,17 +50,26 @@ export const FeedbackResponseCard = ({
     }
     return (
         <div className='feedback-container'>
-        <> <b>{feedback.name ? feedback.name : "Anonymous"} rated us: </b> {feedback.rating}/10 <div>{feedback.content && <p>further details: <br /> <em> {feedback.content}</em></p> }</div></>
-            <label htmlFor='imp'>priority</label>
+            <div className='feedback-section'> 
+            <> <b>{feedback.name ? feedback.name : "Anonymous"} rated us: </b> {feedback.rating}/10 <div>{feedback.content && <p>further details: <br /> <em> {feedback.content}</em></p> }</div></>
+            </div>
+            <div className='button-section'>
+        <div className='priority'>
+        <label htmlFor='imp' className='priority-label'>priority</label>
             <input
                 id = 'imp'
                 type = 'checkbox'
                 checked = {important}
                 onChange={handlePrioritise}
+                className='priority-check'
             />
+            </div>
             <button 
                     type="submit"
+                    onClick={handleResolve}
+                    className = 'resolve-button'
                 >resolved</button>
+            </div>
         </div>
     )
 }
