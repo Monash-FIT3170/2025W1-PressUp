@@ -9,7 +9,15 @@ import { FeedbackResponseCard } from './FeedbackResponseCard.jsx';
 export const FeedbackResponsePage = (() => {
     const isLoading = useSubscribe("feedback.unresolved");
     const feedback = useTracker(()=> FeedbackCollection.find({}).fetch());
-    console.log(feedback)
+    feedback.sort((a,b) => {
+        if (a.important && !b.important) {
+            return -1;
+        } else if (!a.important && b.important) {
+            return 1;
+        } else {
+            return b.date - a.date
+        }
+    })
     if (isLoading()) {
         return <LoadingIndicator />;
     }
