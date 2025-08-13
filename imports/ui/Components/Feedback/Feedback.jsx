@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
 import './Feedback.css';
+import '../Enquiries/Enquiries.css'
 import { CustomerNavbar } from '../PreLogin/CustomerNavbar.jsx';
-import { useFind } from "meteor/react-meteor-data";
 import { useNavigate } from 'react-router-dom';
-import { OrdersCollection } from '../../../api/orders/orders-collection.js';
 
 export const Feedback = () => {
     const [orderID,setOrderID] = useState("");
@@ -33,41 +32,52 @@ export const Feedback = () => {
         });
     }
 
+    const rangeClass = () => {
+        if (rating < 5) {
+            return `rating-poor`
+        }
+        if (rating < 8) {
+            return `rating-average`
+        }
+        return `rating-good`
+    }
+
+
     return (
         <div className='pre-login-container'>
         <CustomerNavbar />
         
-        <div className="feedback-container">
+        <div className="enquiries-container">
             <div className='support-card'>
-                <div className='feedback-header'>
+                <div className='enquiries-header'>
                 <button onClick={handleGoBack} className="back-btn">
                 ← Back to Home
                 </button>
                     <h1>Customer Feedback</h1>
-                    <p>We appreciate all Feedback!<br/><em>simply provide the order ID from your reciept and rate your experience</em></p>
-                    
+                    <p>verify with your order ID and tell us about your experience!</p>
                 </div>
-                {!orderExists && (
-              <div className='message-error'>
-                Invalid Order ID. <br/>ensure Order ID matches your reciept.
-              </div>
-            )}
-                <form onSubmit={handleSubmit} className="feedback-form">
-                    <div className="feedback-input-group">
+                <form onSubmit={handleSubmit} className="enquiries-form">
+                    {!orderExists && (
+                        <div className='message-error'>
+                        Invalid Order ID. <br/>ensure Order ID matches your reciept.
+                        </div>
+                    )}
+                    <div className="enquiries-input-group">
                         <label htmlFor="orderID">Order ID*</label>
                         <div className='feedback-order-id'>#
-                        <input
-                            id="orderID"
-                            type="text"
-                            value={orderID}
-                            onChange={(e) => setOrderID(e.target.value)}
-                            placeholder="uRc45CB..."
-                            required
-                            className='feedback-order-input'
-                            disabled={isLoading}
-                        /></div>
+                            <input
+                                id="orderID"
+                                type="text"
+                                value={orderID}
+                                onChange={(e) => setOrderID(e.target.value)}
+                                placeholder="uRc45CB..."
+                                required
+                                className='feedback-order-input'
+                                disabled={isLoading}
+                            />
+                        </div>
                     </div>
-                    <div className="feedback-input-group">
+                    <div className="enquiries-input-group">
                         <label htmlFor="name">Name</label>
                         <input
                             id="name"
@@ -78,7 +88,7 @@ export const Feedback = () => {
                             disabled={isLoading}
                         />
                     </div>
-                    <div className="feedback-input-group">
+                    <div className="enquiries-input-group">
                         <label htmlFor='rating'>Give us a rating: {rating}/10</label>
                         <input 
                         id = "rating" 
@@ -87,7 +97,10 @@ export const Feedback = () => {
                         max={10} 
                         value={rating}
                         onChange={(e)=>setRating(e.target.value)}
+                        className={rangeClass()}
                         />
+                        </div>
+                    <div className="enquiries-input-group">
                         <label htmlFor="content">Any further details?</label>
                         <textarea
                             id="content"
@@ -95,7 +108,7 @@ export const Feedback = () => {
                             value={content}
                             placeholder='The coffee could have been coffee-er'
                             onChange={(e) => setContent(e.target.value)}
-                            className='feedback-text-box'
+                            className='enquiries-text-box'
                             disabled={isLoading}
                         />
                     </div>
@@ -108,4 +121,5 @@ export const Feedback = () => {
         </div>
         </div>
     )
-}
+
+ }
