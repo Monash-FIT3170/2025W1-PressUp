@@ -3,6 +3,7 @@ import React from 'react';
 import CategoryCountChart from './CategoryChart';
 import IngredientUsageChart from './IngredientUsageChart';
 import IngredientUsageTimeChart from './IngredientUsageTimeChart'; // ← NEW
+import ItemsFrequencyChart from './ItemsFrequencyChart';          // ← ADDED
 
 export default function Dashboard() {
   return (
@@ -35,6 +36,12 @@ export default function Dashboard() {
               <IngredientUsageTimeseries start={new Date('2025-08-01')} end={new Date()} />
           */}
           <IngredientUsageTimeChart onlyClosed={false} maxLines={8} />
+        </section>
+
+        {/* NEW: Items Frequency (Occurrences) */}
+        <section style={{ height: 380 }}>
+          <h2 style={{ marginBottom: 8 }}>Items Frequency (Occurrences)</h2>
+          <ItemsFrequencyChart onlyClosed={false} metric="occurrences" />
         </section>
       </div>
     </div>

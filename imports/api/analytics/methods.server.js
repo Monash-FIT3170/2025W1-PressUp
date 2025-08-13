@@ -246,5 +246,57 @@ Meteor.methods({
     ];
 
     return raw.aggregate(pipeline).toArray();
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // NEW: Items frequency (x=item name, y=# of occurrences in orders; also returns total quantity)
+  // Params:
+  //   onlyClosed : boolean (optional) -> filter {status: 'closed'}
+  //   start, end : Date|string (optional) -> filter by createdAt
+  // ─────────────────────────────────────────────────────────────────────────────
+  async 'analytics.itemFrequency'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+
+    const match = {};
+    if (onlyClosed) match.status = 'closed';
+    if (start || end) {
+      match.createdAt = {};
+      if (start) match.createdAt.$gte = new Date(start);
+      if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    const pipeline = [
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+
+      { $unwind: '$items' },
+
+      {
+        $project: {
+          name: '$items.menu_item',
+          qty: { $ifNull: ['$items.quantity', 1] }
+        }
+      },
+
+      {
+        $group: {
+          _id: '$name',
+          occurrences: { $sum: 1 },   // how many order lines mention this item
+          quantity:    { $sum: '$qty' } // total quantity sold
+        }
+      },
+
+      {
+        $project: {
+          _id: 0,
+          itemName: '$_id',
+          occurrences: 1,
+          quantity: 1
+        }
+      },
+
+      { $sort: { occurrences: -1, itemName: 1 } }
+    ];
+
+    return raw.aggregate(pipeline).toArray();
   }
 });
