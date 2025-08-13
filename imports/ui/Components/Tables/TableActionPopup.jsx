@@ -2,17 +2,17 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import './TableActionPopup.css';
 
-export function TableActionPopup({ tableId, onClose }) {
-  // now inside the popup we know the tableId
+export function TableActionPopup({ tableNumber, onClose }) {
+  // now inside the popup we know the tableNumber
   const handleCheckIn = () => {
-    Meteor.call('tables.updateStatus', tableId, 'checked-in', (err) => {
+    Meteor.call('tables.updateStatus', tableNumber, 'checked-in', (err) => {
       if (err) alert(err.reason);
       onClose();
     });
   };
 
   const handleCheckOut = () => {
-    Meteor.call('tables.updateStatus', tableId, 'available', (err) => {
+    Meteor.call('tables.updateStatus', tableNumber, 'available', (err) => {
       if (err) alert(err.reason);
       onClose();
     });

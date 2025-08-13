@@ -90,7 +90,7 @@ export default function TableMap({ isAdmin }) {
       {tables.map((table) => (
         <TableComponent
           key={table._id}
-          tableId={table._id}
+          tableNumber={table.table_number}
           initialPosition={[table.table_xpos, table.table_ypos]}
           initialSize={[table.table_width, table.table_height]}
           initialRotation={table.table_rotation || 0}
