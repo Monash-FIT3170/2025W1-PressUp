@@ -210,6 +210,7 @@ export const OrderPanel = ({
         }, 0);
 
         return {
+          id: item._id,
           menu_item: item.name,
           quantity: item.quantity,
           price: finalPrice,

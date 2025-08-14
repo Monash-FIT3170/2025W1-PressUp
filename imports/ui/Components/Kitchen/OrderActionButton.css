@@ -1,0 +1,22 @@
+.order-action-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+}
+
+.order-action-btn.complete {
+  background-color: #4CAF50;
+}
+
+.order-action-btn.cancel {
+  background-color: #E53935;
+}
+
+.order-action-btn:hover {
+  opacity: 0.9;
+}

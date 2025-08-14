@@ -1,0 +1,66 @@
+.kitchen-order-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  border-radius: 10px;
+  min-width: 20rem;
+  max-height: calc(100vh - 120px);
+  overflow: visible;
+  padding: 14px 16px;
+}
+
+.koc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.koc-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #222;
+}
+.koc-time {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.koc-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-auto-rows: minmax(20px, auto);
+  row-gap: 6px;
+}
+
+.koc-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
+.koc-qty {
+  font-weight: 600;
+}
+.koc-name {
+  overflow-wrap: anywhere;
+}
+
+.kitchen-order-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  transform: translateY(-1px);
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+
+.koc-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+

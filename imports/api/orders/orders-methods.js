@@ -13,5 +13,19 @@ Meteor.methods({
 
     async 'orders.remove'(id) {
         return await OrdersCollection.removeAsync({_id: id});
+    },
+    
+    async 'orders.markClosed'(id) {
+        return await OrdersCollection.updateAsync(
+            { _id: id },
+            { $set: { status: "closed" } }
+        );
+    },
+
+    async 'orders.markCancelled'(id) {
+        return await OrdersCollection.updateAsync(
+            { _id: id },
+            { $set: { status: "cancelled" } }
+        );
     }
 });
