@@ -106,12 +106,27 @@ export const OrderPanel = ({
     fetchDiscounts();
   }, [orderItems, appliedPromoCode]);
 
-  // Calculate subtotal
+  // Calculate subtotal and loyalty discount
   const subtotal = orderItems.reduce((sum, item, index) => {
     const itemKey = item._id || index;
     const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
     return sum + finalPrice * item.quantity;
   }, 0);
+
+  // Calculate loyalty discount based on points
+  const getLoyaltyDiscount = () => {
+    if (!selectedCustomer || !selectedCustomer.loyaltyPoints) return 0;
+    
+    const points = selectedCustomer.loyaltyPoints;
+    if (points >= 30) return 0.15; // 15% off
+    if (points >= 20) return 0.10; // 10% off
+    if (points >= 10) return 0.05; // 5% off
+    return 0;
+  };
+
+  const loyaltyDiscountPercent = getLoyaltyDiscount();
+  const loyaltyDiscountAmount = subtotal * loyaltyDiscountPercent;
+  const finalSubtotal = subtotal - loyaltyDiscountAmount;
 
   // Function to handle table number changes
   const handleTableChange = (e) => {
@@ -450,6 +465,11 @@ export const OrderPanel = ({
                   ({selectedCustomer.loyaltyPoints} loyalty points)
                 </span>
               )}
+              {loyaltyDiscountPercent > 0 && (
+                <div style={{ marginTop: '4px', color: '#2e7d32', fontWeight: 'bold' }}>
+                  🎉 {(loyaltyDiscountPercent * 100).toFixed(0)}% loyalty discount applied!
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -458,6 +478,36 @@ export const OrderPanel = ({
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
+        
+        {/* Loyalty discount display */}
+        {loyaltyDiscountPercent > 0 && (
+          <div className="loyalty-discount" style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '8px 0',
+            color: '#2e7d32',
+            fontWeight: 'bold',
+            borderBottom: '1px solid #eee'
+          }}>
+            <span>Loyalty Discount ({(loyaltyDiscountPercent * 100).toFixed(0)}% off)</span>
+            <span>-${loyaltyDiscountAmount.toFixed(2)}</span>
+          </div>
+        )}
+        
+        {/* Final total */}
+        {loyaltyDiscountPercent > 0 && (
+          <div className="final-total" style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '8px 0',
+            fontSize: '1.1em',
+            fontWeight: 'bold',
+            borderTop: '2px solid #333'
+          }}>
+            <span>Total</span>
+            <span>${finalSubtotal.toFixed(2)}</span>
+          </div>
+        )}
         <button
           className={`checkout-btn ${isCheckingOut ? "checking-out" : ""}`}
           onClick={handleCheckout}
