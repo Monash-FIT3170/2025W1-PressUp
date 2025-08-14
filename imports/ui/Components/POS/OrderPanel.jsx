@@ -23,6 +23,7 @@ export const OrderPanel = ({
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
+  const [staffName, setStaffName] = useState('');
   
   // Customer lookup state
   const [customerPhone, setCustomerPhone] = useState("");
@@ -68,6 +69,7 @@ export const OrderPanel = ({
   inventoryItems.forEach((invItem) => {
     inventoryMap[invItem._id] = invItem;
   });
+  
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -171,11 +173,18 @@ export const OrderPanel = ({
       return;
     }
 
-    if (!tableNumber) {
-      setCheckoutError("Please enter a table number");
-      setTimeout(() => setCheckoutError(null), 3000);
-      return;
-    }
+	if (!tableNumber) {
+		setCheckoutError("Please enter a table number");
+		setTimeout(() => 
+      setCheckoutError(null), 3000);
+		return;
+	}
+
+  if (!staffName.trim()) {
+    setCheckoutError("Please enter staff name");
+    setTimeout(() => setCheckoutError(null), 3000);
+    return;
+  }
 
     setIsCheckingOut(true);
 
@@ -217,7 +226,8 @@ export const OrderPanel = ({
         };
       }),
       createdAt: new Date(),
-      recievedPayment: 0,
+      recievedPayment: 0, 
+      staffName: staffName.trim(),
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -276,6 +286,18 @@ export const OrderPanel = ({
   return (
     <div className="order-panel">
       <div className="order-panel-header">
+        <div className="staff-name-input">
+          <label htmlFor="staff-name"><h3>Staff:</h3></label>
+          <input 
+            id="staff-name"
+            type="text"
+            value={staffName}
+            onChange={(e) => setStaffName(e.target.value)}
+            className="staff-name-input"
+            placeholder="Enter name"
+          />
+        </div>
+
         <div className="table-selector">
           <label htmlFor="table-number">
             <h3>Table #:</h3>
