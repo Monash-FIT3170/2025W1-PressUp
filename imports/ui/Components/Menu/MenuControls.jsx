@@ -7,7 +7,7 @@ import { CategoryManager } from './CategoryPopUp.jsx';
 import './MenuControls.css'
 
 
-export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
+export const MenuControls = ({ selectedCategory, setSelectedCategory, compact = false }) => {
   // console.log('selectedCategory:', selectedCategory);
   // console.log('setSelectedCategory:', setSelectedCategory);
 
