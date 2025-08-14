@@ -84,6 +84,7 @@ export default function IngredientUsageTimeseries({
   return (
     <div ref={hostRef} style={{ width: '100%', height: HEIGHT, overflow: 'hidden' }}>
       {width > 0 && (
+        
         <LineChart
           width={Math.floor(width)}
           height={HEIGHT}
@@ -108,6 +109,7 @@ export default function IngredientUsageTimeseries({
             />
           ))}
         </LineChart>
+        
       )}
     </div>
   );

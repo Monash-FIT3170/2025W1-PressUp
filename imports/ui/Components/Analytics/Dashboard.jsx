@@ -1,47 +1,53 @@
 // ui/Components/Analytics/Dashboard.jsx
 import React from 'react';
+import './analytics.css';
+
 import CategoryCountChart from './CategoryChart';
 import IngredientUsageChart from './IngredientUsageChart';
-import IngredientUsageTimeChart from './IngredientUsageTimeChart'; // ← NEW
-import ItemsFrequencyChart from './ItemsFrequencyChart';          // ← ADDED
+import IngredientUsageTimeChart from './IngredientUsageTimeChart';
+import ItemsFrequencyChart from './ItemsFrequencyChart';
 
 export default function Dashboard() {
   return (
-    <div style={{ padding: 16 }}>
-      <h1>Analytics</h1>
+    <div className="analytics">
+      <header className="analytics__header">
+        <h1 className="analytics__title">Analytics</h1>
+        <div className="analytics__controls">
+          {/* Example accent to echo your POS feel */}
+          <span className="badge">Live</span>
+        </div>
+      </header>
 
-      <div
-        style={{
-          display: 'grid',
-          gap: 24,
-          gridTemplateColumns: '1fr',
-        }}
-      >
-        {/* Existing: Orders by Category (bar) */}
-        <section style={{ height: 380 }}>
-          <h2 style={{ marginBottom: 8 }}>Orders by Category</h2>
-          <CategoryCountChart onlyClosed={false} />
+      <div className="analytics__grid">
+        {/* Wide timeseries on top — tells the story at a glance */}
+        <section className="card lg-span-12">
+          <h2 className="card__title">Ingredient Usage Over Time</h2>
+          <div className="chart-host">
+            <IngredientUsageTimeChart onlyClosed={false} maxLines={8} />
+          </div>
         </section>
 
-        {/* Existing: Ingredient Usage (bar) */}
-        <section style={{ height: 380 }}>
-          <h2 style={{ marginBottom: 8 }}>Ingredient Usage</h2>
-          <IngredientUsageChart onlyClosed={false} />
+        {/* Two-up overview cards */}
+        <section className="card lg-span-6">
+          <h2 className="card__title">Orders by Category</h2>
+          <div className="chart-host">
+            <CategoryCountChart onlyClosed={false} />
+          </div>
         </section>
 
-        {/* NEW: Ingredient Usage Over Time (multi-line) */}
-        <section style={{ height: 380 }}>
-          <h2 style={{ marginBottom: 8 }}>Ingredient Usage Over Time</h2>
-          {/* Optionally pass start/end dates, e.g.:
-              <IngredientUsageTimeseries start={new Date('2025-08-01')} end={new Date()} />
-          */}
-          <IngredientUsageTimeChart onlyClosed={false} maxLines={8} />
+        <section className="card lg-span-6">
+          <h2 className="card__title">Items Frequency (Occurrences)</h2>
+          <div className="chart-host">
+            <ItemsFrequencyChart onlyClosed={false} metric="occurrences" />
+          </div>
         </section>
 
-        {/* NEW: Items Frequency (Occurrences) */}
-        <section style={{ height: 380 }}>
-          <h2 style={{ marginBottom: 8 }}>Items Frequency (Occurrences)</h2>
-          <ItemsFrequencyChart onlyClosed={false} metric="occurrences" />
+        {/* Full-width detail */}
+        <section className="card lg-span-12">
+          <h2 className="card__title">Ingredient Usage</h2>
+          <div className="chart-host">
+            <IngredientUsageChart onlyClosed={false} />
+          </div>
         </section>
       </div>
     </div>

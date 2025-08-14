@@ -1,7 +1,7 @@
 // ui/Components/Analytics/IngredientUsageChart.jsx
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, ResponsiveContainer } from 'recharts';
 
 export default function IngredientUsageChart({ onlyClosed = false, start = null, end = null }) {
   const [data, setData] = useState([]);
