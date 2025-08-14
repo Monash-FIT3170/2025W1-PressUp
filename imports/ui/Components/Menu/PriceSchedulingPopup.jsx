@@ -111,7 +111,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
               ))}
             </select>
             {errors.selectedItemId && <div className="error">{errors.selectedItemId}</div>}
-          </div>.
+          </div>
           {/* New price input. */}
           <div>
             <label>New Price</label>
