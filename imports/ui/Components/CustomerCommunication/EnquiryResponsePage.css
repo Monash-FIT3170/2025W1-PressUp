@@ -14,4 +14,7 @@
     border: 1px solid #e0e0e0;
     position: relative;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

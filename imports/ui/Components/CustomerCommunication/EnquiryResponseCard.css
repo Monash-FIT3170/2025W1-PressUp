@@ -2,13 +2,12 @@
     background: #ffffff;
     font-family: 'Inter', sans-serif;
     border-radius: 8px;
-    padding: 8px 16px;
     width: 100%;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
     border: 1px solid #e0e0e0;
     text-align: left;
-    margin: 5px 5px;
     cursor: pointer;
+    padding: 10px;
 }
 
 .initial-container:hover {
@@ -19,12 +18,11 @@
     background: #ffffff;
     font-family: 'Inter', sans-serif;
     border-radius: 16px;
-    padding: 8px 16px;
     overflow: hidden;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
     border: 1px solid #e0e0e0;
     text-align: left;
-    margin: 5px 5px;
+    padding: 10px;
 }
 
 .text-field {

@@ -56,12 +56,10 @@ export const FeedbackResponsePage = (() => {
         <h1>Customer Feedback:</h1>
         <div className='feedback'>
             {feedback.map((feedback)=>(
-                <div key = {feedback._id}>
                 <FeedbackResponseCard 
                     feedbackID={feedback._id}
                     key = {feedback._id}
                 />
-                </div>
             ))}
             </div>
         </div>
