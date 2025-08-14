@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, Navigate } from "react-router-dom";
-import { useTracker } from 'meteor/react-meteor-data';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
 // Components
@@ -20,37 +27,79 @@ import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
 import { KitchenDisplay } from "./Components/Kitchen/KitchenDisplay.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
+import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
+import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
 
-import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
 
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
 
-
-export const App = () => {
-  // Authentication tracking
+// Component to handle route protection and redirection logic
+const RouteHandler = ({ children }) => {
+  const location = useLocation();
   const { user, isLoading } = useTracker(() => {
-    const subscription = Meteor.subscribe('currentUser');
+    const subscription = Meteor.subscribe("currentUser");
     const user = Meteor.user();
 
     if (user) {
-      console.log('=== USER DEBUG ===');
-      console.log('Full user object:', user);
-      console.log('Username:', user.username);
-      console.log('isAdmin value:', user.isAdmin);
-      console.log('Type of isAdmin:', typeof user.isAdmin);
-      console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
-      console.log('=================');
+      // console.log('=== USER DEBUG ===');
+      // console.log('Full user object:', user);
+      // console.log('Username:', user.username);
+      // console.log('isAdmin value:', user.isAdmin);
+      // console.log('Type of isAdmin:', typeof user.isAdmin);
+      // console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
+      // console.log('=================');
     }
-    
+
     return {
       user,
-      isLoading: !subscription.ready() || Meteor.loggingIn()
+      isLoading: !subscription.ready() || Meteor.loggingIn(),
     };
   });
-  
 
+  // Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // If no user and trying to access root path, show pre-login page
+  if (!user && location.pathname === "/") {
+    return <PreLoginPage />;
+  }
+
+  if (user && location.pathname === "/") {
+    return <Navigate to="/pos" replace />;
+  }
+
+  // If no user and trying to access any other protected route, redirect to pre-login
+  if (
+    !user &&
+    location.pathname !== "/login" &&
+    location.pathname !== "/pre-login" &&
+    location.pathname !== "/loyalty-signup"
+  ) {
+    return <Navigate to="/" replace />;
+  }
+
+  // If user exists and trying to access login or pre-login, redirect to POS
+  if (
+    user &&
+    (location.pathname === "/login" || location.pathname === "/pre-login")
+  ) {
+    return <Navigate to="/pos" replace />;
+  }
+
+  return children;
+};
+
+export const App = () => {
   // Existing state
   const [showPopup, setShowPopup] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
@@ -68,6 +117,10 @@ export const App = () => {
 
   // State for order management
   const [orderItems, setOrderItems] = useState([]);
+
+  const { user } = useTracker(() => ({
+    user: Meteor.user(),
+  }));
 
   const updateMenuItem = (item) => {
     setExistingItem(item);
@@ -159,140 +212,163 @@ export const App = () => {
     setOrderItems([]);
   };
 
-  // Show loading screen while checking authentication
-  if (isLoading) {
-    return (
-      <div className="loading-screen">
-        <div className="loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
   // Main app with routing
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Login route */}
-        <Route 
-          path="/login" 
-          element={
-            user ? <Navigate to="/" replace /> : <Login />
-          } 
-        />
-        
-        {/* Protected routes */}
-        <Route
-          path="/*"
-          element={
-            !user ? (
-              <Navigate to="/login" replace />
-            ) : (
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+      <RouteHandler>
+        <Routes>
+          {/* Login route */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Pre-login route (optional explicit route) */}
+          <Route path="/pre-login" element={<PreLoginPage />} />
+
+          {/* Loyalty signup route */}
+          <Route path="/loyalty-signup" element={<LoyaltySignupPage />} />
+
+          {/* Root route - handled by RouteHandler */}
+          <Route path="/" element={<PreLoginPage />} />
+
+          {/* Protected POS route */}
+          <Route
+            path="/pos"
+            element={
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={
-                <div className="pos-layout">
-                  <div className="pos-content">
-                    <PageHeader
-                      isSidebarOpen={isSidebarOpen}
-                      setIsSidebarOpen={setIsSidebarOpen}
-                      searchBar={<SearchBar onSearch={handleSearch} />}
-                    />
-                    <POSMenuControls
-                      showPopup={showPopup}
-                      setShowPopup={setShowPopup}
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
-                    />
-                    <POSMenuCards
-                      menuItems={menuItems}
-                      selectedCategory={selectedCategory}
-                      addToOrder={addToOrder}
-                      searchTerm={searchTerm}
-                    />
-                  </div>
-                  {checkout ? (
-                    <OrderSummary
-                      orderID={checkoutID}
-                      setCheckout={setCheckout}
-                    />
-                  ) : (
-                    <OrderPanel
-                      orderItems={orderItems}
-                      removeFromOrder={removeFromOrder}
-                      updateQuantity={updateQuantity}
-                      clearOrder={clearOrder}
-                      setCheckout={setCheckout}
-                      setCheckoutID={setCheckoutID}
-                    />
-                  )}
-                </div>
-              }
-            />
-            <Route
-              path="/kitchen"
-              element={
-                <>
-                  <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
-                  />
-                  <KitchenDisplay isSidebarOpen = {isSidebarOpen}/>
-                </>
-              }
-            />
-            
-            {/* Admin-only routes */}
-            {user.isAdmin ? (
-              <>
-                <Route
-                  path="/inventory"
-                  element={
-                    <>
+                  <div className="pos-layout">
+                    <div className="pos-content">
                       <PageHeader
                         isSidebarOpen={isSidebarOpen}
                         setIsSidebarOpen={setIsSidebarOpen}
                         searchBar={<SearchBar onSearch={handleSearch} />}
                       />
-
-                      <InventoryViewModeDropdown
-                        viewMode={viewMode}
-                        setViewMode={setViewMode}
+                      <POSMenuControls
+                        showPopup={showPopup}
+                        setShowPopup={setShowPopup}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
                       />
+                      <POSMenuCards
+                        menuItems={menuItems}
+                        selectedCategory={selectedCategory}
+                        addToOrder={addToOrder}
+                        searchTerm={searchTerm}
+                      />
+                    </div>
+                    {checkout ? (
+                      <OrderSummary
+                        orderID={checkoutID}
+                        setCheckout={setCheckout}
+                      />
+                    ) : (
+                      <OrderPanel
+                        orderItems={orderItems}
+                        removeFromOrder={removeFromOrder}
+                        updateQuantity={updateQuantity}
+                        clearOrder={clearOrder}
+                        setCheckout={setCheckout}
+                        setCheckoutID={setCheckoutID}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            }
+          />
 
-                      {viewMode === "Ingredients" ? (
-                        <IngredientTable
-                          searchTerm={searchTerm}
-                          openOverlay={openOverlay}
-                          setOpenOverlay={setOpenOverlay}
-                          overlayRef={overlayRef}
-                        />
-                      ) : (
-                        <SupplierTable
-                          searchTerm={searchTerm}
-                          openOverlay={openOverlay}
-                          setOpenOverlay={setOpenOverlay}
-                          overlayRef={overlayRef}
-                        />
-                      )}
-                    </>
-                  }
+          <Route
+            path="/kitchen"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
                 />
-              </>
-            ) : null}
-            
-            <Route
-              path="/menu"
-              element={
-                <>
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <KitchenDisplay isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Other protected routes */}
+          <Route
+            path="/inventory"
+            element={
+              user?.isAdmin ? (
+                <div
+                  className={`app-container ${
+                    !isSidebarOpen ? "sidebar-closed" : ""
+                  }`}
+                >
+                  <Sidebar
+                    isOpen={isSidebarOpen}
+                    setIsOpen={setIsSidebarOpen}
+                    isAdmin={user.isAdmin}
+                  />
+                  <div className="main-content">
+                    <PageHeader
+                      isSidebarOpen={isSidebarOpen}
+                      setIsSidebarOpen={setIsSidebarOpen}
+                      searchBar={<SearchBar onSearch={handleSearch} />}
+                    />
+                    <InventoryViewModeDropdown
+                      viewMode={viewMode}
+                      setViewMode={setViewMode}
+                    />
+                    {viewMode === "Ingredients" ? (
+                      <IngredientTable
+                        searchTerm={searchTerm}
+                        openOverlay={openOverlay}
+                        setOpenOverlay={setOpenOverlay}
+                        overlayRef={overlayRef}
+                      />
+                    ) : (
+                      <SupplierTable
+                        searchTerm={searchTerm}
+                        openOverlay={openOverlay}
+                        setOpenOverlay={setOpenOverlay}
+                        overlayRef={overlayRef}
+                      />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <Navigate to="/pos" replace />
+              )
+            }
+          />
+
+          <Route
+            path="/menu"
+            element={
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
@@ -313,51 +389,83 @@ export const App = () => {
                     setMenuItems={setMenuItems}
                     searchTerm={menuItemSearchTerm}
                   />
-                </>
-              }
-            />
-            <Route
-              path="/scheduling"
-              element={
-                <>
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/scheduling"
+            element={
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                </>
-              }
-            />
-            <Route
-              path="/promotions"
-              element={
-                <>
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/promotions"
+            element={
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <PromotionPage />
-                </>
-              }
-                    />
-            <Route
-              path="/tables"
-              element={
-                <>
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/tables"
+            element={
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <TableMap />
-                </>
-              }
-            />
-                  </Routes>
+                  <TableMap isAdmin={user?.isAdmin} />
                 </div>
               </div>
-            )
-          }
-        />
-      </Routes>
+            }
+          />
+        </Routes>
+      </RouteHandler>
     </BrowserRouter>
   );
 };

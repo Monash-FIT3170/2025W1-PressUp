@@ -1,9 +1,11 @@
 // imports/ui/Components/Login/Login.jsx
 import React, { useState } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,10 +27,19 @@ export const Login = () => {
     });
   };
 
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1 className="login-title">PressUp Login</h1>
+        <div className="login-header">
+          <button onClick={handleBackToHome} className="back-to-home-btn">
+            ← Back to Home
+          </button>
+          <h1 className="login-title">PressUp Staff Login</h1>
+        </div>
         {error && (
           <div className="login-error">
             <span className="error-icon">⚠️</span>

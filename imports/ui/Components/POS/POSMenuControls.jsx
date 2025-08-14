@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
 import './POSMenuControls.css';
 
 export const POSMenuControls = ({ selectedCategory, setSelectedCategory}) => {
 
-  // const categories = useTracker(() => {
-  //   Meteor.subscribe('menuCategories.all');
-  //   const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
-  //   console.log('Fetched categories:', dbCategories);
-  //   return ['All', ...dbCategories.map(c => c.category)];
-  // });
-  const categories = useTracker(() => {
-      Meteor.subscribe('menuCategories.all');
-      const dbCategories = MenuCategories.find({}, { sort: { sortOrder: 1 } }).fetch();
-      console.log('Fetched categories:', dbCategories);
-      return [{ _id: 'all', name: 'All' }, ...dbCategories.map(c => ({ _id: c._id, name: c.category }))];
+  const [categories, setCategories] = useState([{ _id: 'all', name: 'All' }]);
+
+  useEffect(() => {
+    Meteor.call('menuCategories.getCategories', (err, res) => {
+      if (!err && Array.isArray(res)) {
+        setCategories([
+          { _id: 'all', name: 'All' },
+          ...res.map(c => ({ _id: c._id, name: c.category }))
+        ]);
+      }
     });
+  }, []);
 
   return (
     <>
