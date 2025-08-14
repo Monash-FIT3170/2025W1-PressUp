@@ -38,6 +38,6 @@ SimpleSchema.Schema = new SimpleSchema({
 });
 
 // Index on scheduledTime for faster polling.
-await ScheduledChanges.createIndex(
-    { scheduledTime: 1, applied: 1 }
-);
+Meteor.startup(async () => {
+	ScheduledChanges.createIndex({ scheduledTime: 1, applied: 1 });
+});

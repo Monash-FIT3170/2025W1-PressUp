@@ -106,11 +106,17 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
     console.log('[CLIENT] Current menu items in UI:', menuItems.length);
   }, [menuItems]);
 
-  const itemsToDisplay = menuItems.filter(item => {
-    const categoryMatch = selectedCategory === 'all' || item.menuCategory?.toLowerCase() === selectedCategory.toLowerCase();
-    const searchMatch = !searchTerm || item.name?.toLowerCase().includes(searchTerm.toLowerCase());
+  const itemsToDisplay = Array.isArray(menuItems) ? menuItems.filter(item => {
+    const categoryMatch =
+      selectedCategory === 'all' ||
+      item.menuCategory?.toLowerCase() === selectedCategory.toLowerCase();
+
+    const searchMatch =
+      !searchTerm ||
+      item.name?.toLowerCase().includes(searchTerm.toLowerCase());
+
     return categoryMatch && searchMatch;
-  });
+  }) : [];
 
   return (
     <div className="card-container">

@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { ScheduledChanges } from '../imports/api/scheduled-changes/scheduled-changes-collection.js';
 import { applyScheduledChange } from '../imports/api/scheduled-changes/apply-change.js';
 
-const INTERVAL_MILLIS = 5 * 60 * 1000; // 5 mins.
+// How often to poll for scheduled changes.
+const INTERVAL_MILLIS = 5 * 60 * 1000;
 
 async function getApplyScheduledChanges(now = new Date()) {
   console.log(`Looking for scheduled changes at ${now.toISOString()}`);
@@ -33,7 +34,7 @@ Meteor.startup(() => {
   // Run once at startup
   void getApplyScheduledChanges();
 
-  // Then every minute
+  // Then at every interval defined.
   Meteor.setInterval(() => {
     void getApplyScheduledChanges();
   }, INTERVAL_MILLIS);

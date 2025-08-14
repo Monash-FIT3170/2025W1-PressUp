@@ -9,7 +9,7 @@ Meteor.methods({
 		check(changes, Object);
 		check(scheduledTime, Date);
 
-		return ScheduledChanges.insert({
+		return ScheduledChanges.insertAsync({
 			targetCollection,
 			targetId,
 			changes,
@@ -18,5 +18,9 @@ Meteor.methods({
 			appliedAt: null,
 			createdAt: new Date()
 		});
+	},
+	'scheduledChanges.delete'(scheduledChangeId) {
+		check(scheduledChangeId, String);
+		return ScheduledChanges.removeAsync({ _id: scheduledChangeId });
 	}
 });

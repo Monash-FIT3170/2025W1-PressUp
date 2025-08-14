@@ -195,19 +195,19 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }  
-  if (nScheduledChanges === 0) {
-    const firstMenuItem = await Menu.findOneAsync({}, { projection: { _id: 1, price: 1 } });
+  // if (nScheduledChanges === 0) {
+  //   const firstMenuItem = await Menu.findOneAsync({}, { projection: { _id: 1, price: 1 } });
 
-    await ScheduledChanges.insertAsync({
-      targetCollection: 'menu',
-      targetId: firstMenuItem._id,
-      changes: {
-        price: firstMenuItem.price + 1,
-        available: false
-      },
-      scheduledTime: new Date(Date.now()),
-      createdAt: new Date()
-    });
-    console.log('[Server] Inserted sample scheduled change');
-  }
+  //   await ScheduledChanges.insertAsync({
+  //     targetCollection: 'menu',
+  //     targetId: firstMenuItem._id,
+  //     changes: {
+  //       price: firstMenuItem.price + 1,
+  //       available: false
+  //     },
+  //     scheduledTime: new Date(Date.now()),
+  //     createdAt: new Date()
+  //   });
+  //   console.log('[Server] Inserted sample scheduled change');
+  // }
 });

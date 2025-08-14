@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
-import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection'; // Adjust the path as needed
+import { MenuCategories } from '/imports/api/menu-categories/menu-categories-collection';
 import { MenuItemPopUp } from './MenuItemPopUp.jsx';
+import { PriceSchedulingPopup } from './PriceSchedulingPopup.jsx';
 import { CategoryManager } from './CategoryPopUp.jsx';
 import './MenuControls.css'
 
 
-export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup, setShowPopup, compact = false }) => {
+export const MenuControls = ({ selectedCategory, setSelectedCategory, compact = false }) => {
   console.log('selectedCategory:', selectedCategory);
   console.log('setSelectedCategory:', setSelectedCategory);
 
   const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showSchedulingPopup, setShowSchedulingPopup] = useState(false);
 
   // const categories = useTracker(() => {
   //   Meteor.subscribe('menuCategories.all');
@@ -42,8 +45,33 @@ export const MenuControls = ({ selectedCategory, setSelectedCategory, showPopup,
 
   return (
     <>
-      <button className="create-menu-item-button" onClick={() => setShowPopup(true)}>+ New Menu Item</button>
-      {showPopup && <MenuItemPopUp onClose={() => setShowPopup(false)} addMenuItem={addMenuItem} mode='create' />}
+      {/* Container at the top of the page, next to the search bar. */}
+      <div className="menu-button-container">
+        <button
+          className="menu-top-button"
+          onClick={() => setShowPopup(true)}
+        >
+          + New Menu Item
+        </button>
+        <button
+          className="menu-top-button"
+          onClick={() => setShowSchedulingPopup(true)}
+        >
+          Schedule Prices
+        </button>
+      </div>
+      {/* Show the create menu item popup. */}
+      {showPopup && (
+        <MenuItemPopUp
+          onClose={() => setShowPopup(false)}
+          addMenuItem={addMenuItem}
+          mode="create"
+        />
+      )}
+      {/* Show the schedule prices popup. */}
+      {showSchedulingPopup && (
+  <PriceSchedulingPopup onClose={() => setShowSchedulingPopup(false)} />
+)}
       <div className="filter-bar">
         {/* {categories.map((category) => (
           <button
