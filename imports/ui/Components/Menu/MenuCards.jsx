@@ -103,7 +103,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
   }, [deletingItems, setMenuItems, processDeletionQueue]);
 
   React.useEffect(() => {
-    console.log('[CLIENT] Current menu items in UI:', menuItems.length);
+    // console.log('[CLIENT] Current menu items in UI:', menuItems.length);
   }, [menuItems]);
 
   const itemsToDisplay = Array.isArray(menuItems) ? menuItems.filter(item => {
@@ -128,7 +128,7 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
           addMenuItem={updateMenuItem}
         />
       )}
-      {console.log(selectedCategory)}
+      {/* {console.log(selectedCategory)} */}
       {itemsToDisplay.length === 0 ? (
         <p>No items matching this search available</p>
       ) : (

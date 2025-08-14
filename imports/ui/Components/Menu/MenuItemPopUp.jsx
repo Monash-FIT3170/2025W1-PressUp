@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './MenuItemPopUp.css';
+import { useFind, useSubscribe } from "meteor/react-meteor-data";
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
 import '/imports/api/menu-categories/menu-categories-methods.js';
+import { InventoryCollection } from "../../../api/inventory/inventory-collection.js";
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
   const [name, setName] = useState('');
@@ -11,12 +13,18 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [menuCategory, setMenuCategory] = useState('');
   const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
   const [available, setAvailable] = useState(true);
-  const [ingredients, setIngredients] = useState('');
+  const [ingredients, setIngredients] = useState([]);
   const [isHalal, setIsHalal] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
   const [errors, setErrors] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
+  const searchTerm = "";
+  const isInventoryReady  = useSubscribe("inventory.nameIncludes", searchTerm);
+  const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
+  const [ingredientAmounts, setIngredientAmounts] = useState({});
+
+  // const findIngredients = useFind(() => InventoryCollection.find({}));
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [schedule, setSchedule] = useState(
     daysOfWeek.reduce((acc, day) => {
@@ -45,14 +53,20 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setIsHalal(existingItem.isHalal || false);
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
-      setIngredients(existingItem.ingredients ? existingItem.ingredients.join(', ') : '');
-      if (existingItem.schedule) {
-        setSchedule(prev => ({
-          ...prev,
-          ...existingItem.schedule
-        }));
+      // setIngredients(existingItem.ingredients || []);
+      setIngredients((existingItem.ingredients || []).map(ing => ing.id));
+      setIngredientAmounts((existingItem.ingredients || []).reduce((acc, ing) => {
+          acc[ing.id] = ing.amount;
+          return acc;
+        }, {}));
+
+        if (existingItem.schedule) {
+          setSchedule(prev => ({
+            ...prev,
+            ...existingItem.schedule
+          }));
+        }
       }
-    }
   }, [existingItem, mode]);
 
   const validateForm = () => {
@@ -60,7 +74,17 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     if (!name.trim()) newErrors.name = 'Item name is required';
     if (!price || isNaN(price) || parseFloat(price) <= 0) newErrors.price = 'Please enter a valid price greater than 0';
     if (!menuCategory.trim()) newErrors.menuCategory = 'Menu category is required';
-    if (ingredients && !Array.isArray(ingredients.split(','))) newErrors.ingredients = 'Ingredients must be a comma-separated list';
+    if (!Array.isArray(ingredients) || ingredients.length === 0) {
+      newErrors.ingredients = 'Please select at least one ingredient';
+    }
+    ingredients.forEach(id => {
+      const amount = parseFloat(ingredientAmounts[id]);
+      if (isNaN(amount) || amount <= 0) {
+        newErrors.ingredients = 'Each selected ingredient must have a valid amount';
+      }
+    });
+
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -81,7 +105,11 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       isHalal,
       isVegetarian,
       isGlutenFree,
-      ingredients: ingredients.split(',').map(i => i.trim()),
+      // ingredients,
+      ingredients: ingredients.map(id => ({
+        id,
+        amount: parseFloat(ingredientAmounts[id]) || 0
+      })),
       schedule,
     };
 
@@ -95,7 +123,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           setName('');
           setPrice('');
           setMenuCategory('');
-          setIngredients('');
+          setIngredients([]);
           onClose();  // Close the popup after successful submission
         }
       });
@@ -127,7 +155,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     setIsVegetarian(false);
     setIsGlutenFree(false);
   };
-
+  console.log(findIngredients)  
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -201,11 +229,53 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
             </label>
           </div>
 
-          <div>
-            <label>Ingredients</label>
-            <input type="text" value={ingredients} onChange={(e) => setIngredients(e.target.value)} />
-            {errors.ingredients && <span className="error">{errors.ingredients}</span>}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+            {findIngredients.map((ing) => (
+              <div key={ing._id} style={{ display: 'flex', gap: '10px' }}>
+                <label style={{ display: 'flex', gap: '5px' }}>
+                  <input
+                    type="checkbox"
+                    value={ing._id}
+                    checked={ingredients.includes(ing._id)}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newIngredients = checked
+                        ? [...ingredients, ing._id]
+                        : ingredients.filter(id => id !== ing._id);
+
+                      // Clean up amount if unchecked
+                      if (!checked) {
+                        const updatedAmounts = { ...ingredientAmounts };
+                        delete updatedAmounts[ing._id];
+                        setIngredientAmounts(updatedAmounts);
+                      }
+
+                      setIngredients(newIngredients);
+                    }}
+                  />
+                  {ing.name}
+                </label>
+
+                {/* Show input for amount if checked */}
+                {ingredients.includes(ing._id) && (
+                  <input
+                    type="number"
+                    placeholder="Amount (e.g. 100g)"
+                    value={ingredientAmounts[ing._id] || ''}
+                    onChange={(e) =>
+                      setIngredientAmounts({
+                        ...ingredientAmounts,
+                        [ing._id]: e.target.value
+                      })
+                    }
+                  />
+                )}
+              </div>
+            ))}
+
+          {errors.ingredients && <span className="error">{errors.ingredients}</span>}
           </div>
+
 
           <div className="schedule-section">
             <h4>Availability Schedule</h4>

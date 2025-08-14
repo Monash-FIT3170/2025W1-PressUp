@@ -20,28 +20,28 @@ Meteor.methods({
     }
   },
 
-  async 'tables.updateStatus'(tableId, newStatus) {
+  async 'tables.updateStatus'(tableNumber, newStatus) {
     try {
-    TablesCollection.updateAsync(tableId, { $set: { table_status: newStatus } });
+    TablesCollection.updateAsync({table_number: tableNumber}, { $set: { table_status: newStatus } });
     } catch (error) {
-      console.error(`Error updating table status ${tableId}:`, error);
+      console.error(`Error updating table status for table ${tableNumber}:`, error);
       throw new Meteor.Error('updateStatus-failed', 'Failed to update the availability.');
     }
   },
 
-  async 'tables.remove'(tableId) {
+  async 'tables.remove'(tableNumber) {
 
     try {
-      const result = await TablesCollection.removeAsync(tableId);
-      console.log(`Table removed: ${tableId}, Removed documents: ${result}`);
+      const result = await TablesCollection.removeAsync({table_number: tableNumber});
+      console.log(`Table removed: ${tableNumber}, Removed documents: ${result}`);
     } catch (error) {
-      console.error(`Error removing table ${tableId}:`, error);
+      console.error(`Error removing table ${tableNumber}:`, error);
       throw new Meteor.Error('remove-failed', 'Failed to remove the table.');
     }
   },
 
-  'tables.updateLayout'(tableId, newX, newY, newWidth, newHeight, newRotation) {
-    const result = TablesCollection.updateAsync(tableId, {
+  'tables.updateLayout'(tableNumber, newX, newY, newWidth, newHeight, newRotation) {
+    const result = TablesCollection.updateAsync({table_number: tableNumber}, {
       $set: {
         table_xpos: newX,
         table_ypos: newY,
@@ -51,7 +51,7 @@ Meteor.methods({
       },
     });
 
-    console.log(`Table updated: ${tableId}`);
+    console.log(`Table updated: ${tableNumber}`);
 
   }
 });
