@@ -33,6 +33,15 @@ import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
 
+
+import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
+import "../imports/api/enquiries/enquiries-methods";
+import "../imports/api/enquiries/enquiries-publications";
+
+import { FeedbackCollection } from "../imports/api/feedback/feedback-collection.js";
+import "../imports/api/feedback/feedback-methods.js";
+import "../imports/api/feedback/feedback-publication.js";
+
 import { ScheduledChanges } from '/imports/api/scheduled-changes/scheduled-changes-collection.js';
 import '../imports/api/scheduled-changes/scheduled-changes-methods.js';
 import '../imports/api/scheduled-changes/scheduled-changes-publications.js';

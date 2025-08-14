@@ -9,6 +9,14 @@ export const CustomerNavbar = () => {
     navigate('/loyalty-signup');
   };
 
+  const handleFeedback = () => {
+    navigate('/feedback')
+  }
+
+  const handleSupport = () => {
+    navigate('/enquiries')
+  }
+
   const handleStaffLogin = () => {
     navigate('/login');
   };
@@ -25,6 +33,12 @@ export const CustomerNavbar = () => {
           <h1 onClick={handleHomeClick}>PressUp</h1>
         </div>
         <nav className="navbar-nav">
+          <button onClick={handleFeedback} className="nav-link">
+            Customer Feedback
+          </button>
+          <button onClick={handleSupport} className="nav-link">
+            Customer Support
+          </button>
           <button onClick={handleLoyaltySignup} className="nav-link">
             Loyalty Program Signup
           </button>
