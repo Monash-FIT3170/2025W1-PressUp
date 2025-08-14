@@ -12,6 +12,7 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromoCode, setAppliedPromoCode] = useState('');
+  const [staffName, setStaffName] = useState('');
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -82,6 +83,12 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
 		return;
 	}
 
+  if (!staffName.trim()) {
+    setCheckoutError("Please enter staff name");
+    setTimeout(() => setCheckoutError(null), 3000);
+    return;
+  }
+
     setIsCheckingOut(true);
     
     // Format order data according to the schema
@@ -100,7 +107,8 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
         };
       }),
       createdAt: new Date(),
-      recievedPayment: 0
+      recievedPayment: 0, 
+      staffName: staffName.trim(),
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -129,6 +137,18 @@ export const OrderPanel = ({ orderItems, removeFromOrder, updateQuantity, clearO
   return (
     <div className="order-panel">
       <div className="order-panel-header">
+        <div className="staff-name-input">
+          <label htmlFor="staff-name"><h3>Staff:</h3></label>
+          <input 
+            id="staff-name"
+            type="text"
+            value={staffName}
+            onChange={(e) => setStaffName(e.target.value)}
+            className="staff-name-input"
+            placeholder="Enter name"
+          />
+        </div>
+
         <div className="table-selector">
           <label htmlFor="table-number"><h3>Table #:</h3></label>
           <input 
