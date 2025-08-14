@@ -5,6 +5,7 @@ import "/imports/api/promotions/promotions-methods.js";
 import { useTracker } from "meteor/react-meteor-data";
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection.js";
 import { TablesCollection } from "../../../api/tables/TablesCollection";
+import { CustomersCollection } from "/imports/api/customers/customers-collection.js";
 
 export const OrderPanel = ({
   orderItems,
@@ -22,6 +23,11 @@ export const OrderPanel = ({
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
+  
+  // Customer lookup state
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
 
   const inventoryItems = useTracker(() => {
     const handle = Meteor.subscribe("inventory.all");
@@ -40,6 +46,23 @@ export const OrderPanel = ({
       table_status: { $eq: "available" },
     }).fetch();
   }, []);
+
+  // Customer search subscription
+  const matchingCustomers = useTracker(() => {
+    if (!customerPhone || customerPhone.trim() === "") {
+      return [];
+    }
+
+    const handle = Meteor.subscribe("customers.searchByPhone", customerPhone.trim());
+    
+    if (!handle.ready()) {
+      return [];
+    }
+
+    return CustomersCollection.find({
+      phone: { $regex: new RegExp(customerPhone.replace(/\D/g, ''), 'i') }
+    }).fetch();
+  }, [customerPhone]);
 
   const inventoryMap = {};
   inventoryItems.forEach((invItem) => {
@@ -99,6 +122,32 @@ export const OrderPanel = ({
     }
   };
 
+  // Function to handle customer phone input
+  const handleCustomerPhoneChange = (e) => {
+    const value = e.target.value;
+    setCustomerPhone(value);
+    setShowCustomerDropdown(value.length > 0);
+    
+    // Clear selected customer if phone is modified
+    if (selectedCustomer && value !== selectedCustomer.phone) {
+      setSelectedCustomer(null);
+    }
+  };
+
+  // Function to select a customer from dropdown
+  const handleCustomerSelect = (customer) => {
+    setSelectedCustomer(customer);
+    setCustomerPhone(customer.phone);
+    setShowCustomerDropdown(false);
+  };
+
+  // Function to clear customer selection
+  const clearCustomerSelection = () => {
+    setSelectedCustomer(null);
+    setCustomerPhone("");
+    setShowCustomerDropdown(false);
+  };
+
   // Function to handle checkout process
   const handleCheckout = async () => {
     if (orderItems.length === 0) {
@@ -121,6 +170,12 @@ export const OrderPanel = ({
     const orderData = {
       table: tableNumber,
       status: "open",
+      customer: selectedCustomer ? selectedCustomer._id : null, // Add customer reference
+      customerInfo: selectedCustomer ? {
+        name: selectedCustomer.name,
+        phone: selectedCustomer.phone,
+        email: selectedCustomer.email
+      } : null,
       items: orderItems.map((item, index) => {
         const itemKey = item._id || index;
         const finalPrice = discountedItems[itemKey]?.finalPrice ?? item.price;
@@ -181,6 +236,8 @@ export const OrderPanel = ({
         // Reset checkout success message after delay and clear the order
         setTimeout(() => {
           if (clearOrder) clearOrder();
+          // Also clear customer selection after successful checkout
+          clearCustomerSelection();
         }, 2000);
       }
     });
@@ -297,6 +354,102 @@ export const OrderPanel = ({
           {appliedPromoCode && (
             <div className="applied-promo-msg">
               Applied code: <strong>{appliedPromoCode}</strong>
+            </div>
+          )}
+        </div>
+
+        {/* Customer lookup section */}
+        <div className="customer-lookup">
+          <label htmlFor="customer-phone">Customer Phone:</label>
+          <div className="customer-input-container" style={{ position: 'relative' }}>
+            <input
+              id="customer-phone"
+              type="text"
+              value={customerPhone}
+              onChange={handleCustomerPhoneChange}
+              placeholder="Enter phone number"
+              className="customer-phone-input"
+            />
+            {selectedCustomer && (
+              <button
+                type="button"
+                onClick={clearCustomerSelection}
+                className="clear-customer-btn"
+                style={{
+                  position: 'absolute',
+                  right: '8px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  color: '#666'
+                }}
+              >
+                ×
+              </button>
+            )}
+            
+            {/* Customer dropdown */}
+            {showCustomerDropdown && matchingCustomers.length > 0 && (
+              <div className="customer-dropdown" style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'white',
+                border: '1px solid #ccc',
+                borderTop: 'none',
+                maxHeight: '200px',
+                overflowY: 'auto',
+                zIndex: 1000,
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}>
+                {matchingCustomers.map((customer) => (
+                  <div
+                    key={customer._id}
+                    className="customer-option"
+                    onClick={() => handleCustomerSelect(customer)}
+                    style={{
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      borderBottom: '1px solid #eee',
+                      backgroundColor: selectedCustomer?._id === customer._id ? '#f0f0f0' : 'white'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f5f5f5'}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = selectedCustomer?._id === customer._id ? '#f0f0f0' : 'white'
+                    }}
+                  >
+                    <div style={{ fontWeight: 'bold' }}>{customer.name}</div>
+                    <div style={{ fontSize: '0.9em', color: '#666' }}>
+                      {customer.phone}
+                      {customer.email && ` • ${customer.email}`}
+                      {customer.loyaltyPoints > 0 && ` • ${customer.loyaltyPoints} pts`}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          {/* Selected customer display */}
+          {selectedCustomer && (
+            <div className="selected-customer" style={{
+              marginTop: '8px',
+              padding: '8px',
+              backgroundColor: '#e8f5e8',
+              border: '1px solid #4caf50',
+              borderRadius: '4px',
+              fontSize: '0.9em'
+            }}>
+              <strong>Selected:</strong> {selectedCustomer.name}
+              {selectedCustomer.loyaltyPoints > 0 && (
+                <span style={{ marginLeft: '8px', color: '#2e7d32' }}>
+                  ({selectedCustomer.loyaltyPoints} loyalty points)
+                </span>
+              )}
             </div>
           )}
         </div>
