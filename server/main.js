@@ -28,6 +28,11 @@ import '/imports/api/promotions/promotions-publications.js';
 import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
+
+import { CustomersCollection } from '../imports/api/customers/customers-collection.js';
+import "../imports/api/customers/customers-publications.js";
+import "../imports/api/customers/customers-methods.js";
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -37,6 +42,7 @@ Meteor.startup(async () => {
   const nOrders = await OrdersCollection.find().countAsync();
   await initializeUsers();
   const nPromotions = await PromotionsCollection.find().countAsync();
+  const nCustomers = await CustomersCollection.find().countAsync();
   
   console.log(
     `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
@@ -71,6 +77,7 @@ Meteor.startup(async () => {
       next();
     }
   });
+
   if (nOrders === 0) {
     console.log("No order items found. Initializing with default items.");
     const defaultItems = [
@@ -159,6 +166,7 @@ Meteor.startup(async () => {
       async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
+
   if (nPromotions === 0) {
     PromotionsCollection.insertAsync({
       name: 'Promotion',
@@ -172,5 +180,45 @@ Meteor.startup(async () => {
       createdAt: new Date()
     });
     console.log('[Server] Inserted test promotion');
+  }
+
+  // Clear existing customers and initialize test customers for loyalty points testing
+  // await CustomersCollection.removeAsync({});
+  // console.log("[Server] Cleared existing customers database");
+  
+  if (nCustomers === 0) { // Always reinitialize customers for testing
+    console.log("No customers found. Initializing with test customers for loyalty points testing.");
+    const testCustomers = [
+      {
+        name: "Test Customer - 5% Discount",
+        loyaltyPoints: 10,
+        email: "test10@example.com",
+        phone: "123456789"
+      },
+      {
+        name: "Test Customer - 10% Discount", 
+        loyaltyPoints: 20,
+        email: "test20@example.com",
+        phone: "123456788"
+      },
+      {
+        name: "Test Customer - 15% Discount",
+        loyaltyPoints: 30,
+        email: "test30@example.com", 
+        phone: "123456787"
+      },
+      {
+        name: "Regular Customer",
+        loyaltyPoints: 5,
+        email: "regular@example.com",
+        phone: "123456786"
+      }
+    ];
+    
+    testCustomers.forEach(async (customer) => {
+      await CustomersCollection.insertAsync(customer);
+    });
+    
+    console.log(`[Server] Inserted ${testCustomers.length} test customers with varying loyalty points`);
   }  
 });
