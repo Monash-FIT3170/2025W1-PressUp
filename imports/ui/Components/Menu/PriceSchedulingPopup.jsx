@@ -6,7 +6,8 @@ import { ScheduledChanges } from '/imports/api/scheduled-changes/scheduled-chang
 import { Menu } from '/imports/api/menu/menu-collection';
 import '/imports/api/menu/menu-methods.js';
 
-import './MenuItemPopUp.css'; // Reuse modal and form styling from MenuItemPopUp
+ // Reuse modal and form styling from MenuItemPopUp
+import './MenuItemPopUp.css';
 
 /**
  * PriceSchedulingPopup allows users to schedule a future price change
