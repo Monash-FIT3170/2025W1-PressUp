@@ -1,6 +1,5 @@
-.add-promotion-btn {
+  .floating-btn {
     position: fixed;
-    bottom: 30px;
     right: 30px;
     background-color: #FCD581;
     color: black;
@@ -12,7 +11,14 @@
     height: 60px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 1000;}
+    
+  .floating-btn.add-promotion {
+    bottom: 30px;
+  }
+
+  .floating-btn.share-promotion {
+    bottom: 100px;
   }
   
   .promotion-list {
