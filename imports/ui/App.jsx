@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, useNavigate, Navigate, useLocation } from "react-router-dom";
-import { useTracker } from 'meteor/react-meteor-data';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 
 // Components
@@ -28,6 +35,7 @@ import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryR
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
 
+import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
 
 // Styles
 import "./AppStyle.css";
@@ -38,7 +46,7 @@ import "./Components/POS/OrderPanel.css";
 const RouteHandler = ({ children }) => {
   const location = useLocation();
   const { user, isLoading } = useTracker(() => {
-    const subscription = Meteor.subscribe('currentUser');
+    const subscription = Meteor.subscribe("currentUser");
     const user = Meteor.user();
 
     if (user) {
@@ -50,10 +58,10 @@ const RouteHandler = ({ children }) => {
       // console.log('Has isAdmin property?:', user.hasOwnProperty('isAdmin'));
       // console.log('=================');
     }
-    
+
     return {
       user,
-      isLoading: !subscription.ready() || Meteor.loggingIn()
+      isLoading: !subscription.ready() || Meteor.loggingIn(),
     };
   });
 
@@ -68,21 +76,32 @@ const RouteHandler = ({ children }) => {
   }
 
   // If no user and trying to access root path, show pre-login page
-  if (!user && location.pathname === '/') {
+  if (!user && location.pathname === "/") {
     return <PreLoginPage />;
   }
 
-  if (user && location.pathname === '/') {
+  if (user && location.pathname === "/") {
     return <Navigate to="/pos" replace />;
   }
 
   // If no user and trying to access any other protected route, redirect to pre-login
-  if (!user && location.pathname !== '/login' && location.pathname !== '/pre-login' && location.pathname !== '/loyalty-signup' && location.pathname !== '/enquiries' && location.pathname !== '/feedback') {
+
+  if (
+    !user &&
+    location.pathname !== "/login" &&
+    location.pathname !== "/pre-login" &&
+    location.pathname !== "/loyalty-signup" && 
+    location.pathname !== '/enquiries' && 
+    location.pathname !== '/feedback'
+  ) {
     return <Navigate to="/" replace />;
   }
 
   // If user exists and trying to access login or pre-login, redirect to POS
-  if (user && (location.pathname === '/login' || location.pathname === '/pre-login')) {
+  if (
+    user &&
+    (location.pathname === "/login" || location.pathname === "/pre-login")
+  ) {
     return <Navigate to="/pos" replace />;
   }
 
@@ -110,7 +129,7 @@ export const App = () => {
   const [orderItems, setOrderItems] = useState([]);
 
   const { user } = useTracker(() => ({
-    user: Meteor.user()
+    user: Meteor.user(),
   }));
 
   const updateMenuItem = (item) => {
@@ -209,17 +228,11 @@ export const App = () => {
       <RouteHandler>
         <Routes>
           {/* Login route */}
-          <Route 
-            path="/login" 
-            element={<Login />} 
-          />
-          
+          <Route path="/login" element={<Login />} />
+
           {/* Pre-login route (optional explicit route) */}
-          <Route 
-            path="/pre-login" 
-            element={<PreLoginPage />} 
-          />
-          
+          <Route path="/pre-login" element={<PreLoginPage />} />
+
           {/* Loyalty signup route */}
           <Route 
             path="/loyalty-signup" 
@@ -238,22 +251,23 @@ export const App = () => {
             path="/feedback"
             element={<Feedback />}
           />
-          
+         
           {/* Root route - handled by RouteHandler */}
-          <Route
-            path="/"
-            element={<PreLoginPage />}
-          />
-          
+          <Route path="/" element={<PreLoginPage />} />
+
           {/* Protected POS route */}
           <Route
             path="/pos"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user?.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
                   <div className="pos-layout">
@@ -296,17 +310,21 @@ export const App = () => {
               </div>
             }
           />
-          
+
           {/* Other protected routes */}
           <Route
             path="/inventory"
             element={
               user?.isAdmin ? (
-                <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                  <Sidebar 
-                    isOpen={isSidebarOpen} 
+                <div
+                  className={`app-container ${
+                    !isSidebarOpen ? "sidebar-closed" : ""
+                  }`}
+                >
+                  <Sidebar
+                    isOpen={isSidebarOpen}
                     setIsOpen={setIsSidebarOpen}
-                    isAdmin={user.isAdmin} 
+                    isAdmin={user.isAdmin}
                   />
                   <div className="main-content">
                     <PageHeader
@@ -340,15 +358,19 @@ export const App = () => {
               )
             }
           />
-          
+
           <Route
             path="/menu"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user?.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
                   <PageHeader
@@ -375,15 +397,19 @@ export const App = () => {
               </div>
             }
           />
-          
+
           <Route
             path="/scheduling"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user?.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
                   <PageHeader
@@ -394,15 +420,19 @@ export const App = () => {
               </div>
             }
           />
-          
+
           <Route
             path="/promotions"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user?.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
                   <PageHeader
@@ -441,21 +471,26 @@ export const App = () => {
             }
           />
           
+
           <Route
             path="/tables"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
-                <Sidebar 
-                  isOpen={isSidebarOpen} 
+              <div
+                className={`app-container ${
+                  !isSidebarOpen ? "sidebar-closed" : ""
+                }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
-                  isAdmin={user?.isAdmin} 
+                  isAdmin={user?.isAdmin}
                 />
                 <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <TableMap />
+                  <TableMap isAdmin={user?.isAdmin} />
                 </div>
               </div>
             }

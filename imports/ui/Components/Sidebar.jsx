@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { EnquiriesCollection } from "../../api/enquiries/enquiries-collection";
 import { useSubscribe, useTracker } from "meteor/react-meteor-data";
-import { Meteor } from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor'
 import "./Sidebar.css";
 
 export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
@@ -31,9 +31,9 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
   const handleLogout = () => {
     Meteor.logout((err) => {
       if (err) {
-        console.error('Logout error:', err);
+        console.error("Logout error:", err);
       } else {
-        navigate('/login');
+        navigate("/login");
       }
     });
   };
@@ -71,7 +71,26 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 />
                 Home
               </NavLink>
-              
+
+              <NavLink
+                to="/tables"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+              >
+                <img
+                  src="/images/TableIcon.png"
+                  alt="Tables"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Tables
+              </NavLink>
+
               {/* Only show these links if user is admin */}
               {isAdmin && (
                 <>
@@ -93,7 +112,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Inventory
                   </NavLink>
-                  
+
                   <NavLink
                     to="/menu"
                     className={({ isActive }) =>
@@ -112,7 +131,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Menu
                   </NavLink>
-                  
+
                   <NavLink
                     to="/scheduling"
                     className={({ isActive }) =>
@@ -130,25 +149,6 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                       }}
                     />
                     Scheduling
-                  </NavLink>
-
-                      <NavLink
-                    to="/tables"
-                    className={({ isActive }) =>
-                      `sidebar-btn ${isActive ? "active" : ""}`
-                    }
-                  >
-                    <img
-                      src="/images/TableIcon.png"
-                      alt="Tables"
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        verticalAlign: "-4px",
-                        marginRight: "8px",
-                      }}
-                    />
-                    Tables
                   </NavLink>
 
                   <NavLink
@@ -189,11 +189,14 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                   </NavLink>
                 </>
               )}
-              
+
               {/* Logout button */}
               <div className="sidebar-logout">
-                <button onClick={handleLogout} className="sidebar-btn logout-btn">
-                <img
+                <button
+                  onClick={handleLogout}
+                  className="sidebar-btn logout-btn"
+                >
+                  <img
                     src="/images/logout.jpg"
                     alt="Logout"
                     style={{
