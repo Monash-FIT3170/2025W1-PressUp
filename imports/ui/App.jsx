@@ -35,8 +35,6 @@ import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryR
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
 
-import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
-
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
