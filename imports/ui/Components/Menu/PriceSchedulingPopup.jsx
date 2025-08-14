@@ -21,9 +21,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
   const [scheduledTime, setScheduledTime] = useState('');
   const [errors, setErrors] = useState({});
 
-  /**
-   * Fetch all menu items when the popup mounts.
-   */
+  // Get all menu items to show in the dropdown.
   useEffect(() => {
     Meteor.call('menu.getAll', (error, result) => {
       if (error) {
@@ -34,10 +32,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
     });
   }, []);
 
-  /**
-   * Subscribe to scheduled price changes and retrieve them from the database.
-   * Filters to only changes related to the 'menu' collection where a price is set.
-   */
+  // Get scheduled price changes for menu items.
   const scheduledChanges = useTracker(() => {
     Meteor.subscribe('scheduledChanges.all');
     return ScheduledChanges.find(
@@ -49,7 +44,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
     ).fetch();
   }, []);
 
-  // Categorise changes based on whether the time is in the future or past
+  // Categorise changes based on whether the time is in the future or past.
   const upcomingChanges = scheduledChanges.filter(
     (change) => new Date(change.scheduledTime) > new Date()
   );
@@ -58,9 +53,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
     (change) => new Date(change.scheduledTime) <= new Date()
   );
 
-  /**
-   * Validates that all required fields are provided.
-   */
+  // Ensure all fields required for a scheduled change are filled.
   const validate = () => {
     const validationErrors = {};
 
@@ -72,9 +65,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
     return Object.keys(validationErrors).length === 0;
   };
 
-  /**
-   * Handles the form submission to schedule a new price change.
-   */
+  // Submit the form.
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -107,7 +98,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
         <h2>Schedule Price Change</h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Menu item selection */}
+          {/* Menu item selection. */}
           <div>
             <label>Menu Item</label>
             <select value={selectedItemId} onChange={(e) => setSelectedItemId(e.target.value)}>
@@ -119,9 +110,8 @@ export const PriceSchedulingPopup = ({ onClose }) => {
               ))}
             </select>
             {errors.selectedItemId && <div className="error">{errors.selectedItemId}</div>}
-          </div>
-
-          {/* New price input */}
+          </div>.
+          {/* New price input. */}
           <div>
             <label>New Price</label>
             <input
@@ -132,8 +122,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
             />
             {errors.newPrice && <div className="error">{errors.newPrice}</div>}
           </div>
-
-          {/* Schedule time input */}
+          {/* Scheduled time input. */}
           <div>
             <label>Schedule Time</label>
             <input
@@ -146,8 +135,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
 
           <button type="submit">Schedule</button>
         </form>
-
-        {/* Display upcoming changes */}
+        {/* Upcoming changes. */}
         <h3>Upcoming</h3>
         <ul>
           {upcomingChanges.length === 0 && <li>No upcoming changes.</li>}
@@ -161,8 +149,7 @@ export const PriceSchedulingPopup = ({ onClose }) => {
             );
           })}
         </ul>
-
-        {/* Display past changes */}
+        {/* Past changes. */}
         <h3>Past</h3>
         <ul>
           {pastChanges.length === 0 && <li>No past changes.</li>}

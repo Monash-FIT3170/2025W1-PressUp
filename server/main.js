@@ -195,6 +195,7 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }  
+  // Add a scheduled item change to the first menu item.
   // if (nScheduledChanges === 0) {
   //   const firstMenuItem = await Menu.findOneAsync({}, { projection: { _id: 1, price: 1 } });
 
