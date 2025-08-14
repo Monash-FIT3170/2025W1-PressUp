@@ -58,7 +58,7 @@ export default function TableMap({ isAdmin }) {
         boxSizing: "border-box",
       }}
     >
-      {isAdmin ?? (
+      {isAdmin && (
         <>
           {/* Edit‐mode toggle */}
           <button onClick={toggleEditMode} className="tablemap__edit-toggle">
