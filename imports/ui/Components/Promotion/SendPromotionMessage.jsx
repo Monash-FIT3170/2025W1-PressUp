@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './PromotionMessage.css';
 
 export const SendPromotionMessage = ({ onClose }) => {
   const [form, setForm] = useState({
@@ -59,9 +60,9 @@ export const SendPromotionMessage = ({ onClose }) => {
   };
 
   return (
-    <div className="add-promotion-form">
+    <div className="send-promotion-form">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3>Share Promotion</h3>
+        <h3>Send Promotional Message</h3>
         <button type="button" className="close-button" onClick={onClose}>✕</button>
       </div>
 
@@ -90,7 +91,7 @@ export const SendPromotionMessage = ({ onClose }) => {
         name="message"
         value={form.message}
         onChange={handleChange}
-        placeholder="Enter your promotion message here..."
+        placeholder="Enter promotional message here..."
         rows="4"
         required
         style={{ 
@@ -103,13 +104,6 @@ export const SendPromotionMessage = ({ onClose }) => {
           resize: 'vertical'
         }}
       />
-
-      <label>Send To:</label>
-      <select name="recipientType" value={form.recipientType} onChange={handleChange}>
-        <option value="all">All Customers</option>
-        <option value="segment">Customer Segment</option>
-        <option value="individual">Individual Customer</option>
-      </select>
 
       {form.recipientType !== 'all' && (
         <>
