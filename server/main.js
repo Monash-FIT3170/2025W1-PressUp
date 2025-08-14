@@ -3,11 +3,13 @@ import { Meteor } from "meteor/meteor";
 import { WebApp } from "meteor/webapp";
 
 import { MenuCategories } from "/imports/api/menu-categories/menu-categories-collection";
-import { Menu } from "/imports/api/menu/menu-collection";
 import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
 import '/imports/api/menu-categories/menu-categories-methods';
+
+import { Menu } from "/imports/api/menu/menu-collection";
 import "/imports/api/menu/menu-methods";
+import "/imports/api/menu/menu-publications";
 
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection";
 import "../imports/api/inventory/inventory-publications";
@@ -16,19 +18,28 @@ import "../imports/api/inventory/inventory-methods";
 import { SuppliersCollection } from '../imports/api/suppliers/SuppliersCollection';
 import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
+
 import { OrdersCollection } from "../imports/api/orders/orders-collection";
 import "../imports/api/orders/orders-methods";
 import "../imports/api/orders/orders-publications";
 import '../imports/api/users/users-methods';
 import '../imports/api/users/users-publications';
-import { initializeUsers } from '../imports/api/users/users-initialization';
 
 import { PromotionsCollection } from '/imports/api/promotions/promotions-collection.js';
 import '/imports/api/promotions/promotions-methods.js';
 import '/imports/api/promotions/promotions-publications.js';
+
 import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
+
+import { ScheduledChanges } from '/imports/api/scheduled-changes/scheduled-changes-collection.js';
+import '../imports/api/scheduled-changes/scheduled-changes-methods.js';
+import '../imports/api/scheduled-changes/scheduled-changes-publications.js';
+
+import { initializeUsers } from '../imports/api/users/users-initialization';
+import { scheduler } from './scheduler.js';
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -36,8 +47,13 @@ Meteor.startup(async () => {
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
-  await initializeUsers();
   const nPromotions = await PromotionsCollection.find().countAsync();
+  // Ignore any changes that have been applied.
+  const nScheduledChanges = await ScheduledChanges.find({
+    applied: { $ne: true } 
+  }).countAsync();
+
+  await initializeUsers();
   
   console.log(
     `Init: 
@@ -179,4 +195,19 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }  
+  if (nScheduledChanges === 0) {
+    const firstMenuItem = await Menu.findOneAsync({}, { projection: { _id: 1, price: 1 } });
+
+    await ScheduledChanges.insertAsync({
+      targetCollection: 'menu',
+      targetId: firstMenuItem._id,
+      changes: {
+        price: firstMenuItem.price + 1,
+        available: false
+      },
+      scheduledTime: new Date(Date.now()),
+      createdAt: new Date()
+    });
+    console.log('[Server] Inserted sample scheduled change');
+  }
 });

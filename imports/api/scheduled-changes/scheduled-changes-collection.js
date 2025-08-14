@@ -10,7 +10,6 @@ SimpleSchema.Schema = new SimpleSchema({
   },
   targetId: {
     type: String,
-    regEx: /^[a-fA-F0-9]{24}$/,
     label: 'The ID of the target document to be updated.'
   },
   changes: {
