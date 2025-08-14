@@ -18,3 +18,12 @@ Meteor.publish('menuItems.byCategory', (menuCategory) => {
 		fields: { name: 1, price: 1, available: 1 }
 	});
 });
+
+Meteor.publish("menuItems.nameIncludes", (subString) => {
+  if (subString.length > 0) {
+	return MenuItems.find({
+	  name: { $regex: subString, $options: "i" },
+	});
+  }
+  return MenuItems.find();
+});

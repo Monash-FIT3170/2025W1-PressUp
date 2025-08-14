@@ -1,0 +1,33 @@
+.add-promotion-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #FCD581;
+    color: black;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .promotion-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .promotion-card {
+    background-color: #f4f4f4;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 250px; 
+    flex-shrink: 0; 
+  }
+  

@@ -1,62 +1,79 @@
 import React, { useState } from "react";
-import './ItemCard.css';
-import { Meteor } from 'meteor/meteor';
+import "./ItemCard.css";
+import { Meteor } from "meteor/meteor";
 
-const Card = ({ title, description, onDelete, onEdit }) => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [item, setItem] = useState(null); // full menu item info
-  const [showConfirm, setShowConfirm] = useState(false);
+const ItemCard = ({
+  name,
+  price,
+  discountedPrice = null,
+  ingredients,
+  isHalal,
+  isVegetarian,
+  isGlutenFree,
+  onAddToOrder,
+  available = true
+}) => {
+  const [showExtraInfo, setShowExtraInfo] = useState(false);
 
-  // useEffect(() => {
-  //   Meteor.call('menu.getByName', title, (error, result) => {
-  //     if (!error && result) {
-  //       console.log("Fetched menu item:", result);
-  //       setItem(result);
-  //     } else {
-  //       console.warn("Failed to fetch item by name:", title, error);
-  //     }
-  //   });
-  // }, [title]);
-  
+  const toggleExtraInfo = () => setShowExtraInfo(v => !v);
 
-  const handleUpdate = (id, updatedData) => {
-    setItem(prev => ({ ...prev, ...updatedData }));
-    // Optional: add local cache update logic if needed
-  };
-
-  const handleDeleteClick = () => {
-    setShowConfirm(true);
-  };
-
-  const confirmDelete = () => {
-    setShowConfirm(false);
-    onDelete();
-  };
-  
-  const cancelDelete = () => {
-    setShowConfirm(false);
+  const handleAddToOrder = (e) => {
+    e.stopPropagation();
+    if (onAddToOrder) onAddToOrder();
   };
 
   return (
-    <div className="card">
-      <div className="card-content">
-        <div className="card-header">
-          <h3 className="card-title">{title}</h3>
-        </div>
-        <p className="card-description">{description}
-        <button onClick>+</button>
-        </p>
-        {/* {console.log("HI") && item && (
-          <MenuItemPopUp
-            mode="update"
-            onClose={() => setShowPopup(false)}
-            existingItem={item}
-            onUpdate={handleUpdate}
-          />
-        )} */}
+    <div
+      className={`item-card ${available ? "" : "card-disabled"}`}
+      onClick={toggleExtraInfo}
+    >
+      {/* HEADER: title + add-button */}
+      <div className="card-header">
+        <h3>{name}</h3>
+        <button
+          className="add-button"
+          onClick={handleAddToOrder}
+          disabled={!available}
+          aria-disabled={!available}
+        >
+          +
+        </button>
       </div>
+
+      {/* DESCRIPTION: price only */}
+      <div className="card-description">
+        <p className="price">
+          Price:{" "}
+            {discountedPrice !== null && discountedPrice < price ? (
+              <>
+                <span style={{ textDecoration: 'line-through', marginRight: 8 }}>
+                  ${price.toFixed(2)}
+                </span>
+                <span>
+                  ${discountedPrice.toFixed(2)}
+                </span>
+              </>
+            ) : (
+              <span>${price.toFixed(2)}</span>
+            )}
+        </p>
+      </div>
+
+      {/* EXTRA INFO: dietary badges + ingredients */}
+      {showExtraInfo && (
+        <div className="extraInformation">
+          <div className="diet-badges">
+            {isHalal       && <span className="badge">H</span>}
+            {isVegetarian && <span className="badge">V</span>}
+            {isGlutenFree && <span className="badge">GF</span>}
+          </div>
+          <p className="ingredients">
+            {ingredients.join(", ")}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-export { Card };
+export { ItemCard };
