@@ -245,6 +245,21 @@ export const OrderPanel = ({
         setTimeout(() => setCheckoutError(null), 3000);
       } else {
         console.log("Order created successfully with ID:", result);
+        
+        // Award loyalty points if customer is selected
+        if (selectedCustomer) {
+          const pointsToAdd = Math.floor(finalSubtotal * 0.5); // 0.5 points per dollar spent
+          console.log(`Awarding ${pointsToAdd} loyalty points to customer ${selectedCustomer.name}`);
+          
+          Meteor.call("customers.updateLoyaltyPoints", selectedCustomer._id, pointsToAdd, (loyaltyError) => {
+            if (loyaltyError) {
+              console.error("Error adding loyalty points:", loyaltyError);
+            } else {
+              console.log(`Successfully added ${pointsToAdd} loyalty points`);
+            }
+          });
+        }
+        
         setCheckoutSuccess(true);
         setCheckoutID(result);
         setCheckout(true);

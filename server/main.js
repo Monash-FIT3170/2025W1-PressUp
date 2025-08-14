@@ -183,10 +183,10 @@ Meteor.startup(async () => {
   }
 
   // Clear existing customers and initialize test customers for loyalty points testing
-  await CustomersCollection.removeAsync({});
-  console.log("[Server] Cleared existing customers database");
+  // await CustomersCollection.removeAsync({});
+  // console.log("[Server] Cleared existing customers database");
   
-  if (true) { // Always reinitialize customers for testing
+  if (nCustomers === 0) { // Always reinitialize customers for testing
     console.log("No customers found. Initializing with test customers for loyalty points testing.");
     const testCustomers = [
       {
