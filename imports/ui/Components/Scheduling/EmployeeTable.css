@@ -1,0 +1,29 @@
+.employee-table-container {
+    margin-top: 20px;
+  }
+  
+  .add-employee-btn {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .employee-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .employee-table th,
+  .employee-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .employee-table th {
+    background-color: #f2f2f2;
+  }

@@ -1,0 +1,33 @@
+.employee-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .employee-form input,
+  .employee-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .roles-checkboxes {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+  }
+  
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
