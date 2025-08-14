@@ -21,7 +21,6 @@ import "../imports/api/suppliers/SuppliersMethods";
 import "../imports/api/suppliers/SuppliersPublications";
 
 import { ScheduledChanges } from '../imports/api/scheduled-changes/scheduled-changes-collection';
-import '../imports/api/scheduled-changes/scheduled-changes-initialise'
 import '../imports/api/scheduled-changes/scheduled-changes-methods';
 import './scheduler.js';
 
@@ -31,8 +30,15 @@ Meteor.startup(async () => {
   const nMenuItems = await Menu.find().countAsync();
   const nIngredients = await InventoryCollection.find().countAsync();
   const nSuppliers = await SuppliersCollection.find().countAsync();
+  const nScheduledChanges = await ScheduledChanges.find().countAsync();
+
   console.log(
-    `Init: ${nCategories} categories, ${nMenuItems} menu items, ${nIngredients} ingredients.`
+    `Init: 
+    ${nCategories} categories, 
+    ${nMenuItems} menu items, 
+    ${nIngredients} ingredients,
+    ${nSuppliers} suppliers,
+    ${nScheduledChanges} scheduled changes.`
   );
 
   // Handle client-side routing for direct URL access
@@ -130,4 +136,24 @@ Meteor.startup(async () => {
       async (item) => await SuppliersCollection.insertAsync(item)
     );
   }
+
+  // if (nScheduledChanges === 0) {
+  //   console.log("No scheduled changes found. Initializing with default changes.");
+
+  //   const defaultChanges = [
+  //     {
+  //       targetCollection: "menuItems",
+  //       targetId: 1,
+  //       changes: {
+  //         price: 69,
+  //         description: "Updated price for coffee",
+  //       },
+  //       scheduledTime: new Date(Date.now() + 1000 * 60 * 5)
+  //     },
+  //   ];
+
+  //   defaultChanges.forEach(
+  //     async (change) => await ScheduledChanges.insertAsync(change)
+  //   );
+  // }
 });
