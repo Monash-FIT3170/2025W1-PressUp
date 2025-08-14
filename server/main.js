@@ -29,6 +29,10 @@ import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
 
+import { EmployeesCollection } from '../imports/api/payroll/employee/employees-collection.js';
+import "../imports/api/payroll/employee/employees-methods.js";
+import "../imports/api/payroll/employee/employees-publications.js";
+
 import { CustomersCollection } from '../imports/api/customers/customers-collection.js';
 import "../imports/api/customers/customers-publications.js";
 import "../imports/api/customers/customers-methods.js";

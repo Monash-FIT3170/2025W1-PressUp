@@ -34,6 +34,7 @@ import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
+import { EmployeeTable } from "./Components/Scheduling/EmployeeTable.jsx";
 
 // Component to handle route protection and redirection logic
 const RouteHandler = ({ children }) => {
@@ -389,6 +390,7 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                  <EmployeeTable />
                 </div>
               </div>
             }
