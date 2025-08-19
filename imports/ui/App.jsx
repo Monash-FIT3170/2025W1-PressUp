@@ -28,12 +28,17 @@ import { Login } from "./Components/Login/Login.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
-
-import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
+import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
+import { Feedback } from "./Components/Feedback/Feedback.jsx";
+import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
+import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
+import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
+import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
 
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
+
 
 // Component to handle route protection and redirection logic
 const RouteHandler = ({ children }) => {
@@ -78,11 +83,14 @@ const RouteHandler = ({ children }) => {
   }
 
   // If no user and trying to access any other protected route, redirect to pre-login
+
   if (
     !user &&
     location.pathname !== "/login" &&
     location.pathname !== "/pre-login" &&
-    location.pathname !== "/loyalty-signup"
+    location.pathname !== "/loyalty-signup" && 
+    location.pathname !== '/enquiries' && 
+    location.pathname !== '/feedback'
   ) {
     return <Navigate to="/" replace />;
   }
@@ -111,6 +119,7 @@ export const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [menuItemSearchTerm, setMenuItemSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("Ingredients");
+  const [inboxViewMode,setInboxViewMode] = useState("Support")
   const [checkout, setCheckout] = useState(false);
   const [checkoutID, setCheckoutID] = useState(null);
 
@@ -223,8 +232,24 @@ export const App = () => {
           <Route path="/pre-login" element={<PreLoginPage />} />
 
           {/* Loyalty signup route */}
-          <Route path="/loyalty-signup" element={<LoyaltySignupPage />} />
+          <Route 
+            path="/loyalty-signup" 
+            element={<LoyaltySignupPage />} 
+          />
 
+          {/* Customer Enquiries route */}
+          <Route
+            path="/enquiries"
+            element={<Enquiries />}
+          />
+
+
+          {/* Customer feedback route */}
+          <Route
+            path="/feedback"
+            element={<Feedback />}
+          />
+         
           {/* Root route - handled by RouteHandler */}
           <Route path="/" element={<PreLoginPage />} />
 
@@ -417,6 +442,33 @@ export const App = () => {
               </div>
             }
           />
+
+          <Route
+            path="/inbox"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar 
+                  isOpen={isSidebarOpen} 
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin} 
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <InboxViewModeDropdown 
+                    viewMode={inboxViewMode}
+                    setViewMode={setInboxViewMode}
+                  />
+                  {inboxViewMode === 'Support' && <EnquiryResponsePage/>}
+                  {inboxViewMode === 'Feedback' && <FeedbackResponsePage />}
+                  
+                </div>
+              </div>
+            }
+          />
+          
 
           <Route
             path="/tables"
