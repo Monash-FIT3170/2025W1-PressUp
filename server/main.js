@@ -33,6 +33,9 @@ import { CustomersCollection } from '../imports/api/customers/customers-collecti
 import "../imports/api/customers/customers-publications.js";
 import "../imports/api/customers/customers-methods.js";
 
+import { LoyaltySettingsCollection } from '../imports/api/loyalty/loyalty-settings-collection.js';
+import "../imports/api/loyalty/loyalty-setting-methods.js";
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
