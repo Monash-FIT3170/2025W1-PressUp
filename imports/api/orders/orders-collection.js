@@ -8,26 +8,30 @@ OrdersCollection.schema = new SimpleSchema({
   status: {
     type: String,
     allowedValues: ["open", "closed", "cancelled"],
-    defaultValue: "open"
+    defaultValue: "open",
   },
   items: { type: Array },
   "items.$": Object,
   "items.$.menu_item": String,
   "items.$.quantity": Number,
   "items.$.price": Number,
-  createdAt: { 
-    type: Date, 
-    defaultValue: new Date() 
+  createdAt: {
+    type: Date,
+    defaultValue: new Date(),
   },
-  recievedPayment: { 
-    type: Number, 
-    defaultValue: 0
+  recievedPayment: {
+    type: Number,
+    defaultValue: 0,
   },
-  discount: { 
-    type: Number, 
-    optional: true 
+  discount: {
+    type: Number,
+    optional: true,
   },
   staffName: {
-    type: String
-  }
+    type: String,
+  },
+  paymentMethods: {
+    type: String,
+    allowedValues: ["cash, cards"],
+  },
 });
