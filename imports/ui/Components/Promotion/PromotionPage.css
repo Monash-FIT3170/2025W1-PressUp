@@ -1,33 +1,245 @@
-.add-promotion-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #FCD581;
-    color: black;
-    font-size: 28px;
-    font-weight: bold;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-  
-  .promotion-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 20px;
-  }
-  
-  .promotion-card {
-    background-color: #f4f4f4;
+/* Split layout container */
+.promotion-content-split {
+  display: flex;
+  gap: 24px;
+  min-height: calc(100vh - 100px);
+  padding: 20px;
+}
+
+/* Left side - Loyalty Settings */
+.loyalty-settings-section {
+  flex: 1;
+  max-width: 450px;
+}
+
+.loyalty-settings-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.settings-description {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.loyalty-input-group {
+  margin-bottom: 16px;
+}
+
+.loyalty-input-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.input-with-suffix {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loyalty-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100px;
+  transition: border-color 0.2s;
+}
+
+.loyalty-input:focus {
+  outline: none;
+  border-color: #FCD581;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.input-suffix {
+  color: #666;
+  font-size: 14px;
+}
+
+.save-settings-btn {
+  background: #FCD581;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.save-settings-btn:hover:not(:disabled) {
+  background: #FCD581;
+}
+
+.save-settings-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.settings-preview {
+  margin-top: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 4px solid #FCD581;
+}
+
+.settings-preview h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 14px;
+}
+
+.settings-preview ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.settings-preview li {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Right side - Promotions */
+.promotions-section {
+  flex: 1;
+}
+
+.promotions {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  height: fit-content;
+}
+
+.promotion-list {
+  display: grid;
+  gap: 16px;
+}
+
+.promotion-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  background: #f9f9f9;
+  transition: box-shadow 0.2s;
+}
+
+.promotion-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.promotion-card h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.promotion-card p {
+  margin: 4px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Floating buttons */
+.floating-buttons {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1000;
+}
+
+.floating-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floating-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.add-promotion {
+  background: #FCD581;
+  color: black;
+}
+
+.share-promotion {
+  background: #FCD581;
+  color: black;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .promotion-content-split {
+    flex-direction: column;
     padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 250px; 
-    flex-shrink: 0; 
+    gap: 16px;
   }
   
+  .loyalty-settings-section {
+    max-width: none;
+  }
+  
+  .floating-buttons {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .floating-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+}

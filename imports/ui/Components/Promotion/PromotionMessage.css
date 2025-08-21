@@ -1,0 +1,94 @@
+.send-promotion-form {
+  padding: 20px;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+}
+
+.send-promotion-form h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.send-promotion-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 15px;
+}
+
+.send-promotion-form label:first-of-type {
+  margin-top: 0;
+}
+
+.send-promotion-form input,
+.send-promotion-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.send-promotion-form input:focus,
+.send-promotion-form select:focus {
+  outline: none;
+  border-color: #FCD581;
+}
+
+.send-promotion-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+.send-promotion-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.send-promotion-form button[type="button"]:not(.close-button) {
+  background-color: #FCD581;
+  color: black;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.send-promotion-form button[type="button"]:not(.close-button):hover {
+  background-color: #ffc107;
+}
