@@ -379,5 +379,115 @@ Meteor.methods({
     ];
 
     return raw.aggregate(pipeline).toArray();
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+// Sales by Product (qty, gross $, net $)  — respects { start, end, onlyClosed }
+// ─────────────────────────────────────────────────────────────────────────────
+
+  async 'analytics.salesByProduct'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+    const match = (function buildMatch({ onlyClosed, start, end }) {
+      const m = {};
+      if (onlyClosed) m.status = 'closed';
+      if (start || end) {
+        m.createdAt = {};
+        if (start) m.createdAt.$gte = new Date(start);
+        if (end)   m.createdAt.$lte = new Date(end);
+      }
+      return m;
+    })({ onlyClosed, start, end });
+
+    const pipeline = [
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+      { $unwind: '$items' },
+
+      // Join menu doc (to get category id/name)
+      { $lookup: { from: 'menu', localField: 'items.menu_item', foreignField: 'name', as: 'mi' } },
+      { $unwind: { path: '$mi', preserveNullAndEmptyArrays: true } },
+
+      // Resolve category name if available
+      { $lookup: {
+          from: 'menuCategories',
+          let: { catKey: { $toString: '$mi.menuCategory' } },
+          pipeline: [
+            { $match: { $expr: { $or: [
+              { $eq: [{ $toString: '$_id' }, '$$catKey'] },
+              { $eq: ['$category', '$$catKey'] }
+            ]}}},
+            { $project: { _id: 0, category: 1 } }
+          ],
+          as: 'cat'
+      }},
+
+      // Compute dollars
+      { $project: {
+          name: { $ifNull: ['$items.menu_item', 'Unknown'] },
+          category: { $ifNull: [{ $first: '$cat.category' }, null] },
+          qty: { $ifNull: ['$items.quantity', 1] },
+          gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] },
+          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0]  }, { $ifNull: ['$items.quantity', 1] }] }
+      }},
+
+      { $group: {
+          _id: '$name',
+          category: { $first: '$category' },
+          qtySold:  { $sum: '$qty' },
+          gross:    { $sum: '$gross' },
+          cost:     { $sum: '$cost' }
+      }},
+
+      { $project: {
+          _id: 0,
+          name: '$_id',
+          category: 1,
+          qtySold: 1,
+          grossSales: { $round: ['$gross', 2] },
+          netProfit:  { $round: [{ $subtract: ['$gross', '$cost'] }, 2] }
+      }},
+
+      { $sort: { grossSales: -1, name: 1 } }
+    ];
+
+    return raw.aggregate(pipeline).toArray();
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }
+  // ─────────────────────────────────────────────────────────────────────────────
+  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+    const match = {};
+    if (onlyClosed) match.status = 'closed';
+    if (start || end) {
+      match.createdAt = {};
+      if (start) match.createdAt.$gte = new Date(start);
+      if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    const TZ = 'Australia/Melbourne';
+
+    const pipeline = [
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+      { $unwind: '$items' },
+
+      { $project: {
+          date: {
+            $dateToString: {
+              date: { $ifNull: ['$createdAt', { $toDate: '$_id' }] },
+              format: '%Y-%m-%d', timezone: TZ
+            }
+          },
+          gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] }
+      }},
+
+      { $group: { _id: '$date', grossSales: { $sum: '$gross' } } },
+      { $project: { _id: 0, date: '$_id', grossSales: { $round: ['$grossSales', 2] } } },
+      { $sort: { date: 1 } }
+    ];
+
+    return raw.aggregate(pipeline).toArray();
   }
+
+
 });

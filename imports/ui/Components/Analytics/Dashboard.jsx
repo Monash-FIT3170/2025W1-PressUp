@@ -8,6 +8,8 @@ import IngredientUsageChart from './IngredientUsageChart';
 import IngredientUsageTimeChart from './IngredientUsageTimeChart';
 import ItemsFrequencyChart from './ItemsFrequencyChart';
 import StatsCard from './StatsCard';
+import SalesByProductTable from './SalesByProductTable';
+import SalesOverTimeChart from './SalesOverTimeChart';
 
 const cardStyle = {
   background: '#fff',
@@ -157,6 +159,14 @@ export default function Dashboard() {
         <div style={{ gridColumn: 'span 3' }}>
           <StatsCard title="Active Items" value={kpis.activeItems ?? 0} />
         </div>
+        
+        <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
+          <SalesOverTimeChart onlyClosed={false} start={filter.start} end={filter.end} />
+        </section>
+
+        <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
+          <SalesByProductTable onlyClosed={false} start={filter.start} end={filter.end} />
+        </section>
 
         {/* Big charts (all receive same filter) */}
         <section style={{ ...cardStyle, gridColumn: 'span 7' }}>
