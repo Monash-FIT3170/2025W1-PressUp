@@ -96,7 +96,7 @@ export default function IngredientUsageTimeseries({
           <YAxis allowDecimals domain={[0, 'dataMax + 5']} />
           <Tooltip formatter={tooltipFormatter} />
           <Legend />
-          <Brush dataKey="date" height={24} travellerWidth={8} />
+          {/* <Brush dataKey="date" height={24} travellerWidth={8} /> */}
 
           {keys.map((k, i) => (
             <Line

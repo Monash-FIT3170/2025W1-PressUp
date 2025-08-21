@@ -2,15 +2,28 @@
 import { Meteor } from 'meteor/meteor';
 import { OrdersCollection } from '../orders/orders-collection'; // adjust path if needed
 
+// Common match-builder for {status, createdAt}
+function buildMatch({ onlyClosed = false, start = null, end = null } = {}) {
+  const match = {};
+  if (onlyClosed) match.status = 'closed';
+  if (start || end) {
+    match.createdAt = {};
+    if (start) match.createdAt.$gte = new Date(start);
+    if (end)   match.createdAt.$lte = new Date(end);
+  }
+  return match;
+}
+
 Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
-  // Category counts (existing functionality)
+  // Category counts — now supports { start, end }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.categoryCounts'({ onlyClosed = false } = {}) {
+  async 'analytics.categoryCounts'({ onlyClosed = false, start = null, end = null } = {}) {
     const raw = OrdersCollection.rawCollection();
+    const match = buildMatch({ onlyClosed, start, end });
 
     const pipeline = [
-      ...(onlyClosed ? [{ $match: { status: 'closed' } }] : []),
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
 
       { $unwind: '$items' },
 
@@ -70,6 +83,95 @@ Meteor.methods({
   },
 
   // ─────────────────────────────────────────────────────────────────────────────
+  // KPIs for cards: Orders, Revenue, Avg Order Value, Active Items
+  //
+  // Revenue logic:
+  //   - If an order has a numeric 'total' field, we use it.
+  //   - Otherwise we compute Σ(items.price * items.quantity) for that order.
+  // This keeps it robust to your schema.
+  // Params: { onlyClosed?, start?, end? }
+  // ─────────────────────────────────────────────────────────────────────────────
+  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+    const match = buildMatch({ onlyClosed, start, end });
+
+    // Per-order revenue + overall aggregation
+    const kpiAgg = await raw.aggregate([
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+
+      // Compute line totals (if we need them)
+      { $unwind: { path: '$items', preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          _id: 1,
+          totalField: '$total', // may be undefined/Null
+          lineTotal: {
+            $multiply: [
+              { $ifNull: ['$items.price', 0] },
+              { $ifNull: ['$items.quantity', 1] }
+            ]
+          }
+        }
+      },
+
+      // Sum per order; keep any order-level total if present
+      {
+        $group: {
+          _id: '$_id',
+          orderTotalField: { $max: '$totalField' }, // if 'total' exists, we’ll take it
+          lineRevenue: { $sum: '$lineTotal' }
+        }
+      },
+
+      // Coalesce: use 'total' if present, else use summed line items
+      {
+        $project: {
+          orderRevenue: {
+            $cond: [
+              { $gt: ['$orderTotalField', null] }, // not null
+              '$orderTotalField',
+              '$lineRevenue'
+            ]
+          }
+        }
+      },
+
+      // Aggregate across all orders in the window
+      {
+        $group: {
+          _id: null,
+          orders: { $sum: 1 },
+          revenue: { $sum: { $ifNull: ['$orderRevenue', 0] } }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          orders: 1,
+          revenue: 1,
+          avgOrderValue: {
+            $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$revenue', '$orders'] }]
+          }
+        }
+      }
+    ]).toArray();
+
+    const kpis = kpiAgg[0] ?? { orders: 0, revenue: 0, avgOrderValue: 0 };
+
+    // Active Items = distinct items sold in the window
+    const activeItemsAgg = await raw.aggregate([
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+      { $unwind: '$items' },
+      { $group: { _id: '$items.menu_item' } },
+      { $count: 'activeItems' }
+    ]).toArray();
+
+    const activeItems = activeItemsAgg[0]?.activeItems ?? 0;
+
+    return { ...kpis, activeItems };
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
   // Ingredient usage total (bar chart x=ingredient, y=total used)
   // Params:
   //   onlyClosed : boolean (optional) -> filter {status: 'closed'}
@@ -77,14 +179,7 @@ Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
   async 'analytics.ingredientUsage'({ onlyClosed = false, start = null, end = null } = {}) {
     const raw = OrdersCollection.rawCollection();
-
-    const match = {};
-    if (onlyClosed) match.status = 'closed';
-    if (start || end) {
-      match.createdAt = {};
-      if (start) match.createdAt.$gte = new Date(start);
-      if (end)   match.createdAt.$lte = new Date(end);
-    }
+    const match = buildMatch({ onlyClosed, start, end });
 
     const pipeline = [
       ...(Object.keys(match).length ? [{ $match: match }] : []),
@@ -163,14 +258,7 @@ Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
   async 'analytics.ingredientUsageTimeseries'({ onlyClosed = false, start = null, end = null } = {}) {
     const raw = OrdersCollection.rawCollection();
-
-    const match = {};
-    if (onlyClosed) match.status = 'closed';
-    if (start || end) {
-      match.createdAt = {};
-      if (start) match.createdAt.$gte = new Date(start);
-      if (end)   match.createdAt.$lte = new Date(end);
-    }
+    const match = buildMatch({ onlyClosed, start, end });
 
     const TZ = 'Australia/Melbourne';
 
@@ -249,21 +337,14 @@ Meteor.methods({
   },
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // NEW: Items frequency (x=item name, y=# of occurrences in orders; also returns total quantity)
+  // Items frequency (x=item name, y=# of occurrences in orders; also returns total quantity)
   // Params:
   //   onlyClosed : boolean (optional) -> filter {status: 'closed'}
   //   start, end : Date|string (optional) -> filter by createdAt
   // ─────────────────────────────────────────────────────────────────────────────
   async 'analytics.itemFrequency'({ onlyClosed = false, start = null, end = null } = {}) {
     const raw = OrdersCollection.rawCollection();
-
-    const match = {};
-    if (onlyClosed) match.status = 'closed';
-    if (start || end) {
-      match.createdAt = {};
-      if (start) match.createdAt.$gte = new Date(start);
-      if (end)   match.createdAt.$lte = new Date(end);
-    }
+    const match = buildMatch({ onlyClosed, start, end });
 
     const pipeline = [
       ...(Object.keys(match).length ? [{ $match: match }] : []),
@@ -280,8 +361,8 @@ Meteor.methods({
       {
         $group: {
           _id: '$name',
-          occurrences: { $sum: 1 },   // how many order lines mention this item
-          quantity:    { $sum: '$qty' } // total quantity sold
+          occurrences: { $sum: 1 },      // how many order lines mention this item
+          quantity:    { $sum: '$qty' }   // total quantity sold
         }
       },
 
