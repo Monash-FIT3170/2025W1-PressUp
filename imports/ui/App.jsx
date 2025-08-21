@@ -34,6 +34,7 @@ import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
+import Dashboard from './Components/Analytics/Dashboard.jsx';
 
 // Styles
 import "./AppStyle.css";
@@ -493,6 +494,30 @@ export const App = () => {
               </div>
             }
           />
+
+
+          <Route
+            path="/analytics"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Dashboard />
+                </div> {/* ✅ closes main-content */}
+              </div>   
+            }
+          />
+
         </Routes>
       </RouteHandler>
     </BrowserRouter>

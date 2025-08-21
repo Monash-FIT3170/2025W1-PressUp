@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import { OrdersCollection } from "./orders-collection";
+import { check, Match } from 'meteor/check';
 
 Meteor.methods({
 
@@ -13,5 +14,11 @@ Meteor.methods({
 
     async 'orders.remove'(id) {
         return await OrdersCollection.removeAsync({_id: id});
-    }
+    },
+
+    async 'orders.getByName'(name) {
+        check(name, String);
+        return await OrdersCollection.findOne({ name });
+    },
+
 });

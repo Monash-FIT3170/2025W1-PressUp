@@ -152,3 +152,9 @@
   justify-content: center; /* 👈 center horizontally */
   width: 100%; /* optional, ensures it spans parent */
 }
+
+/* global CSS */
+.recharts-wrapper, .recharts-wrapper * {
+  transition: none !important;
+  animation: none !important;
+}

@@ -169,6 +169,25 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Promotions
                   </NavLink>
+
+                  <NavLink
+                    to="/analytics"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/Analytics.jpg"
+                      alt="Promotions"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Analytics
+                  </NavLink>
                   <NavLink
                     to="/inbox"
                     className={({ isActive }) =>
