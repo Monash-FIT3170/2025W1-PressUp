@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [startTime, setStartTime] = useState("06:00");
   const [endTime, setEndTime] = useState("12:00");
   const [bars, setBars] = useState("value");
-  const [filter, setFilter] = useState("Staff");
+  const [staffFilter, setStaffFilter] = useState("");
 
   const Orders = useTracker(() => {
     const handle = Meteor.subscribe('orders.all');
@@ -57,6 +57,9 @@ export default function Dashboard() {
 
       // Filter by date (local date)
       if (itemDate < startDateObj || itemDate > endDateObj) return false;
+
+      // Filter by staff name if provided (fix order.staffName )
+      //if (staffFilter && !order.staffName.toLowerCase().includes(staffFilter.toLowerCase())) return false;
 
       // Extract local time minutes from midnight
       const itemMinutes = itemDate.getHours() * 60 + itemDate.getMinutes();
@@ -116,11 +119,8 @@ export default function Dashboard() {
             <option value="cost">Cost</option>
             <option value="profit">Profit</option>
           </select>
-          <label>Filter Type:</label>
-          <select name="Filter type" onChange={(e) => setFilter(e.target.value)}>
-            <option value="Staff">Staff</option>
-            <option value="Table No.">Table Number</option>
-          </select>
+          <label>Staff Filter:</label>
+          <input type="text" value={staffFilter} onChange={(e) => setStaffFilter(e.target.value)} placeholder="Filter by..." />
         </div>
         <button type="submit">Update Charts</button>
       </form>
