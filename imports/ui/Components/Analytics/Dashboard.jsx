@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { OrdersCollection } from "/imports/api/orders/orders-collection";
 import { useTracker } from "meteor/react-meteor-data";
+import './Dashboard.css';
 
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [endTime, setEndTime] = useState("23:59");
   const [bars, setBars] = useState("value");
   const [staffFilter, setStaffFilter] = useState("");
+  const [tableFilter, setTableFilter] = useState("");
 
   const Orders = useTracker(() => {
     const handle = Meteor.subscribe('orders.all');
@@ -51,7 +53,7 @@ export default function Dashboard() {
     const startMinutes = startH * 60 + startM;
     const endMinutes = endH * 60 + endM;
 
-    //console.log('J', Orders[70]);
+    //console.log('J', Orders[77]);
     const filtered = Orders.filter(order => {
       const itemDate = order.createdAt; // Date object
 
@@ -61,6 +63,9 @@ export default function Dashboard() {
       // Filter by staff name if provided (will need to fix for drop down menu for staff when implemented)
       if (staffFilter && !order.staffName.toLowerCase().includes(staffFilter.toLowerCase())) return false;
 
+      // Filter by table number if provided
+      if (tableFilter && !(order.table == tableFilter)) return false;
+      
       // Extract local time minutes from midnight
       const itemMinutes = itemDate.getHours() * 60 + itemDate.getMinutes();
 
@@ -121,6 +126,8 @@ export default function Dashboard() {
           </select>
           <label>Staff Filter:</label>
           <input type="text" value={staffFilter} onChange={(e) => setStaffFilter(e.target.value)} placeholder="Filter by..." />
+          <label>Table Filter:</label>
+          <input type="text" value={tableFilter} onChange={(e) => setTableFilter(e.target.value)} placeholder="Filter by table..." />
         </div>
         <button type="submit">Update Charts</button>
       </form>

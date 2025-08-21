@@ -506,6 +506,7 @@ export const App = () => {
                   setIsOpen={setIsSidebarOpen}
                   isAdmin={user?.isAdmin}
                 />
+                <div className="main-content">
                 <PageHeader
                   isSidebarOpen={isSidebarOpen}
                   setIsSidebarOpen={setIsSidebarOpen}
@@ -513,6 +514,7 @@ export const App = () => {
                 <Dashboard />
 
               </div>
+            </div>
               }
             />
         </Routes>
