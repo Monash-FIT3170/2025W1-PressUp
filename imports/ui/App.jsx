@@ -490,27 +490,34 @@ export const App = () => {
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <TableMap isAdmin={user?.isAdmin} />
-                  <TableMap />
-                </>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <>
+                </div>
+              </div>
+            }
+          />
+
+
+          <Route
+            path="/analytics"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
                   <PageHeader
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <Dashboard />
-                </>
-              }
-            />
-                  </Routes>
-                </div>
-              </div>
+                </div> {/* ✅ closes main-content */}
+              </div>   
             }
           />
+
         </Routes>
       </RouteHandler>
     </BrowserRouter>
