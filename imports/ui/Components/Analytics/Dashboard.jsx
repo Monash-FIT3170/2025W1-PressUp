@@ -58,8 +58,8 @@ export default function Dashboard() {
       // Filter by date (local date)
       if (itemDate < startDateObj || itemDate > endDateObj) return false;
 
-      // Filter by staff name if provided (fix order.staffName )
-      //if (staffFilter && !order.staffName.toLowerCase().includes(staffFilter.toLowerCase())) return false;
+      // Filter by staff name if provided (will need to fix for drop down menu for staff when implemented)
+      if (staffFilter && !order.staffName.toLowerCase().includes(staffFilter.toLowerCase())) return false;
 
       // Extract local time minutes from midnight
       const itemMinutes = itemDate.getHours() * 60 + itemDate.getMinutes();
