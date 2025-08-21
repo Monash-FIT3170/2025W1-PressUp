@@ -495,15 +495,24 @@ export const App = () => {
             }
           />
           <Route
-              path="/analytics"
-              element={
-                <>
-                  <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
-                  />
-                  <Dashboard />
-                </>
+            path="/analytics"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""
+                  }`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <PageHeader
+                  isSidebarOpen={isSidebarOpen}
+                  setIsSidebarOpen={setIsSidebarOpen}
+                />
+                <Dashboard />
+
+              </div>
               }
             />
         </Routes>

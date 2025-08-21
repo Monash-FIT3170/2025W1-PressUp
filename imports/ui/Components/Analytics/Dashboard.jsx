@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [startDate, setStartDate] = useState(() => formatDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)));
   const [endDate, setEndDate] = useState(() => formatDate(new Date()));
   const [startTime, setStartTime] = useState("06:00");
-  const [endTime, setEndTime] = useState("12:00");
+  const [endTime, setEndTime] = useState("23:59");
   const [bars, setBars] = useState("value");
   const [staffFilter, setStaffFilter] = useState("");
 
