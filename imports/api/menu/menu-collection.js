@@ -72,17 +72,17 @@ Menu.schema = new SimpleSchema({
         label: 'End time in HH:mm format'
     },
     seasons:{
-        type: Object,
+        type: Set,
         optional: true,
         label: 'seasons available'
     },
-    'seasons.avail':{
+    'seasons.$':{
         type: String,
         allowedValues: [
             'Summer',
             'Winter',
             'Autumn',
-            'Fall'
+            'Spring'
         ],
         label: 'seasons available'
     },

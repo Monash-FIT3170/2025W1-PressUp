@@ -13,15 +13,43 @@ export const POSMenuCards = ({
   searchTerm = ''
 }) => {
   const [itemsWithDiscount, setItemsWithDiscount] = useState([]);
+
   // add to order handler remains unchanged
   const handleAddToOrder = item => {
     addToOrder(item);
   };
 
+  // Determines if date is within seasons
+  const getInSeason = itemSeasons => {
+    //if item available in all seasons it is in season
+    if (itemSeasons.length >= 4) return true;
+
+    const date = new Date();
+    const month = date.getMonth();
+    var season = '';
+    if (month < 2 || month == 11) {
+      season = 'Summer'
+    } else if (month >= 2 && month < 5) {
+      season = 'Autumn'
+    } else if (month >= 5 && month < 8) {
+      season = 'Winter'
+    } else {
+      season = 'Spring'
+    }
+
+    if (itemSeasons.has(season)) {
+      return true;
+    }
+    return false;
+   };
+
   // Determines if an item is available right now based on its schedule
   const getIsCurrentlyAvailable = item => {
     if (!item.available) return false;
+    
+    itemSeasons = item.seasons || new Set(['Summer','Winter','Autumn','Spring']);
 
+    console.log(itemSeasons)
     const today = moment().format('dddd');
     const scheduleToday = item.schedule?.[today];
     if (!scheduleToday || !scheduleToday.available) return false;
