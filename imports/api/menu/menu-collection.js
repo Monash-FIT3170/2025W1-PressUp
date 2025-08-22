@@ -71,6 +71,21 @@ Menu.schema = new SimpleSchema({
         type: String,
         label: 'End time in HH:mm format'
     },
+    seasons:{
+        type: Object,
+        optional: true,
+        label: 'seasons available'
+    },
+    'seasons.avail':{
+        type: String,
+        allowedValues: [
+            'Summer',
+            'Winter',
+            'Autumn',
+            'Fall'
+        ],
+        label: 'seasons available'
+    },
 
     isHalal: {
         type: Boolean,

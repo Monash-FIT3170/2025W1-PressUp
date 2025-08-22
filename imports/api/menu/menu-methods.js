@@ -33,6 +33,7 @@ Meteor.methods({
 				}
 				]),
 			schedule: Match.Optional(Object),
+			seasons: Match.Optional(Object),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
@@ -91,6 +92,8 @@ Meteor.methods({
 				}
 				]),
 			schedule: Match.Optional(Object),
+			
+			seasons: Match.Optional(Object),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
