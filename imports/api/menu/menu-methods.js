@@ -33,7 +33,7 @@ Meteor.methods({
 				}
 				]),
 			schedule: Match.Optional(Object),
-			seasons: Match.Maybe(Object),
+			seasons: Match.Maybe([String]),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.

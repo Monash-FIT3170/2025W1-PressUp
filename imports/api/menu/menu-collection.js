@@ -72,7 +72,7 @@ Menu.schema = new SimpleSchema({
         label: 'End time in HH:mm format'
     },
     seasons:{
-        type: Set,
+        type: Array,
         optional: true,
         label: 'seasons available'
     },
