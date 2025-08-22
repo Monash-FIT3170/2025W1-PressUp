@@ -11,9 +11,14 @@ const ItemCard = ({
   isVegetarian,
   isGlutenFree,
   onAddToOrder,
-  available = true
+  available = true,
+  seasonal = false,
+  inSeason = true
 }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
+  if (seasonal && !inSeason) {
+    return <></>
+  }
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
 
