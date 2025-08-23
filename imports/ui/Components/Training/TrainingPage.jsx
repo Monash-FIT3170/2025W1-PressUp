@@ -5,10 +5,11 @@ import "./TrainingPage.css";
 
 // Sample training data
 const trainingModules = [
-  { id: "1", title: "Food Safety Basics", description: "Learn essential food safety practices.", duration: "30 min", createdAt: new Date() },
-  { id: "2", title: "Customer Service", description: "Best practices for customer interactions.", duration: "45 min", createdAt: new Date() },
-  { id: "3", title: "POS System Training", description: "How to use the Point of Sale system.", duration: "20 min", createdAt: new Date() },
-  { id: "4", title: "Kitchen Operations", description: "Overview of kitchen workflows.", duration: "40 min", createdAt: new Date() },
+     { id: "1", title: "Food Safety Basics", description: "Learn essential food safety practices.", duration: "30 min", createdAt: new Date() },
+    { id: "2", title: "Customer Service", description: "Best practices for customer interactions.", duration: "45 min", createdAt: new Date() },
+    { id: "3", title: "POS System Training", description: "How to use the Point of Sale system.", duration: "20 min", createdAt: new Date() },
+    { id: "4", title: "Kitchen Operations", description: "Overview of kitchen workflows.", duration: "40 min", createdAt: new Date() },
+    { id: "4", title: "Kitchen Cleaning", description: "Best practices for kitchen cleaning techniques.", duration: "40 min", createdAt: new Date() },
 ];
 
 const TrainingPage = ({ sidebarOpen }) => {
