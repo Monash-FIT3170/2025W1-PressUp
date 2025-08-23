@@ -4,6 +4,7 @@ import './TrainingCard.css';
 const TrainingCard = ({ module }) => {
   const { id, title, description, duration, createdAt } = module;
 
+  // formatting of the training card
   const formatAEST = (date) => {
     try {
       return new Intl.DateTimeFormat('en-AU', {
