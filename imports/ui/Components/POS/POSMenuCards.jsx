@@ -139,6 +139,7 @@ export const POSMenuCards = ({
   const itemsToRender = (itemsWithDiscount.length > 0 ? itemsWithDiscount : itemsWithAvailability).map(item => ({
     ...item,
     isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+    isInSeason: getInSeason(item),
   }));
 
   // 5) Sort available items first
@@ -148,7 +149,7 @@ export const POSMenuCards = ({
   });
 
   const existsNoAvailable = () => {
-    if (sortedItems.length === 0 || !sortedItems[0].isCurrentlyAvailable) {
+    if (sortedItems.length === 0 || !sortedItems[0].isInSeason) {
       return true
     }
     return false
