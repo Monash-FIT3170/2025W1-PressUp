@@ -25,6 +25,7 @@ import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdow
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
+import { KitchenDisplay } from "./Components/Kitchen/KitchenDisplay.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
@@ -305,6 +306,28 @@ export const App = () => {
                       />
                     )}
                   </div>
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/kitchen"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <KitchenDisplay isSidebarOpen={isSidebarOpen} />
                 </div>
               </div>
             }

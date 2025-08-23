@@ -91,6 +91,27 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 Tables
               </NavLink>
 
+
+              <NavLink
+                to="/kitchen"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+                end
+              >
+                <img
+                  src="/images/MenuIcon.png"
+                  alt="Home"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Kitchen
+              </NavLink>
+              
               {/* Only show these links if user is admin */}
               {isAdmin && (
                 <>
