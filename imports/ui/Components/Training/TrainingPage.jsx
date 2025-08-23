@@ -21,7 +21,7 @@ const TrainingPage = ({ sidebarOpen }) => {
   const modules = trainingModules;
   const isLoading = false;
 
-  // 🔹 Calculate how many cards fit in the viewport
+  // Calculate how many cards fit in the viewport
   const computePageSize = useCallback(() => {
     const viewport = viewportRef.current;
     const probeGrid = probeGridRef.current;
@@ -49,7 +49,7 @@ const TrainingPage = ({ sidebarOpen }) => {
     setPageSize(Math.max(1, cols * rows));
   }, []);
 
-  // 🔹 Run on mount, modules length change, resize, and sidebar toggle
+  // Run on mount, modules length change, resize, and sidebar toggle
   useEffect(() => { requestAnimationFrame(computePageSize); }, [modules.length, computePageSize]);
   useEffect(() => {
     const onResize = () => computePageSize();
@@ -74,14 +74,14 @@ const TrainingPage = ({ sidebarOpen }) => {
     return () => clearTimeout(t);
   }, [sidebarOpen, computePageSize]);
 
-  // 🔹 Adjust page index if size changes
+  // Adjust page index if size changes
   useEffect(() => {
     if (!pageSize) return;
     const totalPages = Math.max(1, Math.ceil(modules.length / pageSize));
     setPageIndex((prev) => Math.min(prev, totalPages - 1));
   }, [pageSize, modules.length]);
 
-  // 🔹 Build pages
+  // Build pages
   const pages = useMemo(() => {
     if (!pageSize || pageSize <= 0) return modules.length ? [modules] : [];
     const out = [];
