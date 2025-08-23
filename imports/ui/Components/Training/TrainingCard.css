@@ -1,0 +1,59 @@
+.training-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 400px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Flex layout to push actions to bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+.tc-head {
+  margin-bottom: 1rem;
+}
+
+.tc-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.tc-time {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.tc-info {
+  /* grow to take remaining vertical space */
+  flex-grow: 1;
+}
+
+.tc-description,
+.tc-duration {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.tc-actions {
+  /* keep button centered at bottom */
+  display: flex;
+  justify-content: center;
+  margin-top: auto; /* pushes to bottom */
+}
+
+.tc-actions button.start {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tc-actions button.start:hover {
+  background-color: #218838;
+}
