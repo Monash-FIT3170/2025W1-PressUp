@@ -23,11 +23,20 @@ export const OrderPanel = ({
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
+  const [staffName, setStaffName] = useState('');
   
   // Customer lookup state
   const [customerPhone, setCustomerPhone] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+
+  // Loyalty settings state
+  const [loyaltySettings, setLoyaltySettings] = useState({
+    fivePercent: 10,
+    tenPercent: 20,
+    fifteenPercent: 30,
+    twentyPercent: 40
+  });
 
   const inventoryItems = useTracker(() => {
     const handle = Meteor.subscribe("inventory.all");
@@ -68,6 +77,23 @@ export const OrderPanel = ({
   inventoryItems.forEach((invItem) => {
     inventoryMap[invItem._id] = invItem;
   });
+  
+
+  // Fetch loyalty settings on component mount
+  useEffect(() => {
+    const fetchLoyaltySettings = async () => {
+      try {
+        const result = await Meteor.callAsync('loyaltySettings.get');
+        if (result) {
+          setLoyaltySettings(result);
+        }
+      } catch (error) {
+        console.error('Failed to fetch loyalty settings:', error);
+      }
+    };
+
+    fetchLoyaltySettings();
+  }, []);
 
   useEffect(() => {
     const fetchDiscounts = async () => {
@@ -113,18 +139,31 @@ export const OrderPanel = ({
     return sum + finalPrice * item.quantity;
   }, 0);
 
-  // Calculate loyalty discount based on points
+  // Calculate loyalty discount based on dynamic settings
   const getLoyaltyDiscount = () => {
-    if (!selectedCustomer || !selectedCustomer.loyaltyPoints) return 0;
+    if (!selectedCustomer || !selectedCustomer.loyaltyPoints) return { percent: 0, tierName: "" };
     
     const points = selectedCustomer.loyaltyPoints;
-    if (points >= 30) return 0.15; // 15% off
-    if (points >= 20) return 0.10; // 10% off
-    if (points >= 10) return 0.05; // 5% off
-    return 0;
+    
+    // Check tiers from highest to lowest
+    if (points >= loyaltySettings.twentyPercent) {
+      return { percent: 0.20, tierName: "20%" };
+    }
+    if (points >= loyaltySettings.fifteenPercent) {
+      return { percent: 0.15, tierName: "15%" };
+    }
+    if (points >= loyaltySettings.tenPercent) {
+      return { percent: 0.10, tierName: "10%" };
+    }
+    if (points >= loyaltySettings.fivePercent) {
+      return { percent: 0.05, tierName: "5%" };
+    }
+    
+    return { percent: 0, tierName: "" };
   };
 
-  const loyaltyDiscountPercent = getLoyaltyDiscount();
+  const loyaltyDiscount = getLoyaltyDiscount();
+  const loyaltyDiscountPercent = loyaltyDiscount.percent;
   const loyaltyDiscountAmount = subtotal * loyaltyDiscountPercent;
   const finalSubtotal = subtotal - loyaltyDiscountAmount;
 
@@ -171,11 +210,18 @@ export const OrderPanel = ({
       return;
     }
 
-    if (!tableNumber) {
-      setCheckoutError("Please enter a table number");
-      setTimeout(() => setCheckoutError(null), 3000);
-      return;
-    }
+	if (!tableNumber) {
+		setCheckoutError("Please enter a table number");
+		setTimeout(() => 
+      setCheckoutError(null), 3000);
+		return;
+	}
+
+  if (!staffName.trim()) {
+    setCheckoutError("Please enter staff name");
+    setTimeout(() => setCheckoutError(null), 3000);
+    return;
+  }
 
     setIsCheckingOut(true);
 
@@ -218,7 +264,8 @@ export const OrderPanel = ({
         };
       }),
       createdAt: new Date(),
-      recievedPayment: 0,
+      recievedPayment: 0, 
+      staffName: staffName.trim(),
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -274,9 +321,57 @@ export const OrderPanel = ({
     });
   };
 
+  // Helper function to get next loyalty tier info
+  const getNextTierInfo = () => {
+    if (!selectedCustomer || !selectedCustomer.loyaltyPoints) return null;
+    
+    const points = selectedCustomer.loyaltyPoints;
+    
+    if (points < loyaltySettings.fivePercent) {
+      return {
+        nextTier: "5%",
+        pointsNeeded: loyaltySettings.fivePercent - points
+      };
+    }
+    if (points < loyaltySettings.tenPercent) {
+      return {
+        nextTier: "10%",
+        pointsNeeded: loyaltySettings.tenPercent - points
+      };
+    }
+    if (points < loyaltySettings.fifteenPercent) {
+      return {
+        nextTier: "15%",
+        pointsNeeded: loyaltySettings.fifteenPercent - points
+      };
+    }
+    if (points < loyaltySettings.twentyPercent) {
+      return {
+        nextTier: "20%",
+        pointsNeeded: loyaltySettings.twentyPercent - points
+      };
+    }
+    
+    return null; // At highest tier
+  };
+
+  const nextTierInfo = getNextTierInfo();
+
   return (
     <div className="order-panel">
       <div className="order-panel-header">
+        <div className="staff-name-input">
+          <label htmlFor="staff-name"><h3>Staff:</h3></label>
+          <input 
+            id="staff-name"
+            type="text"
+            value={staffName}
+            onChange={(e) => setStaffName(e.target.value)}
+            className="staff-name-input"
+            placeholder="Enter name"
+          />
+        </div>
+
         <div className="table-selector">
           <label htmlFor="table-number">
             <h3>Table #:</h3>
@@ -483,7 +578,12 @@ export const OrderPanel = ({
               )}
               {loyaltyDiscountPercent > 0 && (
                 <div style={{ marginTop: '4px', color: '#2e7d32', fontWeight: 'bold' }}>
-                  🎉 {(loyaltyDiscountPercent * 100).toFixed(0)}% loyalty discount applied!
+                  🎉 {loyaltyDiscount.tierName} loyalty discount applied!
+                </div>
+              )}
+              {nextTierInfo && (
+                <div style={{ marginTop: '4px', color: '#1976d2', fontSize: '0.85em' }}>
+                  Next tier: {nextTierInfo.pointsNeeded} more points for {nextTierInfo.nextTier} discount
                 </div>
               )}
             </div>
@@ -505,7 +605,7 @@ export const OrderPanel = ({
             fontWeight: 'bold',
             borderBottom: '1px solid #eee'
           }}>
-            <span>Loyalty Discount ({(loyaltyDiscountPercent * 100).toFixed(0)}% off)</span>
+            <span>Loyalty Discount ({loyaltyDiscount.tierName} off)</span>
             <span>-${loyaltyDiscountAmount.toFixed(2)}</span>
           </div>
         )}

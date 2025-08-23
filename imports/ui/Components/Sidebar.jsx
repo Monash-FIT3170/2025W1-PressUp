@@ -1,11 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Meteor } from "meteor/meteor";
+import { EnquiriesCollection } from "../../api/enquiries/enquiries-collection";
+import { useSubscribe, useTracker } from "meteor/react-meteor-data";
+import { Meteor } from 'meteor/meteor'
 import "./Sidebar.css";
 
 export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
   const navigate = useNavigate();
 
+  const isLoading = useSubscribe("enquiries.active");
+  var enquiries = useTracker(()=> EnquiriesCollection.find({}).fetch());
+
+  const existsActiveEnquiry = () => {
+    var exists = false;
+    var count = 0;
+    for (i = 0;i < enquiries.length;i++) {
+        if (enquiries[i].active) {
+            exists = true;
+            count += 1;
+        }
+    }
+    return {'exists':exists,'count':count};
+  }
+
+  const enquiryCount = useTracker(()=>{
+    enquiries = useTracker(()=> EnquiriesCollection.find({}).fetch());
+    return enquiries.length
+  })
+  
   const handleLogout = () => {
     Meteor.logout((err) => {
       if (err) {
@@ -167,6 +189,43 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                       }}
                     />
                     Promotions
+                  </NavLink>
+
+                  <NavLink
+                    to="/analytics"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/Analytics.jpg"
+                      alt="Promotions"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Analytics
+                  </NavLink>
+                  <NavLink
+                    to="/inbox"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/Mail.svg"
+                      alt="Customer Relations"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Inbox {existsActiveEnquiry().exists && (`(`+existsActiveEnquiry().count+`)`)}
                   </NavLink>
                 </>
               )}

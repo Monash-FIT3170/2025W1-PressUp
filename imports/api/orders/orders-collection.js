@@ -27,5 +27,8 @@ OrdersCollection.schema = new SimpleSchema({
   discount: { 
     type: Number, 
     optional: true 
+  },
+  staffName: {
+    type: String
   }
 });

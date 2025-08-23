@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import { OrdersCollection } from "./orders-collection";
+import { check, Match } from 'meteor/check';
 
 Meteor.methods({
 
@@ -27,5 +28,11 @@ Meteor.methods({
             { _id: id },
             { $set: { status: "cancelled" } }
         );
-    }
+    },
+
+    async 'orders.getByName'(name) {
+        check(name, String);
+        return await OrdersCollection.findOne({ name });
+    },
+
 });
