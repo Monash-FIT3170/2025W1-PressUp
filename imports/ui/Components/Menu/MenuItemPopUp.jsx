@@ -295,6 +295,15 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                         [ing._id]: e.target.value
                       })
                     }
+                    onBlur={(e) => {
+                      if (e.target.value && e.target.value <= 0) {
+                        e.target.value = null;
+                        setIngredientAmounts({
+                          ...ingredientAmounts,
+                          [ing._id]: e.target.value
+                        })
+                      }
+                    }}
                   />
                 )}
               </div>
