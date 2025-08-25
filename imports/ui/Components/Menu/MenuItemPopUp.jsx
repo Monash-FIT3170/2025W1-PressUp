@@ -14,6 +14,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState([]);
+  const [seasons, setSeasons] = useState([]);
+  const [seasonal, setSeasonal] = useState(false);
   const [isHalal, setIsHalal] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
@@ -24,6 +26,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
   const [ingredientAmounts, setIngredientAmounts] = useState({});
 
+  
   // const findIngredients = useFind(() => InventoryCollection.find({}));
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [schedule, setSchedule] = useState(
@@ -32,7 +35,6 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       return acc;
     }, {})
   );
-
   useEffect(() => {
 
     Meteor.call('menuCategories.getCategories', (error, result) => {
@@ -54,6 +56,10 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
       // setIngredients(existingItem.ingredients || []);
+      if (existingItem.seasons && existingItem.seasons.length > 0) {
+        setSeasonal(true)
+        setSeasons(existingItem.seasons)
+      }
       setIngredients((existingItem.ingredients || []).map(ing => ing.id));
       setIngredientAmounts((existingItem.ingredients || []).reduce((acc, ing) => {
           acc[ing.id] = ing.amount;
@@ -97,21 +103,42 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   };
 
   const handleConfirm = () => {
-    const itemData = {
-      name,
-      price: parseFloat(price),
-      menuCategory,
-      available,
-      isHalal,
-      isVegetarian,
-      isGlutenFree,
-      // ingredients,
-      ingredients: ingredients.map(id => ({
-        id,
-        amount: parseFloat(ingredientAmounts[id]) || 0
-      })),
-      schedule,
-    };
+    var itemData;
+    if (seasonal && seasons.length > 0 && seasons.length < 4) {
+        itemData = {
+          name,
+          price: parseFloat(price),
+          menuCategory,
+          available,
+          isHalal,
+          isVegetarian,
+          isGlutenFree,
+          // ingredients,
+          ingredients: ingredients.map(id => ({
+            id,
+            amount: parseFloat(ingredientAmounts[id]) || 0
+          })),
+          schedule,
+          seasons,
+        };
+    } else {
+      itemData = {
+        name,
+        price: parseFloat(price),
+        menuCategory,
+        available,
+        isHalal,
+        isVegetarian,
+        isGlutenFree,
+        // ingredients,
+        ingredients: ingredients.map(id => ({
+          id,
+          amount: parseFloat(ingredientAmounts[id]) || 0
+        })),
+        schedule,
+        'seasons':[],
+      };
+    }
 
     if (mode === 'create') {
       Meteor.call('menu.insert', { menuItem: itemData }, (error, result) => {
@@ -154,8 +181,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     setIsHalal(false);
     setIsVegetarian(false);
     setIsGlutenFree(false);
-  };
-  console.log(findIngredients)  
+  };  
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -262,12 +288,22 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                     type="number"
                     placeholder="Amount (e.g. 100g)"
                     value={ingredientAmounts[ing._id] || ''}
+                    min = {0}
                     onChange={(e) =>
                       setIngredientAmounts({
                         ...ingredientAmounts,
                         [ing._id]: e.target.value
                       })
                     }
+                    onBlur={(e) => {
+                      if (e.target.value && e.target.value <= 0) {
+                        e.target.value = null;
+                        setIngredientAmounts({
+                          ...ingredientAmounts,
+                          [ing._id]: e.target.value
+                        })
+                      }
+                    }}
                   />
                 )}
               </div>
@@ -329,6 +365,89 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                 )}
               </div>
             ))}
+            <h4>Seasonal Availability</h4>
+            <div className="schedule-row">
+            <label>
+            <input 
+              type='checkbox'
+              checked = {seasonal}
+              onChange={(e)=>{
+                setSeasonal(e.target.checked)
+              }}
+            />
+            Seasonal Item
+            </label>
+            </div>
+            {seasonal && (<><h5>Available In:</h5><label className="schedule-row">
+                  <input
+                    type="checkbox"
+                    value='Summer'
+                    checked={seasons.includes('Summer')}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newSeasons = checked
+                        ? [...seasons, 'Summer']
+                        : seasons.filter(season => season !== 'Summer');
+
+
+                      setSeasons(newSeasons);
+                    }}
+                  />
+                  Summer
+                </label>
+                <label className="schedule-row">
+                  <input
+                    type="checkbox"
+                    value='Autumn'
+                    checked={seasons.includes('Autumn')}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newSeasons = checked
+                        ? [...seasons, 'Autumn']
+                        : seasons.filter(season => season !== 'Autumn');
+
+
+                      setSeasons(newSeasons);
+                    }}
+                  />
+                  Autumn
+                </label>
+                <label className="schedule-row">
+                  <input
+                    type="checkbox"
+                    value='Winter'
+                    checked={seasons.includes('Winter')}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newSeasons = checked
+                        ? [...seasons, 'Winter']
+                        : seasons.filter(season => season !== 'Winter');
+
+
+                      setSeasons(newSeasons);
+                    }}
+                  />
+                  Winter
+                </label>
+                <label className="schedule-row">
+                  <input
+                    type="checkbox"
+                    value='Summer'
+                    checked={seasons.includes('Spring')}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      const newSeasons = checked
+                        ? [...seasons, 'Spring']
+                        : seasons.filter(season => season !== 'Spring');
+
+
+                      setSeasons(newSeasons);
+                    }}
+                  />
+                  Spring
+                </label>
+              
+                </>)}
           </div>
 
           <button type="submit">{mode === 'update' ? 'Update Menu Item' : 'Add Menu Item'}</button>
