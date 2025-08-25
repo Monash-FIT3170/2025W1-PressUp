@@ -26,7 +26,6 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
   const [ingredientAmounts, setIngredientAmounts] = useState({});
 
-
   
   // const findIngredients = useFind(() => InventoryCollection.find({}));
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -137,9 +136,9 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           amount: parseFloat(ingredientAmounts[id]) || 0
         })),
         schedule,
+        'seasons':[],
       };
     }
-    
 
     if (mode === 'create') {
       Meteor.call('menu.insert', { menuItem: itemData }, (error, result) => {
