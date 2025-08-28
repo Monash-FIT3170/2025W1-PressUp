@@ -134,7 +134,7 @@ function generateOrdersPDF(rows, opts = {}) {
             doc.text(col.header, x, y, { width: col.width, align: col.align || "left" });
             x += col.width + (col.gutter || 0);
         });
-        y += lineHeight - 4;
+        y += lineHeight;
         rule(y);
         y += 6;
     };
@@ -147,7 +147,7 @@ function generateOrdersPDF(rows, opts = {}) {
         }
 
         if (bandedRows && index % 2 === 1) {
-            doc.save().rect(startX, y - 2, pageWidth, lineHeight).fill("#f7f7f7").restore();
+            doc.save().rect(startX, y - 6, pageWidth, lineHeight).fill("#ffd966").restore();
         }
 
         let x = startX;
