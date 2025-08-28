@@ -30,11 +30,11 @@ import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New co
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
 
 import { PromotionPage } from "./Components/Promotion/PromotionPage.jsx";
+import { Scheduling } from "./Components/Scheduling/Scheduling.jsx";
 
 // Styles
 import "./AppStyle.css";
 import "./Components/POS/OrderPanel.css";
-import { EmployeeTable } from "./Components/Scheduling/EmployeeTable.jsx";
 
 // Component to handle route protection and redirection logic
 const RouteHandler = ({ children }) => {
@@ -390,7 +390,7 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <EmployeeTable />
+                  <Scheduling />
                 </div>
               </div>
             }
