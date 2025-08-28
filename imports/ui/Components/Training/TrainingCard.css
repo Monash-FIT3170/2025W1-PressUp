@@ -9,8 +9,10 @@
 
   /* Flex layout to push actions to bottom */
   display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin: 1rem auto;
+  justify-content: space-between;
+
 }
 
 .tc-head {
@@ -40,10 +42,16 @@
 }
 
 .tc-actions {
-  /* keep button centered at bottom */
   display: flex;
-  justify-content: center;
-  margin-top: auto; /* pushes to bottom */
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.tc-content {
+  display: flex;
+  flex-direction: column; /* stack title, description, duration vertically */
+  justify-content: flex-start; /* top align text content */
+  flex: 1;
 }
 
 .tc-actions button.start {

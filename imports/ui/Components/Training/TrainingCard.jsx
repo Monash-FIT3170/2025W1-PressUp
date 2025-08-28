@@ -22,6 +22,7 @@ const TrainingCard = ({ module }) => {
 
   return (
     <div className="training-card">
+      <div className="tc-content">
       <div className="tc-head">
         <h3 className="tc-title">{title}</h3>
         <span className="tc-time">Created at: {formatAEST(new Date(createdAt))}</span>
@@ -30,6 +31,8 @@ const TrainingCard = ({ module }) => {
         <p className="tc-description">{description}</p>
         <p className="tc-duration">Duration: {duration}</p>
       </div>
+      </div>
+      
       <div className="tc-actions">
         <button className="start" onClick={() => alert(`Starting training: ${title}`)}>
           Start Training
