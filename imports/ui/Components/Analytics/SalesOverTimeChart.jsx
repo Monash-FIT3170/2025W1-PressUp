@@ -16,12 +16,12 @@ export default function SalesOverTimeChart({ onlyClosed = false, start = null, e
   }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.(), metric]);
 
   return (
-    <div style={{ width:'100%', height: 280 }}>
+    <div style={{ width:'100%', height: '100%' }}>
       <ResponsiveContainer width="100%" height="100%" debounce={200}>
         <LineChart data={data} margin={{ top: 10, right: 20, left: 10, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" tickMargin={8} />
-          <YAxis tickFormatter={moneyTick} width={80} />
+          <XAxis dataKey="date" tickMargin={8} label={{ value: "Date", position: "insideBottom", offset: -10 }}/>
+          <YAxis tickFormatter={moneyTick} width={80} label={{ value: "Amount ($)", angle: -90, position: "insideLeft" }}/>
           <Tooltip formatter={(v) => moneyTick(v)} labelFormatter={(d) => `Date: ${d}`} />
           <Line 
             type="monotone" 
