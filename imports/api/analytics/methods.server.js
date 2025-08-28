@@ -489,7 +489,7 @@ Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
   // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales" } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = {};
     if (onlyClosed) match.status = 'closed';
@@ -512,11 +512,26 @@ Meteor.methods({
               format: '%Y-%m-%d', timezone: TZ
             }
           },
-          gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] }
+          sales: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] },
+          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0] }, { $ifNull: ['$items.quantity', 1] }] }
       }},
 
-      { $group: { _id: '$date', grossSales: { $sum: '$gross' } } },
-      { $project: { _id: 0, date: '$_id', grossSales: { $round: ['$grossSales', 2] } } },
+      {
+        $group: {
+          _id: '$date',
+          sales: { $sum: '$sales' },
+          cost: { $sum: '$cost' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          sales: { $round: ['$sales', 2] },
+          cost: { $round: ['$cost', 2] },
+          profit: { $round: [{ $subtract: ['$sales', '$cost'] }, 2] }
+        }
+      },
       { $sort: { date: 1 } }
     ];
 

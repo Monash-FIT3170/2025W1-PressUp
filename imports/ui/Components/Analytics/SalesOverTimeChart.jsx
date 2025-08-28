@@ -6,14 +6,14 @@ function moneyTick(v) {
   return `$${Number(v).toLocaleString()}`;
 }
 
-export default function SalesOverTimeChart({ onlyClosed = false, start = null, end = null }) {
+export default function SalesOverTimeChart({ onlyClosed = false, start = null, end = null, metric = "sales" }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    Meteor.call('analytics.salesOverTime', { onlyClosed, start, end }, (err, res) => {
+    Meteor.call('analytics.salesOverTime', { onlyClosed, start, end, metric }, (err, res) => {
       setData(err ? [] : (res || []));
     });
-  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.()]);
+  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.(), metric]);
 
   return (
     <div style={{ width:'100%', height: 280 }}>
@@ -23,7 +23,13 @@ export default function SalesOverTimeChart({ onlyClosed = false, start = null, e
           <XAxis dataKey="date" tickMargin={8} />
           <YAxis tickFormatter={moneyTick} width={80} />
           <Tooltip formatter={(v) => moneyTick(v)} labelFormatter={(d) => `Date: ${d}`} />
-          <Line type="monotone" dataKey="grossSales" dot={false} stroke="#16a34a" strokeWidth={3} isAnimationActive={false} />
+          <Line 
+            type="monotone" 
+            dataKey={metric} 
+            dot={false} 
+            stroke={metric === "sales" ? "#16a34a" : metric === "cost" ? "#dc2626" : "#2563eb"} 
+            strokeWidth={3} 
+            isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
