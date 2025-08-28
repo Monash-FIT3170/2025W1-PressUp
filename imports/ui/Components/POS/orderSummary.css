@@ -183,7 +183,24 @@
   cursor: pointer;
 }
 
+.split-payment-btn {
+  height: 36px;
+  flex: 1;
+  padding: 12px 8px;
+  gap: 8px;
+  border-radius: 6px;
+  width: 100%; 
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-sizing: border-box;
+}
+
 .payment-btn:hover,
-.payment-btn.selected {
+.payment-btn.selected,
+.split-payment-btn:hover,
+.split-payment-btn.selected {
   background-color: #e5e7eb;
 }

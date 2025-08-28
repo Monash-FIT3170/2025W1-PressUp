@@ -51,6 +51,7 @@ const SummaryDetail = ({ name, value }) => (
 
 export const OrderSummary = ({ orderID, setCheckout }) => {
   const [paymentMethods, setPaymentMethods] = useState("cash");
+  const [splittingPayment, setSplitPayment] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showChangeInfo, setShowChangeInfo] = useState(false);
   const isLoading = useSubscribe("orders.id", orderID);
@@ -68,6 +69,9 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
     }
   }, [paymentMethods, order]);
 
+  function splitPaymentAction() {
+
+  }
   function proceedButtonAction() {
     setShowChangeInfo(true);
   }
@@ -122,6 +126,10 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
           setPaymentMethods={setPaymentMethods}
           paymentMethods={paymentMethods}
         />
+        <SplitPayment
+          setSplitPayment={setSplitPayment}
+          splittingPayment={splittingPayment}
+        />
         <button className="button" onClick={proceedButtonAction}>
           Proceed
         </button>
@@ -150,5 +158,16 @@ const PaymentMethods = ({ setPaymentMethods, paymentMethods }) => {
         <span>Cards</span>
       </button>
     </div>
+  );
+};
+
+const SplitPayment = ({setSplitPayment, splittingPayment}) => {
+  return (
+    <button  
+      onClick={() => setSplitPayment(true)}
+      className={`split-payment-btn ${splittingPayment === true ? "selected" : ""}`}
+      >
+        Split Payment
+    </button>
   );
 };
