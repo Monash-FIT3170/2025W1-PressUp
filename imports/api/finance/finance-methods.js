@@ -105,10 +105,11 @@ const PDF_COLUMNS = [
  */
 function buildOrdersPdf(rows, opts = {}) {
     const {
-        title = "Orders",
+        title = "Orders Report",
         columns = PDF_COLUMNS,
         margin = 24,
         bandedRows = true,
+        showTotals = true,
     } = opts;
 
     const doc = new PDFDocument({ layout: "landscape", margin });
@@ -120,13 +121,13 @@ function buildOrdersPdf(rows, opts = {}) {
     doc.font("Helvetica-Bold").fontSize(16).text(title, { align: "center" });
     doc.moveDown(0.8);
 
-    // Layout
+    // Layout metrics
     const lineHeight = 18;
     const startX = doc.page.margins.left;
     const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
     const maxY = doc.page.height - doc.page.margins.bottom;
     const rule = (yy) =>
-        doc.moveTo(startX, yy).lineTo(startX + pageWidth, yy).strokeColor("#f5e1a4").lineWidth(0.5).stroke();
+        doc.moveTo(startX, yy).lineTo(startX + pageWidth, yy).strokeColor("#d0d0d0").lineWidth(0.5).stroke();
 
     let y = doc.y;
 
@@ -150,7 +151,7 @@ function buildOrdersPdf(rows, opts = {}) {
         }
 
         if (bandedRows && index % 2 === 1) {
-            doc.save().rect(startX, y - 2, pageWidth, lineHeight).fill("#f5e1a4").restore();
+            doc.save().rect(startX, y - 2, pageWidth, lineHeight).fill("#f7f7f7").restore();
         }
 
         let x = startX;
@@ -168,9 +169,53 @@ function buildOrdersPdf(rows, opts = {}) {
         y += lineHeight;
     };
 
+    const drawTotalsRow = () => {
+        if (!showTotals || !rows.length) return;
+
+        // Sum only numeric columns we care about
+        const totals = rows.reduce(
+            (acc, row) => {
+                acc.ItemCount += Number(row.ItemCount || 0);
+                acc.Discount += Number(row.Discount || 0);
+                acc.ReceivedPayment += Number(row.ReceivedPayment || 0);
+                acc.GrossInclGST += Number(row.GrossInclGST || 0);
+                return acc;
+            },
+            { ItemCount: 0, Discount: 0, ReceivedPayment: 0, GrossInclGST: 0 }
+        );
+
+        // Spacer line above totals
+        rule(y - 6);
+
+        if (y > maxY - 40) {
+            doc.addPage({ layout: "landscape", margin });
+            y = doc.y;
+            drawHeader();
+        }
+
+        // Render totals
+        let x = startX;
+        columns.forEach((col, idx) => {
+            let display = "";
+            if (idx === 0) display = "Total";
+            else if (col.key === "ItemCount") display = String(totals.ItemCount);
+            else if (col.key === "Discount") display = formatAUD.format(totals.Discount);
+            else if (col.key === "ReceivedPayment") display = formatAUD.format(totals.ReceivedPayment);
+            else if (col.key === "GrossInclGST") display = formatAUD.format(totals.GrossInclGST);
+
+            doc.font("Helvetica-Bold").fontSize(9).fillColor("#000");
+            doc.text(display, x, y, { width: col.width, align: col.align || "left" });
+            x += col.width + (col.gutter || 0);
+        });
+
+        y += lineHeight;
+    };
+
     drawHeader();
     rows.forEach((r, i) => drawRow(r, i));
+    drawTotalsRow();
 
+    // Footer
     rule(maxY - 16);
     doc.font("Helvetica").fontSize(8).fillColor("#555");
     doc.text(`Generated: ${new Date().toLocaleString("en-AU")}`, startX, maxY - 12);
@@ -234,6 +279,7 @@ Meteor.methods({
      * @param {number} endYear
      * @returns {string}
      */
+
     async "finance.export.ordersPDFForFY"(startYear, endYear) {
         check(startYear, Number);
         check(endYear, Number);
@@ -242,6 +288,14 @@ Meteor.methods({
         }
 
         const { fromDate, toDate } = computeFinancialYearRange(startYear, endYear);
-        return Meteor.callAsync("finance.export.ordersPDF", fromDate, toDate);
-    },
-});
+        const rows = await buildOrderRowsForRange(fromDate, toDate);
+        const fyLabel = `FY${String(endYear).slice(-2)}`;
+
+        const pdfBuffer = await buildOrdersPdf(rows, {
+            title: `Orders (${fyLabel})`,
+            showTotals: true,
+        });
+        return pdfBuffer.toString("base64");
+    }
+},
+);
