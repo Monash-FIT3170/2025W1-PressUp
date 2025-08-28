@@ -154,17 +154,17 @@ export default function Dashboard() {
         {/* Top KPI row (now dynamic) */}
         <div style={{ gridColumn: 'span 3' }}>
           <StatsCard
-            title={range.metric === 'cost' ? 'Cost'
-              : range.metric === 'profit' ? 'Profit'
-                : 'Revenue'}
-            value={`$${(kpis.value ?? 0).toLocaleString()}`}
-            subvalue={range.start || range.end ? '' : 'YTD'}
+            title="Orders"
+            value={kpis.orders?.toLocaleString?.() ?? '0'}
+            subvalue={range.start || range.end ? 'Filtered' : 'All-time'}
           />
         </div>
         <div style={{ gridColumn: 'span 3' }}>
           <StatsCard
-            title="Revenue"
-            value={`$${(kpis.revenue ?? 0).toLocaleString()}`}
+            title={range.metric === 'cost' ? 'Cost'
+              : range.metric === 'profit' ? 'Profit'
+                : 'Revenue'}
+            value={`$${(kpis.value ?? 0).toLocaleString()}`}
             subvalue={range.start || range.end ? '' : 'YTD'}
           />
         </div>
