@@ -1,0 +1,230 @@
+.roster-manager {
+  padding: 20px;
+  width: 100%;
+  margin: 0;
+}
+
+.roster-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.roster-manager-header h1 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.add-shift-btn {
+  background-color: #fcd581;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-shift-btn:hover {
+  background-color: #fde9bf;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.roster-manager-content {
+  background-color: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-width: 1200px;
+}
+
+.roster-table-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.roster-table-container.hide-scrollbar {
+  scrollbar-color: transparent transparent;
+}
+
+.roster-table-container.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.roster-table-container.show-scrollbar {
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.roster-table-container.show-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+}
+
+/* Webkit scrollbar styling (Chrome, Safari, Edge) */
+.roster-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.roster-table-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 1200px;
+}
+
+.roster-header-cell {
+  background-color: #f9f9f9;
+  padding: 16px 12px;
+  text-align: center;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.roster-header-cell:first-child {
+  border-left: none;
+}
+
+.roster-header-cell:last-child {
+  border-right: none;
+}
+
+.employee-header {
+  text-align: left;
+  width: 200px;
+}
+
+.day-header {
+  width: calc((100% - 200px) / 7);
+}
+
+.roster-row {
+  transition: background-color 0.2s ease;
+}
+
+.roster-row:hover {
+  background-color: #f8f9fa;
+}
+
+.roster-cell {
+  padding: 16px 12px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  vertical-align: top;
+  height: 80px;
+}
+
+.roster-cell:first-child {
+  border-left: none;
+}
+
+.roster-cell:last-child {
+  border-right: none;
+}
+
+.employee-name-cell {
+  text-align: left;
+  font-weight: 500;
+  color: #1f2937;
+  background-color: #f8f9fa;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  width: 200px;
+}
+
+.day-cell {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.day-cell:hover {
+  background-color: #fde9bf;
+}
+
+.day-cell:active {
+  background-color: #fcd581;
+}
+
+/* Loading and error states */
+.roster-loading,
+.roster-error {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.roster-error {
+  color: #dc2626;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .roster-manager {
+    padding: 15px;
+  }
+  
+  .roster-manager-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .roster-manager-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .roster-header-cell,
+  .roster-cell {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
+  
+  .roster-table {
+    table-layout: auto;
+  }
+  
+  .employee-header {
+    width: 120px;
+  }
+  
+  .day-header {
+    width: auto;
+  }
+  
+  .employee-name-cell {
+    width: 120px;
+  }
+}
