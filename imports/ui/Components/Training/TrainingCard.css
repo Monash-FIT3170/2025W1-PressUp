@@ -25,6 +25,13 @@
   color: #333;
 }
 
+.tc-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 .tc-time {
   font-size: 0.875rem;
   color: #666;
@@ -44,17 +51,11 @@
 .tc-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end; 
   margin-left: 1rem;
 }
 
-.tc-content {
-  display: flex;
-  flex-direction: column; /* stack title, description, duration vertically */
-  justify-content: flex-start; /* top align text content */
-  flex: 1;
-}
-
-.tc-actions button.start {
+.start {
   padding: 0.5rem 1rem;
   background-color: #28a745;
   color: white;
@@ -64,6 +65,6 @@
   transition: background-color 0.2s;
 }
 
-.tc-actions button.start:hover {
+.start:hover {
   background-color: #218838;
 }

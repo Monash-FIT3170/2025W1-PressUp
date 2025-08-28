@@ -32,12 +32,11 @@ const TrainingCard = ({ module }) => {
         <p className="tc-duration">Duration: {duration}</p>
       </div>
       </div>
-      
-      <div className="tc-actions">
+
+  
         <button className="start" onClick={() => alert(`Starting training: ${title}`)}>
           Start Training
         </button>
-      </div>
     </div>
   );
 };
