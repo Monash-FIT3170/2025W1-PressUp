@@ -10,6 +10,7 @@ import ItemsFrequencyChart from './ItemsFrequencyChart';
 import StatsCard from './StatsCard';
 import SalesByProductTable from './SalesByProductTable';
 import SalesOverTimeChart from './SalesOverTimeChart';
+import PeakHourChart from './PeakHourAnalysisChart';
 
 const cardStyle = {
   background: '#fff',
@@ -194,6 +195,13 @@ export default function Dashboard() {
           <h3 style={{ margin: 0, marginBottom: 8, fontSize: 14, color: '#374151' }}>Items Frequency (Occurrences)</h3>
           <div style={{ height: 340 }}>
             <ItemsFrequencyChart onlyClosed={false} start={filter.start} end={filter.end} metric="occurrences" />
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, gridColumn: 'span 12' }}>
+          <h3 style={{ margin: 0, marginBottom: 8, fontSize: 14, color: '#374151' }}>Peak Hour Analysis</h3>
+          <div style={{ height: 340 }}>
+            <PeakHourChart onlyClosed={false} start={filter.start} end={filter.end} />
           </div>
         </section>
       </div>
