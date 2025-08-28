@@ -4,7 +4,6 @@ import PDFDocument from "pdfkit";
 
 /**
  * Convert rows of data into a CSV string.
- * NOTE: header order follows Object.keys of the first row.
  * @param {Array<Record<string, any>>} rows
  * @returns {string}
  */
@@ -23,24 +22,23 @@ function convertRowsToCSV(rows) {
 }
 
 /**
- * Get the start/end Date objects for an Australian financial year (1 Jul → 30 Jun).
- * Plain JS Dates; if you store non-UTC dates, consider a TZ-aware library later.
+ * Get the start/end dates for an FY.
  * @param {number} startYear - e.g. 2024
  * @param {number} endYear   - must be startYear + 1 (e.g. 2025)
  */
 function computeFinancialYearRange(startYear, endYear) {
-    const fromDate = new Date(startYear, 6, 1, 0, 0, 0, 0);        // 1 Jul startYear 00:00
-    const toDate = new Date(endYear, 5, 30, 23, 59, 59, 999);  // 30 Jun endYear 23:59:59.999
+    const fromDate = new Date(startYear, 6, 1, 0, 0, 0, 0); 
+    const toDate = new Date(endYear, 5, 30, 23, 59, 59, 999); 
     return { fromDate, toDate };
 }
 
 /**
- * Fetch orders and shape them into a consistent row structure used by CSV & PDF.
+ * Transform into a tabular structure.
  * @param {Date} startDate
  * @param {Date} endDate
  * @returns {Promise<Array<Record<string, any>>>}
  */
-async function buildOrderRowsForRange(startDate, endDate) {
+async function transformOrdersToTable(startDate, endDate) {
     const orders = await Meteor.callAsync("orders.getInRange", startDate, endDate);
 
     return orders.map((order) => {
@@ -64,9 +62,7 @@ async function buildOrderRowsForRange(startDate, endDate) {
     });
 }
 
-/* ------------------------------ PDF helpers ------------------------------ */
-
-// Reusable formatters
+// Format as AUD.
 const formatAUD = new Intl.NumberFormat("en-AU", {
     style: "currency",
     currency: "AUD",
@@ -76,7 +72,7 @@ const formatDateAU = (v) =>
     v ? new Date(v).toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" }) : "";
 
 /**
- * Declarative column model for the PDF table.
+ * Columns used for the PDF export, with format.
  * - key:      row property to render (or provide accessor)
  * - header:   column label
  * - width:    fixed width in points
@@ -103,7 +99,7 @@ const PDF_COLUMNS = [
  * @param {{ title?: string, columns?: typeof PDF_COLUMNS, margin?: number, bandedRows?: boolean }} opts
  * @returns {Promise<Buffer>}
  */
-function buildOrdersPdf(rows, opts = {}) {
+function generateOrdersPDF(rows, opts = {}) {
     const {
         title = "Orders Report",
         columns = PDF_COLUMNS,
@@ -117,11 +113,11 @@ function buildOrdersPdf(rows, opts = {}) {
     doc.on("data", (c) => buffers.push(c));
     const endPromise = new Promise((resolve) => doc.on("end", () => resolve(Buffer.concat(buffers))));
 
-    // Title
+    // Title.
     doc.font("Helvetica-Bold").fontSize(16).text(title, { align: "center" });
     doc.moveDown(0.8);
 
-    // Layout metrics
+    // Layout.
     const lineHeight = 18;
     const startX = doc.page.margins.left;
     const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
@@ -172,7 +168,7 @@ function buildOrdersPdf(rows, opts = {}) {
     const drawTotalsRow = () => {
         if (!showTotals || !rows.length) return;
 
-        // Sum only numeric columns we care about
+        // Sum only numeric columns we care about.
         const totals = rows.reduce(
             (acc, row) => {
                 acc.ItemCount += Number(row.ItemCount || 0);
@@ -184,7 +180,7 @@ function buildOrdersPdf(rows, opts = {}) {
             { ItemCount: 0, Discount: 0, ReceivedPayment: 0, GrossInclGST: 0 }
         );
 
-        // Spacer line above totals
+        // Spacer line above totals.
         rule(y - 6);
 
         if (y > maxY - 40) {
@@ -193,7 +189,7 @@ function buildOrdersPdf(rows, opts = {}) {
             drawHeader();
         }
 
-        // Render totals
+        // Totals.
         let x = startX;
         columns.forEach((col, idx) => {
             let display = "";
@@ -235,7 +231,7 @@ Meteor.methods({
         check(startDate, Date);
         check(endDate, Date);
 
-        const rows = await buildOrderRowsForRange(startDate, endDate);
+        const rows = await transformOrdersToTable(startDate, endDate);
         return convertRowsToCSV(rows);
     },
 
@@ -258,8 +254,7 @@ Meteor.methods({
     },
 
     /**
-     * Export orders to a LANDSCAPE PDF with a table (by date range).
-     * Returns a Base64 string so the client can download it as a file.
+     * Export orders to a landscape PDF with a table (by date range).
      * @param {Date} startDate
      * @param {Date} endDate
      * @returns {string} base64 PDF
@@ -268,8 +263,8 @@ Meteor.methods({
         check(startDate, Date);
         check(endDate, Date);
 
-        const rows = await buildOrderRowsForRange(startDate, endDate);
-        const pdfBuffer = await buildOrdersPdf(rows, { title: "Orders Report" });
+        const rows = await transformOrdersToTable(startDate, endDate);
+        const pdfBuffer = await generateOrdersPDF(rows, { title: "Orders Report" });
         return pdfBuffer.toString("base64");
     },
 
@@ -279,7 +274,6 @@ Meteor.methods({
      * @param {number} endYear
      * @returns {string}
      */
-
     async "finance.export.ordersPDFForFY"(startYear, endYear) {
         check(startYear, Number);
         check(endYear, Number);
@@ -288,10 +282,10 @@ Meteor.methods({
         }
 
         const { fromDate, toDate } = computeFinancialYearRange(startYear, endYear);
-        const rows = await buildOrderRowsForRange(fromDate, toDate);
+        const rows = await transformOrdersToTable(fromDate, toDate);
         const fyLabel = `FY${String(endYear).slice(-2)}`;
 
-        const pdfBuffer = await buildOrdersPdf(rows, {
+        const pdfBuffer = await generateOrdersPDF(rows, {
             title: `Orders (${fyLabel})`,
             showTotals: true,
         });

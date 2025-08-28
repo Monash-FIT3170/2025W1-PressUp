@@ -2,7 +2,9 @@ import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { Meteor } from "meteor/meteor";
 import "./Finance.css";
 
-/** Build AU FY options (1 Jul → 30 Jun) from a given start year up to current FY (inclusive). */
+/** 
+ * Get FY options from a given start year up to current FY (inclusive). 
+ */
 function buildFinancialYearOptions(startFromYear) {
   if (typeof startFromYear !== "number" || !Number.isFinite(startFromYear)) {
     throw new Error("buildFinancialYearOptions: startFromYear must be a number");
@@ -20,7 +22,9 @@ function buildFinancialYearOptions(startFromYear) {
   return options;
 }
 
-/** Add more types later by extending this config. */
+/** 
+ * Export options.
+ */
 const EXPORT_CONFIG = {
   orders_csv: {
     method: "finance.export.ordersCSVForFY",
@@ -36,7 +40,9 @@ const EXPORT_CONFIG = {
   },
 };
 
-/** One function to fetch and download any export type */
+/** 
+ * Fetch and download the specified export type.
+ */
 async function fetchAndDownloadExport({ exportType, startYear, endYear, baseFilename }) {
   const config = EXPORT_CONFIG[exportType];
   if (!config) throw new Error(`Unsupported export type: ${exportType}`);
@@ -45,15 +51,16 @@ async function fetchAndDownloadExport({ exportType, startYear, endYear, baseFile
 
   let blob;
   if (config.isBase64) {
-    // Base64 → Blob
+    // Base64 to Blob (for PDF).
     const binaryString = atob(result);
     const byteArray = new Uint8Array([...binaryString].map((ch) => ch.charCodeAt(0)));
     blob = new Blob([byteArray], { type: config.mimeType });
   } else {
-    // Raw string → Blob
+    // Raw string to Blob (for CSV).
     blob = new Blob([result], { type: config.mimeType });
   }
 
+  // File properties.
   const filename = `${baseFilename}.${config.extension}`;
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -63,7 +70,7 @@ async function fetchAndDownloadExport({ exportType, startYear, endYear, baseFile
   URL.revokeObjectURL(url);
 }
 
-export default function TaxPanel({ startFromYear = 2021 }) {
+export default function TaxPanel({ startFromYear = 2025 }) {
   const financialYearOptions = useMemo(
     () => buildFinancialYearOptions(startFromYear),
     [startFromYear]
