@@ -3,12 +3,14 @@
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   padding: 1rem;
-  width: 350px;
+  width: 100%; /* full width */
+  max-width: 1200px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   /* Flex layout to push actions to bottom */
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
 }
 
 .tc-head {
