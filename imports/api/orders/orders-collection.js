@@ -12,6 +12,7 @@ OrdersCollection.schema = new SimpleSchema({
   },
   items: { type: Array },
   "items.$": Object,
+  "items.$.id": String,
   "items.$.menu_item": String,
   "items.$.quantity": Number,
   "items.$.price": Number,

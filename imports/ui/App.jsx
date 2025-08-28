@@ -25,6 +25,7 @@ import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdow
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
+import { KitchenDisplay } from "./Components/Kitchen/KitchenDisplay.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
@@ -34,6 +35,8 @@ import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
+import Dashboard from './Components/Analytics/Dashboard.jsx';
+import { Finance } from "./Components/Finance/Finance.jsx";
 
 // Styles
 import "./AppStyle.css";
@@ -309,6 +312,51 @@ export const App = () => {
             }
           />
 
+          <Route
+            path="/kitchen"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <KitchenDisplay isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Finance route */}
+          <Route
+            path="/finance"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Finance />
+                </div>
+              </div>
+            }
+          />
+
           {/* Other protected routes */}
           <Route
             path="/inventory"
@@ -493,6 +541,30 @@ export const App = () => {
               </div>
             }
           />
+
+
+          <Route
+            path="/analytics"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Dashboard />
+                </div> {/* ✅ closes main-content */}
+              </div>   
+            }
+          />
+
         </Routes>
       </RouteHandler>
     </BrowserRouter>

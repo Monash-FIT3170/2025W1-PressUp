@@ -13,15 +13,51 @@ export const POSMenuCards = ({
   searchTerm = ''
 }) => {
   const [itemsWithDiscount, setItemsWithDiscount] = useState([]);
+
   // add to order handler remains unchanged
   const handleAddToOrder = item => {
     addToOrder(item);
   };
 
+  // Determines if item is seasonal
+  const getSeasonal = item => {
+    if (item.seasons) {
+      return true
+    } 
+    return false;
+  }
+
+  // Determines if date is within seasons
+  const getInSeason = item => {
+    itemSeasons = item.seasons || ['Summer','Winter','Autumn','Spring'];
+    //if item available in all seasons it is in season
+    if (itemSeasons.length >= 4 || itemSeasons.length == 0) return true;
+
+    const date = new Date();
+    const month = date.getMonth();
+    var season = '';
+    if (month < 2 || month == 11) {
+      season = 'Summer'
+    } else if (month >= 2 && month < 5) {
+      season = 'Autumn'
+    } else if (month >= 5 && month < 8) {
+      season = 'Winter'
+    } else {
+      season = 'Spring'
+    }
+
+    if (itemSeasons.includes(season)) {
+      return true;
+    }
+    return false;
+   };
+
   // Determines if an item is available right now based on its schedule
   const getIsCurrentlyAvailable = item => {
     if (!item.available) return false;
 
+    if (!getInSeason(item)) return false;
+    
     const today = moment().format('dddd');
     const scheduleToday = item.schedule?.[today];
     if (!scheduleToday || !scheduleToday.available) return false;
@@ -103,6 +139,7 @@ export const POSMenuCards = ({
   const itemsToRender = (itemsWithDiscount.length > 0 ? itemsWithDiscount : itemsWithAvailability).map(item => ({
     ...item,
     isCurrentlyAvailable: getIsCurrentlyAvailable(item),
+    isInSeason: getInSeason(item),
   }));
 
   // 5) Sort available items first
@@ -111,10 +148,17 @@ export const POSMenuCards = ({
     return a.isCurrentlyAvailable ? -1 : 1;
   });
 
+  const existsNoAvailable = () => {
+    if (sortedItems.length === 0 || !sortedItems[0].isInSeason) {
+      return true
+    }
+    return false
+  };
+
   // 6) Render cards
   return (
     <div className="card-container">
-      {sortedItems.length === 0 ? (
+      {existsNoAvailable() ? (
         <p>No menu items available.</p>
       ) : (
         sortedItems
@@ -131,6 +175,8 @@ export const POSMenuCards = ({
                 isGlutenFree={item.isGlutenFree}
                 isHalal={item.isHalal}
                 isVegetarian={item.isVegetarian}
+                seasonal={getSeasonal(item)}
+                inSeason={getInSeason(item)}
                 onAddToOrder={() => handleAddToOrder(item)}
               />
             );

@@ -91,6 +91,27 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 Tables
               </NavLink>
 
+
+              <NavLink
+                to="/kitchen"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+                end
+              >
+                <img
+                  src="/images/MenuIcon.png"
+                  alt="Home"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Kitchen
+              </NavLink>
+              
               {/* Only show these links if user is admin */}
               {isAdmin && (
                 <>
@@ -169,6 +190,25 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Promotions
                   </NavLink>
+
+                  <NavLink
+                    to="/analytics"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/Analytics.jpg"
+                      alt="Promotions"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        verticalAlign: "-4px",
+                        marginRight: "8px",
+                      }}
+                    />
+                    Analytics
+                  </NavLink>
                   <NavLink
                     to="/inbox"
                     className={({ isActive }) =>
@@ -186,6 +226,19 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                       }}
                     />
                     Inbox {existsActiveEnquiry().exists && (`(`+existsActiveEnquiry().count+`)`)}
+                  </NavLink>
+                  <NavLink
+                    to="/finance"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/FinanceIcon.svg"
+                      alt="Finance"
+                      style={{ width: "30px", height: "20px", verticalAlign: "0px", marginRight: "8px" }}
+                    />
+                    Finance
                   </NavLink>
                 </>
               )}
