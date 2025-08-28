@@ -25,20 +25,27 @@ const cardStyle = {
 // --- Small inline filter bar (presets + custom) ------------------------------
 function FilterBar({ range, onChange }) {
   const presets = useMemo(() => ([
-    { key: 'ALL',  label: 'All time',    start: null,                                     end: null },
-    { key: '7D',   label: 'Last 7 days', start: dayjs().subtract(7, 'day').startOf('day'), end: dayjs() },
-    { key: '30D',  label: 'Last 30 days',start: dayjs().subtract(30,'day').startOf('day'), end: dayjs() },
-    { key: 'YTD',  label: 'YTD',         start: dayjs().startOf('year'),                   end: dayjs() },
+    { key: 'ALL',   label: 'All time',     start: null,                                     end: null },
+    // ✅ NEW: Today preset
+    { key: 'TODAY', label: 'Today',        start: dayjs().startOf('day'),                    end: dayjs().endOf('day') },
+    { key: '7D',    label: 'Last 7 days',  start: dayjs().subtract(7,  'day').startOf('day'), end: dayjs() },
+    { key: '30D',   label: 'Last 30 days', start: dayjs().subtract(30, 'day').startOf('day'), end: dayjs() },
+    { key: 'YTD',   label: 'YTD',          start: dayjs().startOf('year'),                    end: dayjs() },
   ]), []);
 
   const isActive = (p) =>
     (range.start ? dayjs(range.start).isSame(p.start, 'day') : !p.start) &&
-    (range.end   ? dayjs(range.end).isSame(p.end, 'day')     : !p.end);
+    (range.end   ? dayjs(range.end).isSame(p.end,   'day') : !p.end);
 
   const setDate = (field, val) => {
     onChange({
       ...range,
-      [field]: val ? dayjs(val).startOf(field === 'end' ? 'day' : 'day').toDate() : null
+      // ✅ Keep start at startOf('day'), but make end inclusive with endOf('day')
+      [field]: val
+        ? (field === 'end'
+            ? dayjs(val).endOf('day').toDate()
+            : dayjs(val).startOf('day').toDate())
+        : null
     });
   };
 
@@ -162,6 +169,7 @@ export default function Dashboard() {
         </div>
         
         <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
+          <h3 style={{ margin: 0, marginBottom: 8, fontSize: 14, color: '#374151' }}>Menu Orders Revenue</h3>
           <SalesOverTimeChart onlyClosed={false} start={filter.start} end={filter.end} />
         </section>
 
