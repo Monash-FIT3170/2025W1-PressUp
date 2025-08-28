@@ -1,75 +1,130 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
+import { Meteor } from "meteor/meteor";
+import "./Finance.css";
 
-function computeFYs(count = 5) {
+function buildFinancialYearOptions(startYear) {
   const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth();
-  const currentEndYear = m >= 6 ? y + 1 : y;
-  const list = [];
+  const calendarYear = now.getFullYear();
+  const monthIndex = now.getMonth();
+  const currentFyEndYear = monthIndex >= 6 ? calendarYear + 1 : calendarYear;
 
-  for (let i = 0; i < count; i++) {
-    const endYear = currentEndYear - i;
-    const startYear = endYear - 1;
-    list.push({ label: `${startYear}–${endYear}`, startYear, endYear });
+  const options = [];
+
+  for (let endYear = currentFyEndYear; endYear > startYear; endYear -= 1) {
+    const fyStartYear = endYear - 1;
+    options.push({
+      label: `${fyStartYear}–${endYear}`,
+      startYear: fyStartYear,
+      endYear: endYear,
+    });
   }
 
-  return list;
+  return options;
 }
 
 const EXPORT_TYPES = [
-  { value: "summary_csv", label: "Summary (CSV)" },
   { value: "orders_csv", label: "Orders (CSV)" },
-  { value: "lines_csv", label: "Line Items (CSV)" },
 ];
 
-export default function TaxPanel() {
-  const fyOptions = useMemo(() => computeFYs(7), []);
-  const [fy, setFy] = useState(fyOptions[0]);
-  const [exportType, setExportType] = useState(EXPORT_TYPES[0].value);
+function triggerDownload({ content, filename, mimeType = "text/plain;charset=utf-8" }) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
 
-  const handleDownload = () => {
-    const params = new URLSearchParams({
-      type: exportType,
-      startYear: fy.startYear,
-      endYear: fy.endYear,
-      tz: "Australia/Melbourne",
-    });
-    window.open(`/exports/finance?${params.toString()}`, "_blank");
-  };
+export default function TaxPanel() {
+  const financialYearOptions = useMemo(() => buildFinancialYearOptions(2025), []);
+  const [selectedFyIndex, setSelectedFyIndex] = useState(0);
+  const [exportType, setExportType] = useState(EXPORT_TYPES[0].value);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const selectedFy = financialYearOptions[selectedFyIndex];
+
+  const handleDownload = useCallback(async () => {
+    if (!selectedFy) return;
+
+    setErrorMessage("");
+    setIsDownloading(true);
+
+    try {
+      if (exportType !== "orders_csv") {
+        setErrorMessage("Unsupported export type.");
+        return;
+      }
+
+      const csv = await Meteor.callAsync(
+        "finance.export.ordersCSVForFY",
+        selectedFy.startYear,
+        selectedFy.endYear
+      );
+
+      triggerDownload({
+        content: csv,
+        filename: `orders-${selectedFy.startYear}-${selectedFy.endYear}.csv`,
+        mimeType: "text/csv;charset=utf-8",
+      });
+    } catch (error) {
+      console.error("[TaxPanel] download failed:", error);
+      setErrorMessage(error?.reason || error?.message || "Failed to generate export.");
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [exportType, selectedFy]);
+
+  const isFormReady = Boolean(selectedFy && exportType);
 
   return (
-    <div style={{ display: "grid", gap: "16px", maxWidth: 500 }}>
-      <label>
-        Financial Year:
+    <div style={{ display: "grid", gap: 16, maxWidth: 520 }}>
+      <h2>Tax Export</h2>
+
+      <label style={{ display: "grid", gap: 6 }}>
+        <span>Financial Year</span>
         <select
-          value={fy.label}
-          onChange={(e) =>
-            setFy(fyOptions.find((f) => f.label === e.target.value))
-          }
+          value={selectedFyIndex}
+          onChange={(e) => setSelectedFyIndex(Number(e.target.value))}
         >
-          {fyOptions.map((f) => (
-            <option key={f.label} value={f.label}>
-              {f.label}
+          {financialYearOptions.map((option, index) => (
+            <option key={option.label} value={index}>
+              {option.label}
             </option>
           ))}
         </select>
+        <span style={{ color: "#888", fontSize: 12 }}>AU FY runs 1 Jul → 30 Jun</span>
       </label>
 
-      <label>
-        Export Type:
+      <label style={{ display: "grid", gap: 6 }}>
+        <span>Export Type</span>
         <select
           value={exportType}
           onChange={(e) => setExportType(e.target.value)}
         >
-          {EXPORT_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
+          {EXPORT_TYPES.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
             </option>
           ))}
         </select>
       </label>
 
-      <button onClick={handleDownload}>Download</button>
+      <div className="finance-actions">
+        <button
+          className="finance-download-button"
+          onClick={handleDownload}
+          disabled={!isFormReady || isDownloading}
+          aria-disabled={!isFormReady || isDownloading}
+        >
+          {isDownloading ? "Preparing…" : "Download CSV"}
+        </button>
+      </div>
+
+      {errorMessage && (
+        <div style={{ color: "#b00020", fontSize: 14 }}>{errorMessage}</div>
+      )}
     </div>
   );
 }
