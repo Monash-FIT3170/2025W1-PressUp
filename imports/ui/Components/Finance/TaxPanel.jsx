@@ -1,33 +1,60 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import { Meteor } from "meteor/meteor";
 import "./Finance.css";
 
-function buildFinancialYearOptions(startYear) {
+/** Build AU FY options (1 Jul → 30 Jun) from a given start year up to current FY (inclusive). */
+function buildFinancialYearOptions(startFromYear) {
+  if (typeof startFromYear !== "number" || !Number.isFinite(startFromYear)) {
+    throw new Error("buildFinancialYearOptions: startFromYear must be a number");
+  }
   const now = new Date();
-  const calendarYear = now.getFullYear();
-  const monthIndex = now.getMonth();
-  const currentFyEndYear = monthIndex >= 6 ? calendarYear + 1 : calendarYear;
+  const currentCalendarYear = now.getFullYear();
+  const currentMonthIndex = now.getMonth(); // 0 = Jan
+  const currentFyEndYear = currentMonthIndex >= 6 ? currentCalendarYear + 1 : currentCalendarYear;
 
   const options = [];
-
-  for (let endYear = currentFyEndYear; endYear > startYear; endYear -= 1) {
-    const fyStartYear = endYear - 1;
-    options.push({
-      label: `${fyStartYear}–${endYear}`,
-      startYear: fyStartYear,
-      endYear: endYear,
-    });
+  for (let endYear = currentFyEndYear; endYear >= startFromYear + 1; endYear -= 1) {
+    const startYear = endYear - 1;
+    options.push({ label: `${startYear}–${endYear}`, startYear, endYear });
   }
-
   return options;
 }
 
-const EXPORT_TYPES = [
-  { value: "orders_csv", label: "Orders (CSV)" },
-];
+/** Add more types later by extending this config. */
+const EXPORT_CONFIG = {
+  orders_csv: {
+    method: "finance.export.ordersCSVForFY",
+    mimeType: "text/csv;charset=utf-8",
+    extension: "csv",
+    isBase64: false,
+  },
+  orders_pdf: {
+    method: "finance.export.ordersPDFForFY",
+    mimeType: "application/pdf",
+    extension: "pdf",
+    isBase64: true,
+  },
+};
 
-function triggerDownload({ content, filename, mimeType = "text/plain;charset=utf-8" }) {
-  const blob = new Blob([content], { type: mimeType });
+/** One function to fetch and download any export type */
+async function fetchAndDownloadExport({ exportType, startYear, endYear, baseFilename }) {
+  const config = EXPORT_CONFIG[exportType];
+  if (!config) throw new Error(`Unsupported export type: ${exportType}`);
+
+  const result = await Meteor.callAsync(config.method, startYear, endYear);
+
+  let blob;
+  if (config.isBase64) {
+    // Base64 → Blob
+    const binaryString = atob(result);
+    const byteArray = new Uint8Array([...binaryString].map((ch) => ch.charCodeAt(0)));
+    blob = new Blob([byteArray], { type: config.mimeType });
+  } else {
+    // Raw string → Blob
+    blob = new Blob([result], { type: config.mimeType });
+  }
+
+  const filename = `${baseFilename}.${config.extension}`;
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
@@ -36,37 +63,34 @@ function triggerDownload({ content, filename, mimeType = "text/plain;charset=utf
   URL.revokeObjectURL(url);
 }
 
-export default function TaxPanel() {
-  const financialYearOptions = useMemo(() => buildFinancialYearOptions(2025), []);
-  const [selectedFyIndex, setSelectedFyIndex] = useState(0);
-  const [exportType, setExportType] = useState(EXPORT_TYPES[0].value);
+export default function TaxPanel({ startFromYear = 2021 }) {
+  const financialYearOptions = useMemo(
+    () => buildFinancialYearOptions(startFromYear),
+    [startFromYear]
+  );
+
+  const [selectedFyIndex, setSelectedFyIndex] = useState(financialYearOptions.length ? 0 : -1);
+  useEffect(() => {
+    setSelectedFyIndex(financialYearOptions.length ? 0 : -1);
+  }, [financialYearOptions.length]);
+
+  const [exportType, setExportType] = useState("orders_csv");
   const [isDownloading, setIsDownloading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const selectedFy = financialYearOptions[selectedFyIndex];
+  const selectedFy = selectedFyIndex >= 0 ? financialYearOptions[selectedFyIndex] : undefined;
+  const isFormReady = Boolean(selectedFy && exportType);
 
   const handleDownload = useCallback(async () => {
     if (!selectedFy) return;
-
     setErrorMessage("");
     setIsDownloading(true);
-
     try {
-      if (exportType !== "orders_csv") {
-        setErrorMessage("Unsupported export type.");
-        return;
-      }
-
-      const csv = await Meteor.callAsync(
-        "finance.export.ordersCSVForFY",
-        selectedFy.startYear,
-        selectedFy.endYear
-      );
-
-      triggerDownload({
-        content: csv,
-        filename: `orders-${selectedFy.startYear}-${selectedFy.endYear}.csv`,
-        mimeType: "text/csv;charset=utf-8",
+      await fetchAndDownloadExport({
+        exportType,
+        startYear: selectedFy.startYear,
+        endYear: selectedFy.endYear,
+        baseFilename: `orders-${selectedFy.startYear}-${selectedFy.endYear}`,
       });
     } catch (error) {
       console.error("[TaxPanel] download failed:", error);
@@ -75,8 +99,6 @@ export default function TaxPanel() {
       setIsDownloading(false);
     }
   }, [exportType, selectedFy]);
-
-  const isFormReady = Boolean(selectedFy && exportType);
 
   return (
     <div style={{ display: "grid", gap: 16, maxWidth: 520 }}>
@@ -87,6 +109,8 @@ export default function TaxPanel() {
         <select
           value={selectedFyIndex}
           onChange={(e) => setSelectedFyIndex(Number(e.target.value))}
+          disabled={!financialYearOptions.length}
+          aria-label="Select financial year"
         >
           {financialYearOptions.map((option, index) => (
             <option key={option.label} value={index}>
@@ -102,12 +126,10 @@ export default function TaxPanel() {
         <select
           value={exportType}
           onChange={(e) => setExportType(e.target.value)}
+          aria-label="Select export type"
         >
-          {EXPORT_TYPES.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+          <option value="orders_csv">Orders (CSV)</option>
+          <option value="orders_pdf">Orders (PDF)</option>
         </select>
       </label>
 
@@ -118,7 +140,7 @@ export default function TaxPanel() {
           disabled={!isFormReady || isDownloading}
           aria-disabled={!isFormReady || isDownloading}
         >
-          {isDownloading ? "Preparing…" : "Download CSV"}
+          {isDownloading ? "Preparing…" : "Download"}
         </button>
       </div>
 
