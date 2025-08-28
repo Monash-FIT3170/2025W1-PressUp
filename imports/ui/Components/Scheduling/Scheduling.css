@@ -1,0 +1,107 @@
+.scheduling-container {
+  padding: 15px;
+}
+
+.scheduling-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.scheduling-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.view-employees-btn {
+  background-color: #fcd581;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-employees-btn:hover {
+  background-color: #fde9bf;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.scheduling-main-content {
+  background-color: #fff;
+  padding: 20px;
+  align-self: center;
+  /* max-width: 600px; */
+  width: 100%;
+}
+
+/* Employee Modal Styles */
+.employee-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.employee-modal {
+  background-color: #fff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+}
+
+.employee-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #f9f9f9;
+}
+
+.employee-modal-header h2 {
+  margin: 0;
+  color: #000000;
+  font-weight: 500;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #111;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  background-color: #fde9bf;
+  color: #000000;
+}
+
+.employee-modal-content {
+  padding: 20px 30px;
+  max-height: calc(90vh - 100px);
+  overflow-y: auto;
+}
