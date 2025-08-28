@@ -33,6 +33,10 @@ import { EmployeesCollection } from '../imports/api/payroll/employee/employees-c
 import "../imports/api/payroll/employee/employees-methods.js";
 import "../imports/api/payroll/employee/employees-publications.js";
 
+import { RosterItemsCollection } from '../imports/api/payroll/roster/rosteritem-collection.js';
+import "../imports/api/payroll/roster/rosteritem-methods.js";
+import "../imports/api/payroll/roster/rosteritem-publications.js";
+
 import { CustomersCollection } from '../imports/api/customers/customers-collection.js';
 import "../imports/api/customers/customers-publications.js";
 import "../imports/api/customers/customers-methods.js";
