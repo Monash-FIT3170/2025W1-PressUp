@@ -125,7 +125,6 @@ export default function TaxPanel({ startFromYear = 2025 }) {
             </option>
           ))}
         </select>
-        <span style={{ color: "#888", fontSize: 12 }}>AU FY runs 1 Jul → 30 Jun</span>
       </label>
 
       <label style={{ display: "grid", gap: 6 }}>
