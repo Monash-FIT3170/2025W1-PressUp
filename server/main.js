@@ -57,6 +57,8 @@ import "../imports/api/loyalty/loyalty-setting-methods.js";
 
 import '/imports/api/analytics/methods.server.js';
 
+import "/imports/api/finance/finance-methods.js";
+
 
 Meteor.startup(async () => {
   // Testing menu and categories.
