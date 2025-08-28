@@ -87,10 +87,11 @@ function FilterBar({ range, onChange }) {
         >
           Clear
         </button>
+        <label style={{ fontSize: 12, color: '#374151' }}>Metric</label>
         <select
           value={range.metric || 'sales'}
           onChange={(e) => onChange({ ...range, metric: e.target.value })}
-          
+          style={{ padding: 6, borderRadius: 6, border: '1px solid #ddd', background: '#fff', fontSize: 14 }}
         >
           <option value="sales">Sales</option>
           <option value="cost">Cost</option>
