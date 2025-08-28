@@ -536,7 +536,52 @@ Meteor.methods({
     ];
 
     return raw.aggregate(pipeline).toArray();
-  }
+  },
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Peak hours analysis (x = hour of day, y = # of orders)
+  // Respects { start, end, onlyClosed }
+  // ─────────────────────────────────────────────────────────────────────────────
+  async 'analytics.peakHours'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+    const match = {};
+    if (onlyClosed) match.status = 'closed';
+    if (start || end) {
+      match.createdAt = {};
+      if (start) match.createdAt.$gte = new Date(start);
+      if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    const TZ = 'Australia/Melbourne';
+
+    const isDaily = start && end; // if we pass a range, always aggregate daily
+
+    const pipeline = [
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+      {
+        $project: {
+          label: isDaily
+            ? { $dateToString: { date: "$createdAt", format: "%Y-%m-%d", timezone: TZ } }
+            : { $hour: { date: "$createdAt", timezone: TZ } }
+        }
+      },
+      { $group: { _id: "$label", count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ];
+
+    const result = await raw.aggregate(pipeline).toArray();
+
+    if (isDaily) {
+      return result.map(r => ({
+        date: r._id, // YYYY-MM-DD
+        count: r.count
+      }));
+    } else {
+      return result.map(r => ({
+        hour: r._id, // 0–23
+        count: r.count
+      }));
+    }
+  }
 
 });
