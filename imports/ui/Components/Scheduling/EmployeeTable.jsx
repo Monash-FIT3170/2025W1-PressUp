@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { EmployeesCollection } from '../../../api/payroll/employee/employees-collection.js';
-import { EmployeeForm } from './EmployeeForm.js';
+import { EmployeeForm } from './EmployeeForm.jsx';
 import './EmployeeTable.css';
 
 export const EmployeeTable = () => {
@@ -25,15 +25,17 @@ export const EmployeeTable = () => {
 
   return (
     <div className="employee-table-container">
-      <button
-        className="add-employee-btn"
-        onClick={() => {
-          setEditingEmployee(null);
-          setShowForm(true);
-        }}
-      >
-        Add New Employee
-      </button>
+      <div className="employee-table-header">
+        <button
+          className="add-employee-btn"
+          onClick={() => {
+            setEditingEmployee(null);
+            setShowForm(true);
+          }}
+        >
+          Add New Employee
+        </button>
+      </div>
       {showForm && (
         <EmployeeForm
           employee={editingEmployee}
