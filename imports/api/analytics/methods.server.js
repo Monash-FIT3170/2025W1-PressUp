@@ -91,7 +91,7 @@ Meteor.methods({
   // This keeps it robust to your schema.
   // Params: { onlyClosed?, start?, end? }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = buildMatch({ onlyClosed, start, end });
 
@@ -110,6 +110,18 @@ Meteor.methods({
               { $ifNull: ['$items.price', 0] },
               { $ifNull: ['$items.quantity', 1] }
             ]
+          },
+          lineGross: {
+            $multiply: [
+              { $ifNull: ['$items.price', 0] },
+              { $ifNull: ['$items.quantity', 1] }
+            ]
+          },
+          lineCost: {
+            $multiply: [
+              { $ifNull: ['$items.cost', 0] },
+              { $ifNull: ['$items.quantity', 1] }
+            ]
           }
         }
       },
@@ -119,7 +131,8 @@ Meteor.methods({
         $group: {
           _id: '$_id',
           orderTotalField: { $max: '$totalField' }, // if 'total' exists, we’ll take it
-          lineRevenue: { $sum: '$lineTotal' }
+          gross: { $sum: '$lineGross' },
+          cost:    { $sum: '$lineCost' }
         }
       },
 
@@ -132,7 +145,10 @@ Meteor.methods({
               '$orderTotalField',
               '$lineRevenue'
             ]
-          }
+          },
+          gross: 1,
+          cost:  1,
+          profit: { $subtract: ['$gross', '$cost'] }
         }
       },
 
@@ -141,7 +157,10 @@ Meteor.methods({
         $group: {
           _id: null,
           orders: { $sum: 1 },
-          revenue: { $sum: { $ifNull: ['$orderRevenue', 0] } }
+          revenue: { $sum: { $ifNull: ['$orderRevenue', 0] } },
+          totalGross:   { $sum: { $ifNull: ['$gross', 0] } },
+          totalCost:    { $sum: { $ifNull: ['$cost', 0] } },
+          totalProfit:  { $sum: { $ifNull: ['$profit', 0] } }
         }
       },
       {
@@ -151,7 +170,10 @@ Meteor.methods({
           revenue: 1,
           avgOrderValue: {
             $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$revenue', '$orders'] }]
-          }
+          },
+          sales: { $round: ['$totalGross', 2] },
+          cost: { $round: ['$totalCost', 2] },
+          profit: { $round: ['$totalProfit', 2] }
         }
       }
     ]).toArray();
@@ -168,7 +190,19 @@ Meteor.methods({
 
     const activeItems = activeItemsAgg[0]?.activeItems ?? 0;
 
-    return { ...kpis, activeItems };
+    let value;
+    switch (metric) {
+      case 'cost': value = kpis.cost; break;
+      case 'profit': value = kpis.profit; break;
+      default: value = kpis.sales;
+    }
+
+    return { 
+      orders: kpis.orders, 
+      value,
+      metric,
+      activeItems
+    };
   },
 
   // ─────────────────────────────────────────────────────────────────────────────

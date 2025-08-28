@@ -41,6 +41,16 @@ function FilterBar({ range, onChange }) {
     });
   };
 
+  const [metric, setMetric] = useState('cost'); // 'sales' | 'cost' | 'profit'
+
+  // Build the filter object we pass to all calls/components
+  const filter = useMemo(() => ({
+    onlyClosed: false,
+    start: range.start ? new Date(range.start) : null,
+    end: range.end ? new Date(range.end) : null,
+    metric, // <---- NEW
+  }), [range, metric]);
+
   return (
     <div style={{
       display:'flex', gap:8, alignItems:'center',
@@ -87,7 +97,7 @@ function FilterBar({ range, onChange }) {
 
 // --- KPIs loader --------------------------------------------------------------
 function useKpis(filter) {
-  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0 });
+  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: 'sales' });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -95,7 +105,7 @@ function useKpis(filter) {
     setLoading(true);
     Meteor.call('analytics.kpis', filter, (err, res) => {
       if (!cancelled) {
-        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0 } : (res || {}));
+        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: filter.metric } : (res || {}));
         setLoading(false);
       }
     });
@@ -137,9 +147,11 @@ export default function Dashboard() {
         {/* Top KPI row (now dynamic) */}
         <div style={{ gridColumn: 'span 3' }}>
           <StatsCard
-            title="Orders"
-            value={kpis.orders?.toLocaleString?.() ?? '0'}
-            subvalue={range.start || range.end ? 'Filtered' : 'All-time'}
+            title={kpis.metric === 'cost' ? 'Cost'
+              : kpis.metric === 'profit' ? 'Profit'
+                : 'Revenue'}
+            value={`$${(kpis.value ?? 0).toLocaleString()}`}
+            subvalue={range.start || range.end ? '' : 'YTD'}
           />
         </div>
         <div style={{ gridColumn: 'span 3' }}>
