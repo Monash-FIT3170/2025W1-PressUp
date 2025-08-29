@@ -1,18 +1,17 @@
 .training-card {
+  position: relative;
   background: white;
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   padding: 1rem;
-  width: 100%; /* full width */
-  max-width: 1200px;
+  width: 90%; 
+  max-width: 1500px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  /* Flex layout to push actions to bottom */
   display: flex;
   align-items: center;
   margin: 1rem auto;
   justify-content: space-between;
-
 }
 
 .tc-head {
