@@ -1,19 +1,21 @@
-import {Meteor} from 'meteor/meteor';
+import { Meteor } from "meteor/meteor";
 import { OrdersCollection } from "./orders-collection";
 import { check, Match } from 'meteor/check';
 
 Meteor.methods({
+  async "orders.insert"(order) {
+    return await OrdersCollection.insertAsync(order);
+  },
 
-    async 'orders.insert'(order) {
-        return await OrdersCollection.insertAsync(order);
-    },
+  async "orders.updatePayment"(id, paymentAmount, paymentMethods) {
+    return await OrdersCollection.updateAsync(
+      { _id: id },
+      { $set: { recievedPayment: paymentAmount, paymentMethods } }
+    );
+  },
 
-    async 'orders.updatePayment'(id,payment) {
-        return await OrdersCollection.updateAsync({_id: id},{$set: {"recievedPayment":payment}})
-    },
-
-    async 'orders.remove'(id) {
-        return await OrdersCollection.removeAsync({_id: id});
+  async "orders.remove"(id) {
+    return await OrdersCollection.removeAsync({ _id: id });
     },
     
     async 'orders.markClosed'(id) {
@@ -54,5 +56,5 @@ Meteor.methods({
             sort: { createdAt: 1 },
             }
         ).fetch();
-    }
+  },
 });
