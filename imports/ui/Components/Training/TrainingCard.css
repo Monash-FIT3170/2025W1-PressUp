@@ -37,7 +37,6 @@
 }
 
 .tc-info {
-  /* grow to take remaining vertical space */
   flex-grow: 1;
 }
 
