@@ -1,39 +1,35 @@
 .module-page {
-  padding: 20px;
-  line-height: 1.6;
-  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
 }
 
-.module-page h1 {
-  font-size: 2rem;
-  margin-bottom: 16px;
+.module-header h1,
+.module-content h2,
+.module-content p {
+  text-align: left; /* keep text left-aligned */
 }
 
-.module-page p {
-  margin-bottom: 12px;
-  color: #333;
-}
-
-.module-page h2 {
-  margin-top: 24px;
-  margin-bottom: 12px;
-  font-size: 1.5rem;
+.button-container {
+  margin-top: auto; /* pushes button to bottom */
+  display: flex;
+  justify-content: center; /* center horizontally */
 }
 
 .mark-complete-btn {
-  display: inline-block;
   padding: 12px 24px;
-  background-color: #28a745; 
+  background-color: #28a745; /* green */
   color: white;
   border: none;
   border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin-top: 20px;
 }
 
 .mark-complete-btn:hover {
-  background-color: #218838; /* darker green on hover */
+  background-color: #218838;
 }

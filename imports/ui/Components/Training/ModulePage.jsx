@@ -35,7 +35,9 @@ const ModulePage = () => {
         <p>Welcome to the <em>{module.title}</em> training module. Here you’ll learn all the key concepts in detail.</p>
       </section>
 
-      <button className="mark-complete-btn">Mark as Complete</button>
+      <div className="button-container">
+    <button className="mark-complete-btn">Mark as Complete</button>
+  </div> 
     </div>
   );
 };
