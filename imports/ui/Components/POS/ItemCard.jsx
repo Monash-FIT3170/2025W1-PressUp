@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ItemCard.css";
 import { Meteor } from "meteor/meteor";
+import { InventoryCollection } from "../../../api/inventory/inventory-collection";
 
 const ItemCard = ({
   name,
@@ -18,6 +19,13 @@ const ItemCard = ({
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   if (seasonal && !inSeason) {
     return <></>
+  }
+
+  const getIngredientName = (ingredient) => {
+    if (typeof ingredient === "string") return ingredient; // legacy data as old ingredients were strings - connor was heere 
+    if (ingredient && ingredient.id) {
+      return InventoryCollection.findOne(ingredient.id)?.name || "Unknown Ingredient";
+    }
   }
 
   const toggleExtraInfo = () => setShowExtraInfo(v => !v);
@@ -73,7 +81,7 @@ const ItemCard = ({
             {isGlutenFree && <span className="badge">GF</span>}
           </div>
           <p className="ingredients">
-            {ingredients.join(", ")}
+            {ingredients.map(ingredient => getIngredientName(ingredient)).join(", ")}
           </p>
         </div>
       )}
