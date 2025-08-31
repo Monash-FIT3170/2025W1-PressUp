@@ -204,3 +204,47 @@
 .split-payment-btn.selected {
   background-color: #e5e7eb;
 }
+
+/* dark backdrop */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5); /* dim background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* on top of everything */
+}
+
+/* modal box */
+.modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%; /* responsive */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.item-row {
+  display: flex;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  margin-bottom: 6px;
+  transition: background-color 0.2s;
+}
+
+.item-row.selected {
+  background-color: #fde68a; /* e.g., light yellow to show selection */
+  font-weight: 500;
+}
+
+.item-row:hover {
+  background-color: #fcd581;
+}
