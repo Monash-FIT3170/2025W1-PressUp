@@ -5,8 +5,9 @@ import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { OrdersCollection } from "../../../api/orders/orders-collection";
 import { ChangeDetails } from "./ChangeDetails.jsx";
 import { Banknote, CreditCard } from "lucide-react";
+import { SplitPaymentButton, SplitPaymentModal } from "./SplitPayment.jsx";
 
-// Utility function for order calculations
+// Utility function to calculate totals
 const calculateOrderTotals = (order) => {
   const gross = order.items.reduce(
     (sum, item) => sum + item.quantity * item.price,
@@ -17,60 +18,68 @@ const calculateOrderTotals = (order) => {
   return { gross, GST, total };
 };
 
-// ------------------- MAIN COMPONENT -------------------
 export const OrderSummary = ({ orderID, setCheckout }) => {
   const [paymentMethods, setPaymentMethods] = useState("cash");
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showChangeInfo, setShowChangeInfo] = useState(false);
 
-  // states for split payments
   const [remainingItems, setRemainingItems] = useState([]);
   const [showSplitModal, setShowSplitModal] = useState(false);
 
   const isLoading = useSubscribe("orders.id", orderID);
-  var order = useFind(() => OrdersCollection.find({}), [orderID]);
+  let order = useFind(() => OrdersCollection.find({}), [orderID]);
 
-  // when order loads, flatten items so each quantity is selectable individually
+  // Flatten items for split payment whenever orderID changes
   useEffect(() => {
-    if (order && order.length > 0) {
-      const flatItems = order[0].items.flatMap((item) =>
-        Array.from({ length: item.quantity }, () => ({
-          menu_item: item.menu_item,
-          price: item.price,
-          id: crypto?.randomUUID ? crypto.randomUUID() : Date.now() + Math.random(),
-        }))
-      );
-      setRemainingItems(flatItems);
+    if (!orderID) return;
+  
+    // Fetch the latest order from the collection
+    const foundOrders = OrdersCollection.find({ _id: orderID }).fetch();
+    if (foundOrders.length === 0) {
+      setRemainingItems([]);
+      setShowSplitModal(false);
+      setShowChangeInfo(false);
+      return;
     }
-  }, [order]);
-
-  // Update payment amount when payment method or order changes
+  
+    const currentOrder = foundOrders[0];
+  
+    // Flatten items for split payment
+    const flatItems = currentOrder.items.flatMap((item) =>
+      Array.from({ length: item.quantity }, () => ({
+        menu_item: item.menu_item,
+        price: item.price,
+        id: crypto?.randomUUID
+          ? crypto.randomUUID()
+          : Date.now() + Math.random(),
+      }))
+    );
+  
+    // Reset split payment state for new order
+    setRemainingItems(flatItems);
+    setShowSplitModal(false);
+    setShowChangeInfo(false);
+  
+  }, [orderID]);
+  
+  // Auto-update payment amount if method is card
   useEffect(() => {
     if (order && order.length > 0) {
       const { total } = calculateOrderTotals(order[0]);
-      if (paymentMethods === "cards") {
-        setPaymentAmount(total);
-      } else if (paymentMethods === "cash") {
-        setPaymentAmount(0);
-      }
+      setPaymentAmount(paymentMethods === "cards" ? total : 0);
     }
   }, [paymentMethods, order]);
 
-  const proceedButtonAction = () => {
-    setShowChangeInfo(true);
-  };
+  const proceedButtonAction = () => setShowChangeInfo(true);
 
-  if (isLoading()) {
-    return <LoadingIndicator />;
-  }
-
-  if (!order || order.length === 0) {
+  if (isLoading()) return <LoadingIndicator />;
+  if (!order || order.length === 0)
     return <div className="order-summary">invalid order number.</div>;
-  }
 
   order = order[0];
   const { gross, GST, total } = calculateOrderTotals(order);
 
+  // Show receipt / change details page
   if (showChangeInfo) {
     return (
       <div className="order-summary-section">
@@ -91,10 +100,12 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
     );
   }
 
+  // Main order summary page
   return (
     <div className="order-summary-section">
       <OrderHeader order={order} />
       <OrderItems items={order.items} />
+
       <div className="bottom-section">
         <div className="summary-title">Summary</div>
         <div className="summary-details">
@@ -111,13 +122,14 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
           paymentMethods={paymentMethods}
         />
 
-        <SplitPayment setShowSplitModal={setShowSplitModal} />
+        <SplitPaymentButton setShowSplitModal={setShowSplitModal} />
 
         {showSplitModal && (
           <SplitPaymentModal
             remainingItems={remainingItems}
             setRemainingItems={setRemainingItems}
             setShowSplitModal={setShowSplitModal}
+            onComplete={() => setShowChangeInfo(true)} // always go to receipt
           />
         )}
 
@@ -130,6 +142,7 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
 };
 
 // ------------------- SUB COMPONENTS -------------------
+
 const OrderHeader = ({ order }) => (
   <div className="top-section">
     <div className="order-number">Your Order</div>
@@ -179,110 +192,3 @@ const PaymentMethods = ({ setPaymentMethods, paymentMethods }) => (
     </button>
   </div>
 );
-
-const SplitPayment = ({ setShowSplitModal }) => (
-  <button
-    onClick={() => setShowSplitModal(true)}
-    className="split-payment-btn"
-  >
-    Split Payment
-  </button>
-);
-
-const SplitPaymentModal = ({
-  remainingItems,
-  setRemainingItems,
-  setShowSplitModal,
-}) => {
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [method, setMethod] = useState("cash");
-
-  const toggleItem = (item) => {
-    if (selectedItems.includes(item.id)) {
-      setSelectedItems(selectedItems.filter((id) => id !== item.id));
-    } else {
-      setSelectedItems([...selectedItems, item.id]);
-    }
-  };
-
-  const selectedTotal = remainingItems
-    .filter((item) => selectedItems.includes(item.id))
-    .reduce((sum, item) => sum + item.price, 0);
-
-  const handleConfirm = () => {
-    if (selectedItems.length === 0) return;
-
-    const newRemaining = remainingItems.filter(
-      (item) => !selectedItems.includes(item.id)
-    );
-    setRemainingItems(newRemaining);
-
-    if (newRemaining.length === 0) {
-      setShowSplitModal(false);
-    }
-
-    setSelectedItems([]);
-  };
-
-  return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <h3>Select items for this person</h3>
-        <div className="items-list">
-          {remainingItems.map((item) => (
-            <div
-              key={item.id}
-              className={`item-row ${
-                selectedItems.includes(item.id) ? "selected" : ""
-              }`}
-              onClick={() => toggleItem(item)}
-            >
-              <input
-                type="checkbox"
-                readOnly
-                checked={selectedItems.includes(item.id)}
-              />
-              <span style={{ marginLeft: "8px" }}>
-                1x {item.menu_item} - ${item.price.toFixed(2)}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div style={{ marginTop: "10px", fontWeight: "500" }}>
-          Selected total: ${selectedTotal.toFixed(2)}
-        </div>
-
-        <div className="payment-methods" style={{ marginTop: "10px" }}>
-          <button
-            className={method === "cash" ? "selected" : ""}
-            onClick={() => setMethod("cash")}
-          >
-            <Banknote size={16} /> Cash
-          </button>
-          <button
-            className={method === "cards" ? "selected" : ""}
-            onClick={() => setMethod("cards")}
-          >
-            <CreditCard size={16} /> Card
-          </button>
-        </div>
-
-        <button
-          className="button"
-          onClick={handleConfirm}
-          style={{ marginTop: "12px" }}
-        >
-          Confirm Payment
-        </button>
-        <button
-          className="button"
-          onClick={() => setShowSplitModal(false)}
-          style={{ marginTop: "6px", backgroundColor: "#eee" }}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
-};
