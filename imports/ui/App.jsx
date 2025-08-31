@@ -366,18 +366,15 @@ export const App = () => {
                   isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
                   isAdmin={user?.isAdmin}
+                  label="Training" // <-- pass a static label if your Sidebar supports it
                 />
                 <div className="main-content">
-                  <PageHeader
-                    isSidebarOpen={isSidebarOpen}
-                    setIsSidebarOpen={setIsSidebarOpen}
-                  />
                   <ModulePage />
                 </div>
               </div>
             }
           />
-
+          
           {/* Other protected routes */}
           <Route
             path="/inventory"

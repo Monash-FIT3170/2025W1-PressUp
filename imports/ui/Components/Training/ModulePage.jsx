@@ -23,7 +23,7 @@ const ModulePage = () => {
   }, [module]);
 
   if (!module) return <div style={{ padding: "20px" }}>Module not found.</div>;
-
+  
   return (
     <div className="module-page">
       <header className="module-header">
@@ -31,13 +31,12 @@ const ModulePage = () => {
       </header>
 
       <section className="module-content">
-        <h2>Training Content</h2>
         <p>Welcome to the <em>{module.title}</em> training module. Here you’ll learn all the key concepts in detail.</p>
       </section>
 
       <div className="button-container">
-    <button className="mark-complete-btn">Mark as Complete</button>
-  </div> 
+        <button className="mark-complete-btn">Mark as Complete</button>
+      </div>
     </div>
   );
 };
