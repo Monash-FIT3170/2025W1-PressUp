@@ -337,9 +337,11 @@ export const App = () => {
           />
 
           <Route
-            path="/training/module/:id"
+            path="/training"
             element={
-              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
                 <Sidebar
                   isOpen={isSidebarOpen}
                   setIsOpen={setIsSidebarOpen}
@@ -350,7 +352,7 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
-                  <ModulePage />
+                  <TrainingPage isSidebarOpen={isSidebarOpen} />
                 </div>
               </div>
             }
