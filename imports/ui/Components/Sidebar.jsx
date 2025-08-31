@@ -250,6 +250,19 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                     />
                     Inbox {existsActiveEnquiry().exists && (`(`+existsActiveEnquiry().count+`)`)}
                   </NavLink>
+                  <NavLink
+                    to="/finance"
+                    className={({ isActive }) =>
+                      `sidebar-btn ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <img
+                      src="/images/FinanceIcon.svg"
+                      alt="Finance"
+                      style={{ width: "30px", height: "20px", verticalAlign: "0px", marginRight: "8px" }}
+                    />
+                    Finance
+                  </NavLink>
                 </>
               )}
 

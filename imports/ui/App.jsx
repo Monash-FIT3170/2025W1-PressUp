@@ -37,6 +37,7 @@ import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryR
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
 import Dashboard from './Components/Analytics/Dashboard.jsx';
+import { Finance } from "./Components/Finance/Finance.jsx";
 import ModulePage from "./Components/Training/ModulePage.jsx";
 
 
@@ -331,6 +332,29 @@ export const App = () => {
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <KitchenDisplay isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Finance route */}
+          <Route
+            path="/finance"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Finance />
                 </div>
               </div>
             }

@@ -15,7 +15,8 @@ Meteor.startup(async () => {
         { category: 'drinks', sortOrder: 1 },
         { category: 'breakfast', sortOrder: 2 },
         { category: 'lunch', sortOrder: 3 },
-        { category: 'pastries', sortOrder: 4 }
+        { category: 'pastries', sortOrder: 4 },
+        { category: 'specials', sortOrder: 5 }
     ];
 
     const rawCategories = MenuCategories.rawCollection();

@@ -33,6 +33,7 @@ Meteor.methods({
 				}
 				]),
 			schedule: Match.Optional(Object),
+			seasons: Match.Maybe([String]),
 		});
 
 		// Ensure the menu category exists, otherwise throw an error.
@@ -91,6 +92,8 @@ Meteor.methods({
 				}
 				]),
 			schedule: Match.Optional(Object),
+			
+			seasons: Match.Maybe([String]),
 		});
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
@@ -100,6 +103,7 @@ Meteor.methods({
 				'invalid-category', 'The specified category does not exist.'
 			);
 		} */
+		console.log(menuItem)
 		
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(
