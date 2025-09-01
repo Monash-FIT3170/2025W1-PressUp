@@ -25,14 +25,13 @@ function formatAEST(date) {
 const KitchenIngredientCard = ({ingredient}) => {
   const isLoading = useSubscribe("inventory.id",ingredient.id);
   var completeIngredient = useFind(() => InventoryCollection.find({_id:ingredient.id}),[ingredient.id]);
-  completeIngredient = completeIngredient[0];
   if (isLoading()) {
     return <LoadingIndicator />;
   }
   return (
     <>
-      <span>{completeIngredient.name}</span>
-      <span>&times;{ingredient.amount}</span>
+      <span>{completeIngredient[0].name}</span>
+      <span>{ingredient.amount} {completeIngredient[0].units}</span>
     </>
   )
 }

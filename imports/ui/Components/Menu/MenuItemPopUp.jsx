@@ -279,7 +279,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                       setIngredients(newIngredients);
                     }}
                   />
-                  {ing.name}
+                  {ing.name} ({ing.units})
                 </label>
 
                 {/* Show input for amount if checked */}
