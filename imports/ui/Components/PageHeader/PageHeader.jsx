@@ -1,3 +1,4 @@
+// imports/ui/Components/PageHeader/PageHeader.jsx
 import React from "react";
 import { useLocation } from "react-router-dom";
 import "./PageHeader.css";
@@ -5,9 +6,17 @@ import { capitalizeFirstLetter } from "../../../utils/utils.js";
 
 export const PageHeader = ({ isSidebarOpen, setIsSidebarOpen, searchBar, addButton }) => {
   const location = useLocation();
-  const title = capitalizeFirstLetter(
-    location.pathname.replace("/", "") || "Home"
-  );
+
+  let title;
+  if (location.pathname.startsWith("/training")) {
+    // Always show "Training" for training main page and module detail pages
+    title = "Training";
+  } else {
+    // Default behaviour: derive from pathname
+    title = capitalizeFirstLetter(
+      location.pathname.replace("/", "") || "Home"
+    );
+  }
 
   return (
     <div className="page-header">
