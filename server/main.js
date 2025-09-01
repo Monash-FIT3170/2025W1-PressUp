@@ -59,6 +59,13 @@ import '/imports/api/analytics/methods.server.js';
 
 import "/imports/api/finance/finance-methods.js";
 
+import { TrainingModules } from '../imports/api/trainingModules/trainingModuleCollection';
+import '../imports/api/trainingModules/TrainingModulesMethods';
+import '../imports/api/trainingModules/trainingModulePublications';
+
+import {TrainingAssignments} from '../imports/api/TrainingAssignments/TrainingAssignmentsCollection';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsMethods';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsPublications';
 
 Meteor.startup(async () => {
   // Testing menu and categories.
@@ -68,6 +75,7 @@ Meteor.startup(async () => {
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
   const nPromotions = await PromotionsCollection.find().countAsync();
+  const nTrainingModules = await TrainingModules.find().countAsync();
   // Ignore any changes that have been applied.
   const nScheduledChanges = await ScheduledChanges.find({
     applied: { $ne: true } 
@@ -201,6 +209,19 @@ Meteor.startup(async () => {
     ]
     defaultSuppliers.forEach(
       async (item) => await SuppliersCollection.insertAsync(item)
+    );
+  }
+
+  if (nTrainingModules === 0) {
+    const seed = [
+      { title: 'Food Safety Basics', description: 'Learn essential food safety practices.', duration: 30, link: 'https://example.com/food-safety' },
+      { title: 'Customer Service', description: 'Best practices for customer interactions.', duration: 45, link: 'https://example.com/customer-service' },
+      { title: 'POS System Training', description: 'How to use the Point of Sale system.', duration: 20, link: 'https://example.com/pos' },
+      { title: 'Kitchen Operations', description: 'Overview of kitchen workflows.', duration: 40, link: 'https://example.com/kitchen-ops' },
+      { title: 'Kitchen Cleaning', description: 'Best practices for kitchen cleaning techniques.', duration: 40, link: 'https://example.com/cleaning' },
+    ];
+    seed.forEach(
+      async (doc) => await TrainingModules.insertAsync({ ...doc, createdAt: new Date() })
     );
   }
 

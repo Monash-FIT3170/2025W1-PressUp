@@ -26,7 +26,9 @@ import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
 import { KitchenDisplay } from "./Components/Kitchen/KitchenDisplay.jsx";
+import TrainingPage from "./Components/Training/TrainingPage.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
+import AdminAssignModules from "./Components/Training/adminAssignModules.jsx"; 
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
 import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
@@ -37,6 +39,8 @@ import { FeedbackResponsePage } from "./Components/CustomerCommunication/Feedbac
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
 import Dashboard from './Components/Analytics/Dashboard.jsx';
 import { Finance } from "./Components/Finance/Finance.jsx";
+import ModulePage from "./Components/Training/ModulePage.jsx";
+
 
 // Styles
 import "./AppStyle.css";
@@ -357,6 +361,51 @@ export const App = () => {
             }
           />
 
+          <Route
+            path="/training"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isAdmin={user?.isAdmin} />
+                <div className="main-content">
+                  <PageHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+                  <TrainingPage isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Module detail page (fix for "blank page" when starting training) */}
+          <Route
+            path="/training/module/:id"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isAdmin={user?.isAdmin} label="Training" />
+                <div className="main-content">
+                  {/* Header keeps UX consistent; ModulePage already handles Loading / Not found */}
+                  <PageHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+                  <ModulePage />
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/training/module/:id"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                  label="Training"
+                />
+                <div className="main-content">
+                  <ModulePage />
+                </div>
+              </div>
+            }
+          />
+          
           {/* Other protected routes */}
           <Route
             path="/inventory"

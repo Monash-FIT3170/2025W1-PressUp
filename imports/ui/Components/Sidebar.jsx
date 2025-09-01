@@ -100,8 +100,8 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 end
               >
                 <img
-                  src="/images/MenuIcon.png"
-                  alt="Home"
+                  src="/images/chef.png"
+                  alt="Kitchen"
                   style={{
                     width: "30px",
                     height: "30px",
@@ -110,6 +110,29 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                   }}
                 />
                 Kitchen
+              
+              
+              </NavLink>
+
+
+              <NavLink
+                to="/training"
+                className={({ isActive }) =>
+                  `sidebar-btn ${isActive ? "active" : ""}`
+                }
+                end
+              >
+                <img
+                  src="/images/book.png"
+                  alt="Training"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    verticalAlign: "-4px",
+                    marginRight: "8px",
+                  }}
+                />
+                Training
               </NavLink>
               
               {/* Only show these links if user is admin */}

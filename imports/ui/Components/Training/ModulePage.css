@@ -1,0 +1,35 @@
+.module-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.module-header h1,
+.module-content h2,
+.module-content p {
+  text-align: left; /* keep text left-aligned */
+}
+
+.button-container {
+  margin-top: auto; /* pushes button to bottom */
+  display: flex;
+  justify-content: center; /* center horizontally */
+}
+
+.mark-complete-btn {
+  padding: 12px 24px;
+  background-color: #28a745; /* green */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.mark-complete-btn:hover {
+  background-color: #218838;
+}
