@@ -13,7 +13,6 @@
   padding: 12px 16px;
   border-bottom: 1px solid #e6e6e6;
 }
-
 .training-header h1 {
   margin: 0;
   font-size: 20px;
@@ -21,50 +20,56 @@
   color: #333;
 }
 
-/* Viewport wrapper (contains cards) */
-.training-cards-flex-wrapper {
+/* Admin panel spacing helper (optional) */
+.training-admin-wrap {
+  padding: 0 16px 12px;
+}
+.training-admin-wrap hr { margin-top: 12px; }
+
+/* === 2-COLUMN LAYOUT === */
+.training-columns {
+  /* Fill remaining height below header/admin and become the scroll “frame” for columns */
   flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* left: not completed, right: completed */
+  gap: 80px;
+  padding: 0 16px 16px;
+  min-height: 0;   /* allow children to shrink and scroll */
+}
+@media (max-width: 1024px) {
+  .training-columns { grid-template-columns: 1fr; } /* stack on smaller screens */
+}
+
+.training-col {
+  min-width: 0;          /* fix overflow in grid children */
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* allow vertical scrolling if needed */
-  overflow-x: hidden; /* prevent horizontal scrolling */
-  width: 100%;
-  padding: 16px;
+  background: #fff;
 }
 
-/* Cards container */
-.training-cards-flex {
+.training-col h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  padding-top: 2px;
+}
+
+/* Each column has its own scroll */
+.training-col-list {
   display: flex;
-  flex-wrap: wrap;       /* wrap to next row */
-  align-content: flex-start;
-  justify-content: flex-start; /* adjust to center if desired */
-  gap: 16px;
+  flex-direction: column;
+  gap: 8px;                  /* compact vertical rhythm between cards */
+  overflow-y: auto;          /* long lists scroll within the column */
+  padding-right: 4px;        /* room for scrollbar */
+  min-height: 0;             /* allow proper scrolling */
 }
 
-
-/* Push button to bottom */
-.tc-info {
-  flex-grow: 1; /* take remaining vertical space */
-}
-
-.tc-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: auto; /* push button to bottom */
-}
-
-.tc-actions button.start {
-  padding: 0.5rem 1rem;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.tc-actions button.start:hover {
-  background-color: #218838;
+/* Optional: slimmer scrollbars (WebKit) */
+.training-col-list::-webkit-scrollbar { width: 8px; }
+.training-col-list::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 8px;
 }
 
 /* Empty / loading states */
@@ -74,3 +79,7 @@
   font-size: 16px;
   color: #666;
 }
+
+/* (Legacy flex grid kept in case other views rely on it) */
+.training-cards-flex-wrapper { display: none; }  /* hide old rail */
+.training-cards-flex { display: none; }          /* hide old grid */
