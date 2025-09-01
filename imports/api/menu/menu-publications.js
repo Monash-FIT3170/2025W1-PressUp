@@ -19,6 +19,15 @@ Meteor.publish('menuItems.byCategory', (menuCategory) => {
 	});
 });
 
+Meteor.publish('menuItems.isCalled', (name) => {
+	if (name.length > 0) {
+		return MenuItems.find({
+		  name: { $eq: name },
+		});
+	  }
+	  return MenuItems.find();
+});
+
 Meteor.publish("menuItems.nameIncludes", (subString) => {
   if (subString.length > 0) {
 	return MenuItems.find({
