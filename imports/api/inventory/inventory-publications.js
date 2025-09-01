@@ -5,6 +5,10 @@ Meteor.publish("inventory.all", () => {
   return InventoryCollection.find();
 });
 
+Meteor.publish("inventory.id", function(myId) {
+  return InventoryCollection.find({_id:myId});
+})
+
 Meteor.publish("inventory.nameIncludes", (subString) => {
   if (subString.length > 0) {
     return InventoryCollection.find({
