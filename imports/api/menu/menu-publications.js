@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
-import { MenuItems } from './menu-collection';
+import { Menu } from './menu-collection';
 
 Meteor.publish('menuItems.all', function () {
-	return MenuItems.find({}, {
+	return Menu.find({}, {
 		fields: {
 			name:         1,
 			price:        1,
@@ -14,25 +14,25 @@ Meteor.publish('menuItems.all', function () {
 
 Meteor.publish('menuItems.byCategory', (menuCategory) => {
 	check(menuCategory, String);
-	return MenuItems.find({ menuCategory: menuCategory }, {
+	return Menu.find({ menuCategory: menuCategory }, {
 		fields: { name: 1, price: 1, available: 1 }
 	});
 });
 
-Meteor.publish('menuItems.isCalled', (name) => {
-	if (name.length > 0) {
-		return MenuItems.find({
-		  name: { $eq: name },
+Meteor.publish('menuItems.isCalled', (itemName) => {
+	if (itemName.length > 0) {
+		return Menu.find({
+		  name: { $eq: itemName},
 		});
 	  }
-	  return MenuItems.find();
+	  return Menu.find();
 });
 
 Meteor.publish("menuItems.nameIncludes", (subString) => {
   if (subString.length > 0) {
-	return MenuItems.find({
+	return Menu.find({
 	  name: { $regex: subString, $options: "i" },
 	});
   }
-  return MenuItems.find();
+  return Menu.find();
 });
