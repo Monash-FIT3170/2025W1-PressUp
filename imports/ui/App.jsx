@@ -142,29 +142,7 @@ export const App = () => {
     setShowPopup(true);
   };
 
-  // useEffect(() => {
-  //   // Only fetch menu items if user is logged in
-  //   if (user) {
-  //     await Meteor.callAsync("menu.getAll", (error, result) => {
-  //       if (error) {
-  //         console.error("Error fetching menu items:", error);
-  //       } else {
-  //         setMenuItems(result);
-
-  //         const uniqueCategories = [
-  //           ...new Set(
-  //             result
-  //               .map((item) => item.menuCategory)
-  //               .filter((category) => category && category.trim() !== "")
-  //           ),
-  //         ];
-  //         setCategories(["All", ...uniqueCategories]);
-  //       }
-  //     });
-  //   }
-  // }, [user]);
-
-  useEffect(() => {
+useEffect(() => {
     if (!user) return;
 
     let cancelled = false;
