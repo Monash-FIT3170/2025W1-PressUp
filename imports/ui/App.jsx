@@ -142,27 +142,60 @@ export const App = () => {
     setShowPopup(true);
   };
 
-  useEffect(() => {
-    // Only fetch menu items if user is logged in
-    if (user) {
-      Meteor.call("menu.getAll", (error, result) => {
-        if (error) {
-          console.error("Error fetching menu items:", error);
-        } else {
-          setMenuItems(result);
+  // useEffect(() => {
+  //   // Only fetch menu items if user is logged in
+  //   if (user) {
+  //     await Meteor.callAsync("menu.getAll", (error, result) => {
+  //       if (error) {
+  //         console.error("Error fetching menu items:", error);
+  //       } else {
+  //         setMenuItems(result);
 
-          const uniqueCategories = [
-            ...new Set(
-              result
-                .map((item) => item.menuCategory)
-                .filter((category) => category && category.trim() !== "")
-            ),
-          ];
-          setCategories(["All", ...uniqueCategories]);
+  //         const uniqueCategories = [
+  //           ...new Set(
+  //             result
+  //               .map((item) => item.menuCategory)
+  //               .filter((category) => category && category.trim() !== "")
+  //           ),
+  //         ];
+  //         setCategories(["All", ...uniqueCategories]);
+  //       }
+  //     });
+  //   }
+  // }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const result = await Meteor.callAsync("menu.getAll"); // no callback
+
+        if (cancelled) return;
+
+        setMenuItems(result);
+
+        const uniqueCategories = Array.from(
+          new Set(
+            (result || [])
+              .map(item => item?.menuCategory?.trim())
+              .filter(Boolean)
+          )
+        );
+
+        setCategories(["All", ...uniqueCategories]);
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching menu items:", error);
         }
-      });
-    }
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [user]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
