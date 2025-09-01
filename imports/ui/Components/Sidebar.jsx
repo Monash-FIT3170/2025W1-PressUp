@@ -100,7 +100,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 end
               >
                 <img
-                  src="/images/MenuIcon.png"
+                  src="/images/chef.png"
                   alt="Kitchen"
                   style={{
                     width: "30px",
@@ -123,7 +123,7 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 end
               >
                 <img
-                  src="/images/MenuIcon.png"
+                  src="/images/book.png"
                   alt="Training"
                   style={{
                     width: "30px",
