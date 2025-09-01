@@ -37,14 +37,22 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   );
   useEffect(() => {
 
-    Meteor.call('menuCategories.getCategories', (error, result) => {
-    if (error) {
-      console.error('Failed to fetch categories:', error);
-    } else {
-      // console.log('Fetched categories:', result);
-      setMenuCategories(result); // assuming result is an array of category strings
+  //   Meteor.call('menuCategories.getCategories', (error, result) => {
+  //   if (error) {
+  //     console.error('Failed to fetch categories:', error);
+  //   } else {
+  //     // console.log('Fetched categories:', result);
+  //     setMenuCategories(result); // assuming result is an array of category strings
+  //   }
+  // });
+  (async () => {
+    try {
+      const result = await Meteor.callAsync("menuCategories.getCategories");
+      setMenuCategories(result);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
     }
-  });
+  })();
 
 
     if (mode === 'update' && existingItem) {
