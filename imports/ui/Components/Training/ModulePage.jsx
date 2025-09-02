@@ -62,7 +62,7 @@ const ModulePage = () => {
       }).format(new Date(myAssignment.completedAt))
     : null;
 
-  const btn = useMemo(
+  const completeBtn = useMemo(
     () =>
       !isCompleted ? (
         <button className="mark-complete-btn" onClick={onCompleteModule} disabled={busy || !safeId || !mineReady}>
@@ -71,6 +71,14 @@ const ModulePage = () => {
       ) : null,
     [busy, safeId, mineReady, isCompleted, onCompleteModule]
   );
+  const backBtn = useMemo(
+  () => (
+    <button className="mark-back-btn" onClick={() => navigate('/training')}>
+      Back
+    </button>
+  ),
+  [navigate]
+);
 
   // Build UI after all hooks
   let content;
@@ -113,8 +121,13 @@ const ModulePage = () => {
             </p>
           )}
         </section>
-
-        <div className="button-container">{btn}</div>
+        
+        <div className="button-container">
+          <div className="btn-row">
+            {backBtn}
+            {completeBtn}
+          </div>
+        </div>
       </>
     );
   }
