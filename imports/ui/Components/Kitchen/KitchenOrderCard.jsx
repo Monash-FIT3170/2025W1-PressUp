@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './KitchenOrderCard.css';
 import OrderActionButton from './OrderActionButton.jsx';
 
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
+import { useEffect } from 'react';
 import { Menu } from '../../../api/menu/menu-collection.js';
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
 import { InventoryCollection } from '../../../api/inventory/inventory-collection.js';
@@ -23,32 +24,50 @@ function formatAEST(date) {
 }
 
 const KitchenIngredientCard = ({ingredient}) => {
+  const [ingName,setIngName] = useState("");
+  const [ingUnit,setIngUnit] = useState("");
   const isLoading = useSubscribe("inventory.id",ingredient.id);
   var completeIngredient = useFind(() => InventoryCollection.find({_id:ingredient.id}),[ingredient.id]);
+  useEffect(() => {
+    if (completeIngredient.length > 0) {
+      setIngName(completeIngredient[0].name);
+      setIngUnit(completeIngredient[0].units);
+    }
+  }, [completeIngredient]);
   if (isLoading()) {
-    return <LoadingIndicator />;
+    return <></>;
   }
+  
+
   return (
     <>
-      <span>{completeIngredient[0].name}</span>
-      <span>{ingredient.amount} {completeIngredient[0].units}</span>
+      <span className='koc-ing'>{ingName}</span>
+      <span>{ingredient.amount} {ingUnit}</span>
     </>
   )
 }
 
 const KitchenRecipeCard = ({ item }) => {
+    const [ingredients,setIngredients] = useState([]);
     const isLoading = useSubscribe("menuItems.id",item.id);
     const menuItem = useFind(() => Menu.find({_id:item.id}), [item.id]);
+    useEffect(() => {
+      if (menuItem.length > 0) {
+        setIngredients(menuItem[0].ingredients);
+      }
+    }, [menuItem]);
     if (isLoading()) {
-      return <LoadingIndicator />;
+      return <><span className="koc-qty">{item.quantity}&times;</span>
+          <span className="koc-name">{item.menu_item}</span></>;
     }
     
+
     return (
           <>
           <span className="koc-qty">{item.quantity}&times;</span>
           <span className="koc-name">{item.menu_item}</span>
-          <ul>{menuItem[0].ingredients.map((ing, idx) => (
-          <li key={ing.id || idx} className="koc-item">
+          <ul>{ingredients.map((ing, idx) => (
+          <li key={ing.id || idx} className="koc-recipe">
           <KitchenIngredientCard 
             ingredient={ing}
           />

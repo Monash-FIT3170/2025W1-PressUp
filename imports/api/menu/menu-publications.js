@@ -20,7 +20,6 @@ Meteor.publish('menuItems.byCategory', (menuCategory) => {
 });
 
 Meteor.publish("menuItems.id", function(myId) {
-	console.log(myId)
 	return Menu.find({_id:myId});
   });
 
