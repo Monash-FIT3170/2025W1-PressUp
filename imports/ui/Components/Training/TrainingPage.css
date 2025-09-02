@@ -59,17 +59,18 @@
 .training-col-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;                  /* compact vertical rhythm between cards */
-  overflow-y: auto;          /* long lists scroll within the column */
-  padding-right: 4px;        /* room for scrollbar */
-  min-height: 0;             /* allow proper scrolling */
+  gap: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;   /* ✅ no sideways scroll */
+  min-height: 0;
+  padding-right: 12px;   /* more breathing room for scrollbar */
+  box-sizing: border-box;
 }
 
 /* Optional: slimmer scrollbars (WebKit) */
 .training-col-list::-webkit-scrollbar { width: 8px; }
 .training-col-list::-webkit-scrollbar-thumb {
   background: #d0d0d0;
-  border-radius: 8px;
 }
 
 /* Empty / loading states */
