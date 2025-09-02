@@ -1,9 +1,8 @@
 // server/main.js
 import { Meteor } from "meteor/meteor";
 import { WebApp } from "meteor/webapp";
-
+import { MongoInternals } from "meteor/mongo";
 import { MenuCategories } from "/imports/api/menu-categories/menu-categories-collection";
-import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
 import '/imports/api/menu-categories/menu-categories-methods';
 
@@ -67,6 +66,7 @@ import {TrainingAssignments} from '../imports/api/TrainingAssignments/TrainingAs
 import '../imports/api/TrainingAssignments/TrainingAssignmentsMethods';
 import '../imports/api/TrainingAssignments/TrainingAssignmentsPublications';
 
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -122,6 +122,18 @@ Meteor.startup(async () => {
       next();
     }
   });
+
+  if (nCategories === 0) {
+
+    const defaultCategories = [
+    { category: "drinks",     sortOrder: 1 },
+    { category: "breakfast",  sortOrder: 2 },
+    { category: "lunch",      sortOrder: 3 },
+    { category: "pastries",   sortOrder: 4 },
+    { category: "specials",   sortOrder: 5 },
+  ];
+  defaultCategories.forEach(async (cat) => await SuppliersCollection.insertAsync(cat))
+  }
 
   if (nOrders === 0) {
     console.log("No order items found. Initializing with default items.");
@@ -239,6 +251,8 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }
+
+
 
   // Clear existing customers and initialize test customers for loyalty points testing
   // await CustomersCollection.removeAsync({});
