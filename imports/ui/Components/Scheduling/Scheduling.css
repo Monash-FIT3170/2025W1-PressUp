@@ -11,6 +11,8 @@
 .scheduling-actions {
   display: flex;
   justify-content: flex-start;
+  gap: 16px;
+  align-items: center;
 }
 
 .view-employees-btn {

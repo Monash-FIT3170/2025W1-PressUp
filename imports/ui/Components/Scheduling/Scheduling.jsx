@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { EmployeeTable } from './EmployeeTable.jsx';  
 import { RosterManager } from './RosterManager.jsx';
+import { OrgStructure } from './OrgStructure.jsx';
 import './Scheduling.css';
 
 export const Scheduling = () => {
@@ -25,6 +26,7 @@ export const Scheduling = () => {
           >
             Manage Employees
           </button>
+          <OrgStructure />
         </div>
         
         <div className="scheduling-main-content">
