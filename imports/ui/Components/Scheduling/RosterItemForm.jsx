@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
+import { Meteor } from 'meteor/meteor';
 import { EmployeesCollection } from '../../../api/payroll/employee/employees-collection.js';
+import { RosterItemsCollection } from '../../../api/payroll/roster/rosteritem-collection.js';
+import { DepartmentsCollection } from '../../../api/payroll/departments/departments-collection.js';
+import { RolesCollection } from '../../../api/payroll/roles/roles-collection.js';
 import './RosterItemForm.css';
 
-export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }) => {
+export const RosterItemForm = ({ isOpen, onClose, initialData = null }) => {
   const [formData, setFormData] = useState({
-    employeeId: '',
+    employee_id: '',
     date: '',
     startTime: '09:00',
     endTime: '17:00',
-    department: '',
-    role: '',
+    shift_type: 'Normal',
+    department_id: '',
+    role_id: '',
+    status: 'confirmed',
+    break_duration: 0,
     notes: ''
   });
 
   const [errors, setErrors] = useState({});
 
   // Fetch employees for the dropdown
-  const { employees, isLoading } = useTracker(() => {
+  const { employees, isLoading: employeesLoading } = useTracker(() => {
     const subscription = Meteor.subscribe('Employees');
     
     if (!subscription.ready()) {
@@ -32,16 +39,82 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
     }
   });
 
+  // Fetch departments for the dropdown
+  const { departments, isLoading: departmentsLoading } = useTracker(() => {
+    const subscription = Meteor.subscribe('departments.all');
+    
+    if (!subscription.ready()) {
+      return { departments: [], isLoading: true };
+    }
+
+    try {
+      const departmentsData = DepartmentsCollection.find({}, { sort: { name: 1 } }).fetch();
+      return { departments: departmentsData, isLoading: false };
+    } catch (err) {
+      return { departments: [], isLoading: false };
+    }
+  });
+
+  // Fetch roles for the dropdown
+  const { roles, isLoading: rolesLoading } = useTracker(() => {
+    const subscription = Meteor.subscribe('roles.all');
+    
+    if (!subscription.ready()) {
+      return { roles: [], isLoading: true };
+    }
+
+    try {
+      const rolesData = RolesCollection.find({}, { sort: { name: 1 } }).fetch();
+      return { roles: rolesData, isLoading: false };
+    } catch (err) {
+      return { roles: [], isLoading: false };
+    }
+  });
+
   // Set initial data if editing
   useEffect(() => {
     if (initialData) {
+      // Convert date to YYYY-MM-DD format if it's a Date object
+      let dateString = '';
+      if (initialData.date) {
+        if (initialData.date instanceof Date) {
+          dateString = initialData.date.toISOString().split('T')[0];
+        } else if (typeof initialData.date === 'string') {
+          // If it's already a string, use it directly
+          dateString = initialData.date;
+        }
+      }
+
+      // Convert start_time and end_time to HH:MM format if they're Date objects
+      let startTimeString = '09:00';
+      let endTimeString = '17:00';
+      
+      if (initialData.start_time) {
+        if (initialData.start_time instanceof Date) {
+          startTimeString = initialData.start_time.toTimeString().slice(0, 5);
+        } else if (typeof initialData.start_time === 'string') {
+          startTimeString = initialData.start_time;
+        }
+      }
+      
+      if (initialData.end_time) {
+        if (initialData.end_time instanceof Date) {
+          endTimeString = initialData.end_time.toTimeString().slice(0, 5);
+        } else if (typeof initialData.end_time === 'string') {
+          endTimeString = initialData.end_time;
+        }
+      }
+
       setFormData({
-        employeeId: initialData.employeeId || '',
-        date: initialData.date || '',
-        startTime: initialData.startTime || '09:00',
-        endTime: initialData.endTime || '17:00',
-        department: initialData.department || '',
-        role: initialData.role || '',
+        employee_id: initialData.employee_id || '',
+        date: dateString,
+        startTime: startTimeString,
+        endTime: endTimeString,
+        shift_type: initialData.shift_type || 'Normal',
+        department_id: initialData.department_id || '',
+        role_id: initialData.role_id || '',
+        status: initialData.status || 'confirmed',
+        break_duration: initialData.break_duration || 0,
         notes: initialData.notes || ''
       });
     }
@@ -51,12 +124,15 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
   useEffect(() => {
     if (isOpen && !initialData) {
       setFormData({
-        employeeId: '',
+        employee_id: '',
         date: '',
         startTime: '09:00',
         endTime: '17:00',
-        department: '',
-        role: '',
+        shift_type: 'Normal',
+        department_id: '',
+        role_id: '',
+        status: 'confirmed',
+        break_duration: 0,
         notes: ''
       });
       setErrors({});
@@ -65,10 +141,20 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // If department changes, reset role selection
+    if (name === 'department_id') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        role_id: '' // Reset role when department changes
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
     
     // Clear error when user starts typing
     if (errors[name]) {
@@ -82,8 +168,8 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.employeeId) {
-      newErrors.employeeId = 'Employee is required';
+    if (!formData.employee_id) {
+      newErrors.employee_id = 'Employee is required';
     }
 
     if (!formData.date) {
@@ -102,30 +188,81 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
       newErrors.endTime = 'End time must be after start time';
     }
 
-    if (!formData.department) {
-      newErrors.department = 'Department is required';
+    if (!formData.shift_type) {
+      newErrors.shift_type = 'Shift type is required';
     }
 
-    if (!formData.role) {
-      newErrors.role = 'Role is required';
+    if (!formData.department_id) {
+      newErrors.department_id = 'Department is required';
+    }
+
+    if (!formData.role_id) {
+      newErrors.role_id = 'Role is required';
+    }
+
+    if (formData.break_duration < 0 || formData.break_duration > 480) {
+      newErrors.break_duration = 'Break duration must be between 0 and 480 minutes';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
-      onSubmit(formData);
-      onClose();
+      try {
+        // Convert date and time strings to Date objects
+        const dateObj = new Date(formData.date);
+        const startDateTime = new Date(`${formData.date}T${formData.startTime}`);
+        const endDateTime = new Date(`${formData.date}T${formData.endTime}`);
+
+        const rosterData = {
+          employee_id: formData.employee_id,
+          date: dateObj,
+          start_time: startDateTime,
+          end_time: endDateTime,
+          shift_type: formData.shift_type,
+          department_id: formData.department_id,
+          role_id: formData.role_id,
+          status: formData.status,
+          break_duration: parseInt(formData.break_duration) || 0,
+          notes: formData.notes || ''
+        };
+
+        if (initialData && initialData._id) {
+          // Update existing roster item
+          await Meteor.callAsync('rosteritems.update', initialData._id, rosterData);
+        } else {
+          // Create new roster item
+          await Meteor.callAsync('rosteritems.insert', rosterData);
+        }
+
+        onClose();
+      } catch (error) {
+        console.error('Error saving roster item:', error);
+        // Handle specific error types
+        if (error.error === 'conflict-error') {
+          setErrors({ general: 'This shift conflicts with an existing roster item for this employee.' });
+        } else if (error.error === 'validation-error') {
+          setErrors({ general: 'Please check all required fields are filled correctly.' });
+        } else {
+          setErrors({ general: 'Failed to save roster item. Please try again.' });
+        }
+      }
     }
   };
 
   const handleClose = () => {
     setErrors({});
     onClose();
+  };
+
+  // Helper function to get roles for the selected department
+  const getRolesForDepartment = (departmentId) => {
+    if (!departmentId) return [];
+    return roles.filter(role => role.department_id === departmentId);
   };
 
   if (!isOpen) return null;
@@ -145,16 +282,21 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
         </div>
 
         <form className="roster-form" onSubmit={handleSubmit}>
+          {errors.general && (
+            <div className="error-message general-error">
+              {errors.general}
+            </div>
+          )}
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="employeeId">Employee *</label>
+              <label htmlFor="employee_id">Employee *</label>
               <select
-                id="employeeId"
-                name="employeeId"
-                value={formData.employeeId}
+                id="employee_id"
+                name="employee_id"
+                value={formData.employee_id}
                 onChange={handleInputChange}
-                className={errors.employeeId ? 'error' : ''}
-                disabled={isLoading}
+                className={errors.employee_id ? 'error' : ''}
+                disabled={employeesLoading}
               >
                 <option value="">Select an employee</option>
                 {employees.map(employee => (
@@ -163,7 +305,7 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
                   </option>
                 ))}
               </select>
-              {errors.employeeId && <span className="error-message">{errors.employeeId}</span>}
+              {errors.employee_id && <span className="error-message">{errors.employee_id}</span>}
             </div>
 
             <div className="form-group">
@@ -210,31 +352,102 @@ export const RosterItemForm = ({ isOpen, onClose, onSubmit, initialData = null }
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="department">Department *</label>
-              <input
-                type="text"
-                id="department"
-                name="department"
-                value={formData.department}
+              <label htmlFor="shift_type">Shift Type *</label>
+              <select
+                id="shift_type"
+                name="shift_type"
+                value={formData.shift_type}
                 onChange={handleInputChange}
-                placeholder="e.g., Front of House"
-                className={errors.department ? 'error' : ''}
-              />
-              {errors.department && <span className="error-message">{errors.department}</span>}
+                className={errors.shift_type ? 'error' : ''}
+              >
+                <option value="Normal">Normal</option>
+                <option value="Annual Leave">Annual Leave</option>
+                <option value="Personal Leave">Personal Leave</option>
+                <option value="Long Service Leave">Long Service Leave</option>
+              </select>
+              {errors.shift_type && <span className="error-message">{errors.shift_type}</span>}
             </div>
 
             <div className="form-group">
-              <label htmlFor="role">Role *</label>
-              <input
-                type="text"
-                id="role"
-                name="role"
-                value={formData.role}
+              <label htmlFor="department_id">Department *</label>
+              <select
+                id="department_id"
+                name="department_id"
+                value={formData.department_id}
                 onChange={handleInputChange}
-                placeholder="e.g., Waiter"
-                className={errors.role ? 'error' : ''}
+                className={errors.department_id ? 'error' : ''}
+                disabled={departmentsLoading}
+              >
+                <option value="">Select a department</option>
+                {departments.map(department => (
+                  <option key={department._id} value={department._id}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+              {errors.department_id && <span className="error-message">{errors.department_id}</span>}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="role_id">Role *</label>
+              <select
+                id="role_id"
+                name="role_id"
+                value={formData.role_id}
+                onChange={handleInputChange}
+                className={errors.role_id ? 'error' : ''}
+                disabled={rolesLoading || !formData.department_id}
+              >
+                <option value="">
+                  {!formData.department_id 
+                    ? "Select a department first" 
+                    : "Select a role"
+                  }
+                </option>
+                {getRolesForDepartment(formData.department_id).map(role => (
+                  <option key={role._id} value={role._id}>
+                    {role.name}
+                  </option>
+                ))}
+              </select>
+              {errors.role_id && <span className="error-message">{errors.role_id}</span>}
+              {formData.department_id && getRolesForDepartment(formData.department_id).length === 0 && (
+                <span className="info-message">No roles available for this department</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="status">Status</label>
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+              >
+                <option value="unconfirmed">Unconfirmed</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="published">Published</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="break_duration">Break Duration (minutes)</label>
+              <input
+                type="number"
+                id="break_duration"
+                name="break_duration"
+                value={formData.break_duration}
+                onChange={handleInputChange}
+                min="0"
+                max="480"
+                placeholder="0"
+                className={errors.break_duration ? 'error' : ''}
               />
-              {errors.role && <span className="error-message">{errors.role}</span>}
+              {errors.break_duration && <span className="error-message">{errors.break_duration}</span>}
             </div>
           </div>
 

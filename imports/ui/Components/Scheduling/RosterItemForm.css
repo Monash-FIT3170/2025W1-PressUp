@@ -133,6 +133,14 @@
   font-weight: 500;
 }
 
+.info-message {
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  font-weight: 500;
+  font-style: italic;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
