@@ -38,10 +38,16 @@ RosterItemsCollection.schema = new SimpleSchema({
         label: 'Shift Type'
     },
     
-    role: {
+    department_id: {
         type: String,
         required: true,
-        label: 'Role for this shift'
+        label: 'Department ID for this shift'
+    },
+    
+    role_id: {
+        type: String,
+        required: true,
+        label: 'Role ID for this shift'
     },
     
     // Status

@@ -12,7 +12,7 @@ Meteor.methods({
     try {
       // Validate required fields
       if (!rosterData.employee_id || !rosterData.date || !rosterData.start_time || 
-          !rosterData.end_time || !rosterData.shift_type || !rosterData.role) {
+          !rosterData.end_time || !rosterData.shift_type || !rosterData.department_id || !rosterData.role_id) {
         throw new Meteor.Error('validation-error', 'Missing required fields');
       }
 
@@ -214,7 +214,7 @@ Meteor.methods({
       for (const rosterData of rosterItemsArray) {
         // Validate required fields
         if (!rosterData.employee_id || !rosterData.date || !rosterData.start_time || 
-            !rosterData.end_time || !rosterData.shift_type || !rosterData.role) {
+            !rosterData.end_time || !rosterData.shift_type || !rosterData.department || !rosterData.role) {
           throw new Meteor.Error('validation-error', 'Missing required fields in roster data');
         }
 
