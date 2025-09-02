@@ -1,7 +1,6 @@
 .module-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   padding: 20px;
   font-family: Arial, sans-serif;
   line-height: 1.6;
