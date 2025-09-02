@@ -38,6 +38,7 @@ Meteor.startup(async () => {
     // Optional: Add unique index on the category field
     await rawCategories.createIndex({ category: 1 }, { unique: true });
 
+
     // Define the validator schema.
     const validator = {
         $jsonSchema: {
