@@ -27,14 +27,20 @@
 
 
 
-## Operating System
-- Windows 10+, macOS
+## Software Requirments
 
-## Programming Language / Runtime:
+**Operating System:**  
+- Windows 10 or later  
+- macOS 10.15 (Catalina) or later  
+
+**Runtime / Languages:** 
 - Node.js (must be at least version 20)
 - MeteorJS (install using ```bash # npm install -g meteor --foreground-script ``` for Windows or ```bash curl https://install.meteor.com/ | sh``` for MAC OS -- this must be run as administrator on Windows and installed globally)
 - MongoDB (included with Meteor by default)
-- A code editor (VS Code)
+
+**Development Tools:**  
+- VS Code (or another IDE/editor that supports JavaScript/TypeScript)
+
 
 ## Hardware Requirements: (No strict hardware requirments)
 - Recommended: 
