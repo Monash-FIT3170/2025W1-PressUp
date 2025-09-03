@@ -148,7 +148,7 @@ export const LoyaltySignupPage = () => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="email">Email Address</label>
+                  <label htmlFor="email">Email Address *</label>
                   <input
                     type="email"
                     id="email"
@@ -156,11 +156,12 @@ export const LoyaltySignupPage = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="your.email@example.com"
+                    required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
+                  <label htmlFor="phone">Phone Number *</label>
                   <input
                     type="tel"
                     id="phone"
@@ -168,12 +169,13 @@ export const LoyaltySignupPage = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="0412 345 678"
+                    required
                   />
                 </div>
               </div>
 
               <p className="form-note">
-                * Please provide at least an email or phone number so we can contact you about your rewards and special offers.
+                * Please provide an email and phone number so we can contact you about your rewards and special offers.
               </p>
 
               <div className="form-actions">

@@ -12,6 +12,7 @@ OrdersCollection.schema = new SimpleSchema({
   },
   items: { type: Array },
   "items.$": Object,
+  "items.$.id": String,
   "items.$.menu_item": String,
   "items.$.quantity": Number,
   "items.$.price": Number,
@@ -26,5 +27,8 @@ OrdersCollection.schema = new SimpleSchema({
   discount: { 
     type: Number, 
     optional: true 
+  },
+  staffName: {
+    type: String
   }
 });

@@ -1,0 +1,34 @@
+  .feedback-order-id {
+    display: inline;
+    width: 900px;
+  }
+
+  .feedback-order-input {
+    width: 780px;
+  }
+
+
+  .message-error {
+    background-color: #fff5f5;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    padding: 16px 20px;
+    border-radius: 16px;
+    margin: 0 0 24px 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .rating-average {
+    accent-color: #FCD581;
+  }
+
+  .rating-poor {
+    accent-color: #9b0000;
+  }
+
+  .rating-good {
+    accent-color: #12cf42;
+  }

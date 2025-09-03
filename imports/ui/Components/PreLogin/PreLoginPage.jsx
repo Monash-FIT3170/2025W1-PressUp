@@ -96,7 +96,7 @@ export const PreLoginPage = () => {
             <div className="footer-links">
               <a href="#privacy">Privacy Policy</a>
               <a href="#terms">Terms of Service</a>
-              <a href="#contact">Contact</a>
+              <a href="enquiries">Contact</a>
             </div>
           </div>
         </footer>
