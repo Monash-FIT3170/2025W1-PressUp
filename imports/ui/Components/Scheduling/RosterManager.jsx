@@ -139,7 +139,7 @@ export const RosterManager = () => {
       
       setEditingRosterItem({
         employee_id: employeeId,
-        date: targetDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+        date: `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`, // Format as YYYY-MM-DD without timezone conversion
         startTime: '09:00',
         endTime: '17:00',
         shift_type: 'Normal',

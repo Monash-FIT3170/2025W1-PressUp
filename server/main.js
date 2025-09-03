@@ -48,20 +48,6 @@ import { RolesCollection } from '../imports/api/payroll/roles/roles-collection.j
 import "../imports/api/payroll/roles/roles-methods.js";
 import "../imports/api/payroll/roles/roles-publications.js";
 
-import { EmployeesCollection } from '../imports/api/payroll/employee/employees-collection.js';
-import "../imports/api/payroll/employee/employees-methods.js";
-import "../imports/api/payroll/employee/employees-publications.js";
-
-import { RosterItemsCollection } from '../imports/api/payroll/roster/rosteritem-collection.js';
-import "../imports/api/payroll/roster/rosteritem-methods.js";
-import "../imports/api/payroll/roster/rosteritem-publications.js";
-
-import { DepartmentsCollection } from '../imports/api/payroll/departments/departments-collection.js';
-import "../imports/api/payroll/departments/departments-methods.js";
-import "../imports/api/payroll/departments/departments-publications.js";
-
-
-
 
 import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
 import "../imports/api/enquiries/enquiries-methods";
