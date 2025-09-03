@@ -19,7 +19,7 @@ Meteor.methods({
 		// Ensure the menu item object is correct.
 		check(menuItem, {
 			name: String,
-			price: Number,
+			price: String,
 			menuCategory: Match.Optional(String),
 			available: Match.Optional(Boolean),
 			isHalal: Match.Optional(Boolean),
