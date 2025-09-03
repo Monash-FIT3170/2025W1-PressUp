@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
 import '/imports/api/menu-categories/menu-categories-methods.js';
+import {menuCollection} from '/imports/api/menu/menu-collection.js';
 import { InventoryCollection } from "../../../api/inventory/inventory-collection.js";
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
@@ -25,6 +26,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   const isInventoryReady  = useSubscribe("inventory.nameIncludes", searchTerm);
   const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
   const [ingredientAmounts, setIngredientAmounts] = useState({});
+  const isMenuReady = useSubscribe('menu.all');
+  const menuDocs = useFind(() => menuCollection.find({}, { sort: { name: 1 } }));
 
   
   // const findIngredients = useFind(() => InventoryCollection.find({}));
@@ -83,6 +86,11 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       }
   }, [existingItem, mode]);
 
+  useEffect(() => {
+    if (isMenuReady) {
+      console.log('[MenuItemPopUp] Current Menu docs:', menuDocs);
+    }
+  }, [isMenuReady, menuDocs]);
   const validateForm = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = 'Item name is required';
