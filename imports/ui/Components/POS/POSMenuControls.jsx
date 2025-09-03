@@ -8,14 +8,28 @@ export const POSMenuControls = ({ selectedCategory, setSelectedCategory}) => {
   const [categories, setCategories] = useState([{ _id: 'all', name: 'All' }]);
 
   useEffect(() => {
-    Meteor.call('menuCategories.getCategories', (err, res) => {
-      if (!err && Array.isArray(res)) {
-        setCategories([
-          { _id: 'all', name: 'All' },
-          ...res.map(c => ({ _id: c._id, name: c.category }))
-        ]);
+    // Meteor.call('menuCategories.getCategories', (err, res) => {
+    //   if (!err && Array.isArray(res)) {
+    //     setCategories([
+    //       { _id: 'all', name: 'All' },
+    //       ...res.map(c => ({ _id: c._id, name: c.category }))
+    //     ]);
+    //   }
+    // });
+    (async () => {
+      try {
+        const res = await Meteor.callAsync('menuCategories.getCategories');
+        if (Array.isArray(res)) {
+          setCategories([
+            { _id: 'all', name: 'All' },
+            ...res.map(({ _id, category }) => ({ _id, name: category }))
+          ]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
       }
-    });
+    })();
+
   }, []);
 
   return (

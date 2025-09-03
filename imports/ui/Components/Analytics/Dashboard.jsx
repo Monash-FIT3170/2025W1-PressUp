@@ -35,7 +35,7 @@ function FilterBar({ range, onChange }) {
 
   const isActive = (p) =>
     (range.start ? dayjs(range.start).isSame(p.start, 'day') : !p.start) &&
-    (range.end   ? dayjs(range.end).isSame(p.end,   'day') : !p.end);
+    (range.end ? dayjs(range.end).isSame(p.end, 'day') : !p.end);
 
   const setDate = (field, val) => {
     onChange({
@@ -49,45 +49,62 @@ function FilterBar({ range, onChange }) {
     });
   };
 
+  // Build the filter object we pass to all calls/components
+  const filter = useMemo(() => ({
+    onlyClosed: false,
+    start: range.start ? new Date(range.start) : null,
+    end: range.end ? new Date(range.end) : null,
+  }), [range]);
+
   return (
     <div style={{
-      display:'flex', gap:8, alignItems:'center',
-      marginBottom:16, flexWrap:'wrap'
+      display: 'flex', gap: 8, alignItems: 'center',
+      marginBottom: 16, flexWrap: 'wrap'
     }}>
       {presets.map(p => (
         <button
           key={p.key}
           onClick={() => onChange({ start: p.start?.toDate?.() ?? null, end: p.end?.toDate?.() ?? null })}
           style={{
-            padding:'8px 12px',
-            borderRadius:8,
+            padding: '8px 12px',
+            borderRadius: 8,
             border: isActive(p) ? '2px solid #3b82f6' : '1px solid #ddd',
-            background:'#fff', cursor:'pointer'
+            background: '#fff', cursor: 'pointer'
           }}
         >{p.label}</button>
       ))}
 
-      <div style={{ display:'flex', gap:6, alignItems:'center', marginLeft:8 }}>
-        <label style={{ fontSize:12, color:'#374151' }}>From</label>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginLeft: 8 }}>
+        <label style={{ fontSize: 12, color: '#374151' }}>From</label>
         <input
           type="date"
           value={range.start ? dayjs(range.start).format('YYYY-MM-DD') : ''}
           onChange={e => setDate('start', e.target.value || null)}
-          style={{ padding:6, borderRadius:6, border:'1px solid #ddd', background:'#fff' }}
+          style={{ padding: 6, borderRadius: 6, border: '1px solid #ddd', background: '#fff' }}
         />
-        <label style={{ fontSize:12, color:'#374151' }}>To</label>
+        <label style={{ fontSize: 12, color: '#374151' }}>To</label>
         <input
           type="date"
           value={range.end ? dayjs(range.end).format('YYYY-MM-DD') : ''}
           onChange={e => setDate('end', e.target.value || null)}
-          style={{ padding:6, borderRadius:6, border:'1px solid #ddd', background:'#fff' }}
+          style={{ padding: 6, borderRadius: 6, border: '1px solid #ddd', background: '#fff' }}
         />
         <button
           onClick={() => onChange({ start: null, end: null })}
-          style={{ padding:'8px 10px', borderRadius:8, border:'1px solid #ddd', background:'#fff', cursor:'pointer' }}
+          style={{ padding: '8px 10px', borderRadius: 8, border: '1px solid #ddd', background: '#fff', cursor: 'pointer' }}
         >
           Clear
         </button>
+        <label style={{ fontSize: 12, color: '#374151' }}>Metric</label>
+        <select
+          value={range.metric || 'sales'}
+          onChange={(e) => onChange({ ...range, metric: e.target.value })}
+          style={{ padding: 6, borderRadius: 6, border: '1px solid #ddd', background: '#fff', fontSize: 14 }}
+        >
+          <option value="sales">Sales</option>
+          <option value="cost">Cost</option>
+          <option value="profit">Profit</option>
+        </select>
       </div>
     </div>
   );
@@ -95,7 +112,7 @@ function FilterBar({ range, onChange }) {
 
 // --- KPIs loader --------------------------------------------------------------
 function useKpis(filter) {
-  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0 });
+  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: 'sales' });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -103,31 +120,32 @@ function useKpis(filter) {
     setLoading(true);
     Meteor.call('analytics.kpis', filter, (err, res) => {
       if (!cancelled) {
-        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0 } : (res || {}));
+        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: filter.metric } : (res || {}));
         setLoading(false);
       }
     });
     return () => { cancelled = true; };
-  }, [filter?.start?.valueOf?.(), filter?.end?.valueOf?.()]); // re-run when dates change
+  }, [filter?.start?.valueOf?.(), filter?.end?.valueOf?.(), filter?.metric]); // re-run when date or data type changes
 
   return { kpis, loading };
 }
 
 export default function Dashboard() {
   // Single source of truth for time filter:
-  const [range, setRange] = useState({ start: null, end: null });
+  const [range, setRange] = useState({ start: null, end: null, metric: 'sales' });
 
   // Build the filter object we pass to all calls/components
   const filter = useMemo(() => ({
     onlyClosed: false,
     start: range.start ? new Date(range.start) : null,
-    end:   range.end   ? new Date(range.end)   : null
+    end: range.end ? new Date(range.end) : null,
+    metric: range.metric
   }), [range]);
 
   const { kpis } = useKpis(filter);
 
   return (
-    <div style={{ background: '#929395ff', padding: 24, width: '100%', minHeight: '100vh' }}>
+    <div style={{ background: '#929395ff', padding: 24, width: '100%', height: 'flex' }}>
       <h1 style={{ margin: 0, marginBottom: 12, fontSize: 24 }}>Analytics</h1>
 
       {/* Filters */}
@@ -152,8 +170,10 @@ export default function Dashboard() {
         </div>
         <div style={{ gridColumn: 'span 3' }}>
           <StatsCard
-            title="Revenue"
-            value={`$${(kpis.revenue ?? 0).toLocaleString()}`}
+            title={range.metric === 'cost' ? 'Cost'
+              : range.metric === 'profit' ? 'Profit'
+                : 'Revenue'}
+            value={`$${(kpis.value ?? 0).toLocaleString()}`}
             subvalue={range.start || range.end ? '' : 'YTD'}
           />
         </div>
@@ -169,8 +189,11 @@ export default function Dashboard() {
         </div>
         
         <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
-          <h3 style={{ margin: 0, marginBottom: 8, fontSize: 14, color: '#374151' }}>Menu Orders Revenue</h3>
-          <SalesOverTimeChart onlyClosed={false} start={filter.start} end={filter.end} />
+          <SalesOverTimeChart 
+          onlyClosed={false} 
+          start={filter.start} 
+          end={filter.end}
+          metric={filter.metric} /> 
         </section>
 
         <section style={{ ...cardStyle, gridColumn: 'span 6' }}>

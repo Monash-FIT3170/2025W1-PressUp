@@ -10,7 +10,7 @@ Menu.schema = new SimpleSchema({
     },
 
     price: {
-        type: String,
+        type: Number,
         regEx: /^\d+(\.\d{1,2})?$/,
         label: 'Price of the menu item in dollars etc.'
     },
