@@ -41,6 +41,7 @@ import Dashboard from './Components/Analytics/Dashboard.jsx';
 import { Finance } from "./Components/Finance/Finance.jsx";
 import ModulePage from "./Components/Training/ModulePage.jsx";
 
+import { Scheduling } from "./Components/Scheduling/Scheduling.jsx";
 
 // Styles
 import "./AppStyle.css";
@@ -522,6 +523,7 @@ useEffect(() => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                  <Scheduling />
                 </div>
               </div>
             }
