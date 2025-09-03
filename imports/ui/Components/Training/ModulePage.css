@@ -1,7 +1,6 @@
 .module-page {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   padding: 20px;
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -14,10 +13,11 @@
 }
 
 .button-container {
-  margin-top: auto; /* pushes button to bottom */
+  margin-top: auto;          /* keep buttons at bottom of page */
   display: flex;
-  justify-content: center; /* center horizontally */
+  justify-content: center;   /* center the whole group */
 }
+
 
 .mark-complete-btn {
   padding: 12px 24px;
@@ -29,6 +29,30 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;                 /* space between Back and Complete */
+}
+
+.mark-back-btn {
+  padding: 12px 24px;
+  background-color: white;
+  color: #ffcc00;         /* yellow text */
+  border: 2px solid #ffcc00;  /* yellow border */
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  
+}
+
+.back-btn:hover {
+  background-color: #fff8e1;  /* subtle yellow background on hover */
+  color: #e6b800;            /* darker yellow text */
+}
+
 
 .mark-complete-btn:hover {
   background-color: #218838;

@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: hidden;     /* page itself doesn't scroll; columns will */
   background: #fff;
 }
 
@@ -20,31 +20,33 @@
   color: #333;
 }
 
-/* Admin panel spacing helper (optional) */
+/* Optional admin area */
 .training-admin-wrap {
+  flex: 0 0 auto;
   padding: 0 16px 12px;
 }
 .training-admin-wrap hr { margin-top: 12px; }
 
 /* === 2-COLUMN LAYOUT === */
 .training-columns {
-  /* Fill remaining height below header/admin and become the scroll “frame” for columns */
-  flex: 1 1 auto;
+  flex: 1 1 auto;                 /* fill remaining height */
+  min-height: 0;                  /* allow children to shrink & scroll */
   display: grid;
   grid-template-columns: 1fr 1fr; /* left: not completed, right: completed */
   gap: 80px;
   padding: 0 16px 16px;
-  min-height: 0;   /* allow children to shrink and scroll */
 }
 @media (max-width: 1024px) {
-  .training-columns { grid-template-columns: 1fr; } /* stack on smaller screens */
+  .training-columns { grid-template-columns: 1fr; }
 }
 
+/* Each column container */
 .training-col {
-  min-width: 0;          /* fix overflow in grid children */
+  min-width: 0;                   /* fix grid overflow issues */
+  min-height: 0;                  /* 🔑 allow inner list to shrink */
   display: flex;
   flex-direction: column;
-  background: #fff;
+  overflow: hidden;               /* keep scrollbars inside the list */
 }
 
 .training-col h2 {
@@ -55,22 +57,22 @@
   padding-top: 2px;
 }
 
-/* Each column has its own scroll */
+/* The scrollable list inside each column */
 .training-col-list {
+  flex: 1 1 auto;                 /* 🔑 take all remaining column height */
+  min-height: 0;                  /* 🔑 allow scrolling instead of stretching */
   display: flex;
   flex-direction: column;
-  gap: 8px;                  /* compact vertical rhythm between cards */
-  overflow-y: auto;          /* long lists scroll within the column */
-  padding-right: 4px;        /* room for scrollbar */
-  min-height: 0;             /* allow proper scrolling */
+  gap: 8px;
+  overflow-y: auto;               /* 🔑 vertical scroll only */
+  overflow-x: hidden;             /* no sideways scroll */
+  padding-right: 12px;            /* room for scrollbar */
+  box-sizing: border-box;
 }
 
-/* Optional: slimmer scrollbars (WebKit) */
+/* Optional: slimmer WebKit scrollbars */
 .training-col-list::-webkit-scrollbar { width: 8px; }
-.training-col-list::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: 8px;
-}
+.training-col-list::-webkit-scrollbar-thumb { background: #d0d0d0; }
 
 /* Empty / loading states */
 .training-empty {
@@ -80,6 +82,6 @@
   color: #666;
 }
 
-/* (Legacy flex grid kept in case other views rely on it) */
-.training-cards-flex-wrapper { display: none; }  /* hide old rail */
-.training-cards-flex { display: none; }          /* hide old grid */
+/* Hide any legacy layouts */
+.training-cards-flex-wrapper { display: none; }
+.training-cards-flex { display: none; }

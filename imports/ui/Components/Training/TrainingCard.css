@@ -4,9 +4,10 @@
   border: 1px solid #ddd;
   border-radius: 0.5rem;
   padding: 0.75rem;          /* ↓ from 1rem */
-  width: 100%;               /* fill column width */
+  width: 95%;               /* fill column width */
   max-width: 100%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  min-width: 0;
 
   display: flex;
   align-items: flex-start;   /* tighter vertical packing */
