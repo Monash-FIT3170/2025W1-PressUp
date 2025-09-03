@@ -146,7 +146,6 @@ export default function Dashboard() {
 
   return (
     <div style={{ background: '#929395ff', padding: 24, width: '100%', height: 'flex' }}>
-      <h1 style={{ margin: 0, marginBottom: 12, fontSize: 24 }}>Analytics</h1>
 
       {/* Filters */}
       <FilterBar range={range} onChange={setRange} />
