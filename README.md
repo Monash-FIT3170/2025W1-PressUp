@@ -27,24 +27,26 @@
 
 
 
-**Operating System:** Windows 10+, macOS
-**Programming Language / Runtime:**
-    - Node.js (must be at least version 20)
-    - MeteorJS (install using ```bash # npm install -g meteor --foreground-script ``` for Windows or```bash curl https://install.meteor.com/ | sh``` for MAC OS -- this must be run as administrator on Windows and installed globally)
-    - MongoDB (included with Meteor by default)
-    - A code editor (VS Code)
+## Operating System
+- Windows 10+, macOS
 
-**Hardware Requirements:**  (No strict hardware requirments)
-    - **Recommended**: 
-        - CPU: Dual-core 2.0+ GHz processor (Intel i5 / AMD Ryzen 3 or better)
-        - RAM: Minimum 8 GB (16 GB recommended if running multiple services like MongoDB, IDE, and browser)
-        - Storage: At least 10 GB free SSD space (faster builds and package installs with SSD)
-        - Network: Stable internet connection (for fetching Meteor/NPM packages)
+## Programming Language / Runtime:
+- Node.js (must be at least version 20)
+- MeteorJS (install using ```bash # npm install -g meteor --foreground-script ``` for Windows or ```bash curl https://install.meteor.com/ | sh``` for MAC OS -- this must be run as administrator on Windows and installed globally)
+- MongoDB (included with Meteor by default)
+- A code editor (VS Code)
+
+## Hardware Requirements: (No strict hardware requirments)
+- Recommended: 
+    - CPU: Dual-core 2.0+ GHz processor (Intel i5 / AMD Ryzen 3 or better)
+    - RAM: Minimum 8 GB (16 GB recommended if running multiple services like MongoDB, IDE, and browser)
+    - Storage: At least 10 GB free SSD space (faster builds and package installs with SSD)
+    - Network: Stable internet connection (for fetching Meteor/NPM packages)
     
-**Dependencies:** 
+## Dependencies:
 
-    | Package             | Version | Purpose                                            |
-    | ------------------- | ----------------------------- | -------------------------------------------------- |
-    | `recharts` | ^3.1.2                       | Allows financial and analytics graphing |
-    | | | |
+| Package             | Version | Purpose                                            |
+| ------------------- | ----------------------------- | -------------------------------------------------- |
+| `recharts` | ^3.1.2                       | Allows financial and analytics graphing |
+| | | |
 
