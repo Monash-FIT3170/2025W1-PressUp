@@ -85,6 +85,7 @@ import '../imports/api/TrainingAssignments/TrainingAssignmentsPublications';
 
 Meteor.startup(async () => {
   // delete following after tech demo ??????????????????????????????????????????????????????????????????????????????
+  await SuppliersCollection.removeAsync({})
 
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -141,7 +142,7 @@ Meteor.startup(async () => {
     }
   });
 
-  if (nCategories === 1) {
+  if (nCategories === 0) {
 
     const defaultCategories = [
     { category: "drinks",     sortOrder: 1, _id: 'drinks' },
@@ -150,7 +151,7 @@ Meteor.startup(async () => {
     { category: "pastries",   sortOrder: 4, _id: 'pastries' },
     { category: "specials",   sortOrder: 5, _id: 'specials' },
   ];
-  defaultCategories.forEach(async (cat) => await SuppliersCollection.insertAsync(cat))
+  defaultCategories.forEach(async (cat) => await MenuCategories.insertAsync(cat))
   }
 
   if (nOrders === 0) {
