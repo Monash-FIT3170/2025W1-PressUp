@@ -25,7 +25,10 @@ import { InventoryViewModeDropdown } from "./Components/InventoryViewModeDropdow
 import { SearchBar } from "./Components/PageHeader/SearchBar/SearchBar.jsx";
 import { OrderSummary } from "./Components/POS/orderSummary.jsx";
 import { Login } from "./Components/Login/Login.jsx";
+import { KitchenDisplay } from "./Components/Kitchen/KitchenDisplay.jsx";
+import TrainingPage from "./Components/Training/TrainingPage.jsx";
 import TableMap from "./Components/Tables/TableMap.jsx";
+import AdminAssignModules from "./Components/Training/adminAssignModules.jsx"; 
 import { PreLoginPage } from "./Components/PreLogin/PreLoginPage.jsx"; // New component
 import { LoyaltySignupPage } from "./Components/PreLogin/LoyaltySignupPage.jsx"; // New component
 import { Enquiries } from "./Components/Enquiries/Enquiries.jsx";
@@ -34,6 +37,11 @@ import { PromotionPage } from './Components/Promotion/PromotionPage.jsx';
 import { EnquiryResponsePage } from "./Components/CustomerCommunication/EnquiryResponsePage.jsx";
 import { FeedbackResponsePage } from "./Components/CustomerCommunication/FeedbackResponsePage.jsx";
 import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxViewModeDropdown.jsx";
+import Dashboard from './Components/Analytics/Dashboard.jsx';
+import { Finance } from "./Components/Finance/Finance.jsx";
+import ModulePage from "./Components/Training/ModulePage.jsx";
+
+import { Scheduling } from "./Components/Scheduling/Scheduling.jsx";
 
 // Styles
 import "./AppStyle.css";
@@ -135,27 +143,38 @@ export const App = () => {
     setShowPopup(true);
   };
 
-  useEffect(() => {
-    // Only fetch menu items if user is logged in
-    if (user) {
-      Meteor.call("menu.getAll", (error, result) => {
-        if (error) {
-          console.error("Error fetching menu items:", error);
-        } else {
-          setMenuItems(result);
+useEffect(() => {
+    if (!user) return;
 
-          const uniqueCategories = [
-            ...new Set(
-              result
-                .map((item) => item.menuCategory)
-                .filter((category) => category && category.trim() !== "")
-            ),
-          ];
-          setCategories(["All", ...uniqueCategories]);
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const result = await Meteor.callAsync("menu.getAll"); // no callback
+
+        if (cancelled) return;
+
+        setMenuItems(result);
+
+        const uniqueCategories = Array.from(
+          new Set(
+            (result || [])
+              .map(item => item?.menuCategory?.trim())
+              .filter(Boolean)
+          )
+        );
+
+        setCategories(["All", ...uniqueCategories]);
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Error fetching menu items:", error);
         }
-      });
-    }
+      }
+    })();
+
+    return () => { cancelled = true; };
   }, [user]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -309,6 +328,96 @@ export const App = () => {
             }
           />
 
+          <Route
+            path="/kitchen"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <KitchenDisplay isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Finance route */}
+          <Route
+            path="/finance"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Finance />
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/training"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isAdmin={user?.isAdmin} />
+                <div className="main-content">
+                  <PageHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+                  <TrainingPage isSidebarOpen={isSidebarOpen} />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Module detail page (fix for "blank page" when starting training) */}
+          <Route
+            path="/training/module/:id"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} isAdmin={user?.isAdmin} label="Training" />
+                <div className="main-content">
+                  {/* Header keeps UX consistent; ModulePage already handles Loading / Not found */}
+                  <PageHeader isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+                  <ModulePage />
+                </div>
+              </div>
+            }
+          />
+
+          <Route
+            path="/training/module/:id"
+            element={
+              <div className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}>
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                  label="Training"
+                />
+                <div className="main-content">
+                  <ModulePage />
+                </div>
+              </div>
+            }
+          />
+          
           {/* Other protected routes */}
           <Route
             path="/inventory"
@@ -414,6 +523,7 @@ export const App = () => {
                     isSidebarOpen={isSidebarOpen}
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
+                  <Scheduling />
                 </div>
               </div>
             }
@@ -493,6 +603,30 @@ export const App = () => {
               </div>
             }
           />
+
+
+          <Route
+            path="/analytics"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <Dashboard />
+                </div> {/* ✅ closes main-content */}
+              </div>   
+            }
+          />
+
         </Routes>
       </RouteHandler>
     </BrowserRouter>

@@ -10,7 +10,7 @@ Menu.schema = new SimpleSchema({
     },
 
     price: {
-        type: String,
+        type: Number,
         regEx: /^\d+(\.\d{1,2})?$/,
         label: 'Price of the menu item in dollars etc.'
     },
@@ -70,6 +70,21 @@ Menu.schema = new SimpleSchema({
     'schedule.$.to': {
         type: String,
         label: 'End time in HH:mm format'
+    },
+    seasons:{
+        type: Array,
+        optional: true,
+        label: 'seasons available'
+    },
+    'seasons.$':{
+        type: String,
+        allowedValues: [
+            'Summer',
+            'Winter',
+            'Autumn',
+            'Spring'
+        ],
+        label: 'seasons available'
     },
 
     isHalal: {

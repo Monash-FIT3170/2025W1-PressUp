@@ -1,0 +1,56 @@
+.training-card {
+  position: relative;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 0.75rem;          /* ↓ from 1rem */
+  width: 95%;               /* fill column width */
+  max-width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;   /* tighter vertical packing */
+  margin: 0;                 /* remove large outside margins in columns */
+  justify-content: space-between;
+  gap: 0.75rem;              /* breathing room between text and button */
+}
+
+.tc-head { margin-bottom: 0.5rem; }  /* tighter */
+.tc-title {
+  font-size: 1rem;           /* ↓ from 1.25rem */
+  font-weight: 600;
+  color: #333;
+}
+.tc-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.tc-time { font-size: 0.8rem; color: #666; }
+.tc-info { flex-grow: 1; }
+
+.tc-description,
+.tc-duration {
+  margin: 0.25rem 0;         /* tighter spacing */
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.tc-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 0.5rem;
+}
+.start {
+  padding: 0.45rem 0.8rem;   /* smaller button to shrink card height */
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+.start:hover { background-color: #218838; }

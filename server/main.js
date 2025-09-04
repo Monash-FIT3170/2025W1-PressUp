@@ -1,9 +1,8 @@
 // server/main.js
 import { Meteor } from "meteor/meteor";
 import { WebApp } from "meteor/webapp";
-
+import { MongoInternals } from "meteor/mongo";
 import { MenuCategories } from "/imports/api/menu-categories/menu-categories-collection";
-import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
 import '/imports/api/menu-categories/menu-categories-methods';
 
@@ -33,6 +32,22 @@ import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
 
+import { EmployeesCollection } from '../imports/api/payroll/employee/employees-collection.js';
+import "../imports/api/payroll/employee/employees-methods.js";
+import "../imports/api/payroll/employee/employees-publications.js";
+
+import { RosterItemsCollection } from '../imports/api/payroll/roster/rosteritem-collection.js';
+import "../imports/api/payroll/roster/rosteritem-methods.js";
+import "../imports/api/payroll/roster/rosteritem-publications.js";
+
+import { DepartmentsCollection } from '../imports/api/payroll/departments/departments-collection.js';
+import "../imports/api/payroll/departments/departments-methods.js";
+import "../imports/api/payroll/departments/departments-publications.js";
+
+import { RolesCollection } from '../imports/api/payroll/roles/roles-collection.js';
+import "../imports/api/payroll/roles/roles-methods.js";
+import "../imports/api/payroll/roles/roles-publications.js";
+
 
 import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
 import "../imports/api/enquiries/enquiries-methods";
@@ -55,6 +70,19 @@ import "../imports/api/customers/customers-methods.js";
 import { LoyaltySettingsCollection } from '../imports/api/loyalty/loyalty-settings-collection.js';
 import "../imports/api/loyalty/loyalty-setting-methods.js";
 
+import '/imports/api/analytics/methods.server.js';
+
+import "/imports/api/finance/finance-methods.js";
+
+import { TrainingModules } from '../imports/api/trainingModules/trainingModuleCollection';
+import '../imports/api/trainingModules/TrainingModulesMethods';
+import '../imports/api/trainingModules/trainingModulePublications';
+
+import {TrainingAssignments} from '../imports/api/TrainingAssignments/TrainingAssignmentsCollection';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsMethods';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsPublications';
+
+
 Meteor.startup(async () => {
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
@@ -63,6 +91,7 @@ Meteor.startup(async () => {
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
   const nPromotions = await PromotionsCollection.find().countAsync();
+  const nTrainingModules = await TrainingModules.find().countAsync();
   // Ignore any changes that have been applied.
   const nScheduledChanges = await ScheduledChanges.find({
     applied: { $ne: true } 
@@ -109,6 +138,18 @@ Meteor.startup(async () => {
       next();
     }
   });
+
+  if (nCategories === 0) {
+
+    const defaultCategories = [
+    { category: "drinks",     sortOrder: 1 },
+    { category: "breakfast",  sortOrder: 2 },
+    { category: "lunch",      sortOrder: 3 },
+    { category: "pastries",   sortOrder: 4 },
+    { category: "specials",   sortOrder: 5 },
+  ];
+  defaultCategories.forEach(async (cat) => await SuppliersCollection.insertAsync(cat))
+  }
 
   if (nOrders === 0) {
     console.log("No order items found. Initializing with default items.");
@@ -199,6 +240,19 @@ Meteor.startup(async () => {
     );
   }
 
+  if (nTrainingModules === 0) {
+    const seed = [
+      { title: 'Food Safety Basics', description: 'Learn essential food safety practices.', duration: 30, link: 'https://example.com/food-safety' },
+      { title: 'Customer Service', description: 'Best practices for customer interactions.', duration: 45, link: 'https://example.com/customer-service' },
+      { title: 'POS System Training', description: 'How to use the Point of Sale system.', duration: 20, link: 'https://example.com/pos' },
+      { title: 'Kitchen Operations', description: 'Overview of kitchen workflows.', duration: 40, link: 'https://example.com/kitchen-ops' },
+      { title: 'Kitchen Cleaning', description: 'Best practices for kitchen cleaning techniques.', duration: 40, link: 'https://example.com/cleaning' },
+    ];
+    seed.forEach(
+      async (doc) => await TrainingModules.insertAsync({ ...doc, createdAt: new Date() })
+    );
+  }
+
   if (nPromotions === 0) {
     PromotionsCollection.insertAsync({
       name: 'Promotion',
@@ -213,6 +267,8 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }
+
+
 
   // Clear existing customers and initialize test customers for loyalty points testing
   // await CustomersCollection.removeAsync({});
