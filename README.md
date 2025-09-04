@@ -35,6 +35,7 @@
 - **Analytics Dashboard**: Financial reporting and business insights
 - **Customer Communication**: Enquiry management and feedback systems
 - **Staff Training**: Training module assignments and progress tracking
+- **Employee Scheduling**: Shift planning, timesheet management, and payroll integration
 - **Table Management**: Restaurant table layout and reservation system
 - **Menu Management**: Dynamic menu creation and pricing
 - **Promotions**: Discount and promotional campaign management
@@ -120,6 +121,12 @@ Ensure you have the following installed:
 <!-- - **Location**: `imports/ui/Components/CustomerCommunication/` -->
 - **Key Features**: Enquiry management, feedback collection
 - **Dependencies**: Enquiries collection, Feedback collection
+
+### Employee Scheduling
+<!-- - **Location**: `imports/api/payroll/timesheet/` -->
+- **Key Features**: Shift planning, timesheet management, payroll integration, schedule optimization
+- **Dependencies**: Users collection, Payroll methods, Scheduler service
+- **Related Components**: Timesheet tracking, shift assignment, payroll calculations
 
 ---
 
