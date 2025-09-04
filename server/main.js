@@ -142,11 +142,11 @@ Meteor.startup(async () => {
   if (nCategories === 0) {
 
     const defaultCategories = [
-    { category: "drinks",     sortOrder: 1 },
-    { category: "breakfast",  sortOrder: 2 },
-    { category: "lunch",      sortOrder: 3 },
-    { category: "pastries",   sortOrder: 4 },
-    { category: "specials",   sortOrder: 5 },
+    { category: "drinks",     sortOrder: 1, _id: 'drinks' },
+    { category: "breakfast",  sortOrder: 2, _id: 'breakfast' },
+    { category: "lunch",      sortOrder: 3, _id: 'lunch' },
+    { category: "pastries",   sortOrder: 4, _id: 'pastries' },
+    { category: "specials",   sortOrder: 5, _id: 'specials' },
   ];
   defaultCategories.forEach(async (cat) => await SuppliersCollection.insertAsync(cat))
   }
@@ -178,22 +178,60 @@ Meteor.startup(async () => {
     console.log("No inventory items found. Initializing with default items.");
     const defaultItems = [
       {
+        _id: "coffee1",
         name: "Arabica beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
       },
       {
+        _id: "coffee2",
         name: "Robusta beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
       },
       {
+        _id: "coffee3",
         name: "Liberica beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
+      },
+      {
+        _id: "beef1",
+        name: "minced beef",
+        quantity: 10,
+        units: "kg",
+        price: "$4.50",
+      },
+      {
+        _id: "chicken1",
+        name: "chicken breast",
+        quantity: 10,
+        units: "kg",
+        price: "$6.50",
+      },
+      {
+        _id: "rice1",
+        name: "white rice",
+        quantity: 3,
+        units: "kg",
+        price: "$2.50",
+      },
+      {
+        _id: "bread1",
+        name: "brioche bun",
+        quantity: 3,
+        units: "kg",
+        price: "$1.50",
+      },
+      {
+        _id: "milk1",
+        name: "milk",
+        quantity: 3,
+        units: "L",
+        price: "$2.50",
       },
     ];
     defaultItems.forEach(
@@ -238,6 +276,99 @@ Meteor.startup(async () => {
     defaultSuppliers.forEach(
       async (item) => await SuppliersCollection.insertAsync(item)
     );
+  }
+
+  // menu item json 
+
+  if (nMenuItems === 0) {
+    const defaultMenuItems = [
+    {
+      _id: 'beefBurger',
+      name: 'Beef Burger',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'beef1', amount: 100 }, { id: 'bread1', amount: 49 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'chickenBurger',
+      name: 'Chicken Burger',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'bread1', amount: 49 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'espresso',
+      name: 'Espresso',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'flatwhite',
+      name: 'Flat White',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee12', amount: 10 }, { id: 'milk1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+
+    ];
+    defaultMenuItems.forEach(async (item) => await Menu.insertAsync(item));
   }
 
   if (nTrainingModules === 0) {
