@@ -187,3 +187,13 @@
 .payment-btn.selected {
   background-color: #e5e7eb;
 }
+
+#destructive {
+  background-color: oklch(70.4% 0.191 22.216);
+  color: white;
+}
+
+#destructive:hover,
+.selected#destructive {
+  background-color: oklch(63.7% 0.237 25.331);
+}

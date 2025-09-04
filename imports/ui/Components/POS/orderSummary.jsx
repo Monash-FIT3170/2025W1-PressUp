@@ -9,7 +9,10 @@ import { Banknote, CreditCard } from "lucide-react";
 
 // Utility function for order calculations
 const calculateOrderTotals = (order) => {
-  const gross = order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+  const gross = order.items.reduce(
+    (sum, item) => sum + item.quantity * item.price,
+    0
+  );
   const GST = gross / 11;
   const total = order.discount ? gross - order.discount : gross;
   return { gross, GST, total };
@@ -69,6 +72,14 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
   }, [paymentMethods, order]);
 
   function proceedButtonAction() {
+    if (paymentMethods === "cards-failed") {
+      alert(
+        "❌ Payment failed. Please try again or use a different payment method."
+      );
+
+      return;
+    }
+
     setShowChangeInfo(true);
   }
   //if loading show loading indicator
@@ -80,7 +91,7 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
   if (!order || order.length === 0) {
     return <div className="order-summary">invalid order number.</div>;
   }
-  
+
   order = order[0];
   const { gross, GST, total } = calculateOrderTotals(order);
   //show change info section after proceeding
@@ -145,6 +156,16 @@ const PaymentMethods = ({ setPaymentMethods, paymentMethods }) => {
         className={`payment-btn ${
           paymentMethods === "cards" ? "selected" : ""
         }`}
+      >
+        <CreditCard size={16} />
+        <span>Cards</span>
+      </button>
+      <button
+        onClick={() => setPaymentMethods("cards-failed")}
+        className={`payment-btn ${
+          paymentMethods === "cards-failed" ? "selected" : ""
+        }`}
+        id="destructive"
       >
         <CreditCard size={16} />
         <span>Cards</span>
