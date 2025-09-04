@@ -45,6 +45,17 @@
   font-size: 14px;
   color: #333;
 }
+
+.koc-recipe {
+  font-size: 12px;
+  color: #333;
+}
+
+.koc-ing {
+  overflow-wrap: anywhere;
+  font-style: italic;
+}
+
 .koc-qty {
   font-weight: 600;
 }
