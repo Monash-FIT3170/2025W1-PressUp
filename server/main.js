@@ -220,6 +220,13 @@ Meteor.startup(async () => {
         price: "$2.50",
       },
       {
+        _id: "egg1",
+        name: "Eggs",
+        quantity: 3,
+        units: "dozen",
+        price: "$2.50",
+      },
+      {
         _id: "bread1",
         name: "brioche bun",
         quantity: 3,
@@ -280,7 +287,7 @@ Meteor.startup(async () => {
 
   // menu item json 
 
-  if (nMenuItems === 1) {
+  if (nMenuItems === 0) {
     const defaultMenuItems = [
     {
       _id: 'beefBurger',
@@ -291,7 +298,7 @@ Meteor.startup(async () => {
       isHalal: false,
       isVegetarian: false,
       isGlutenFree: false,
-      ingredients: [ { id: 'beef1', amount: 100 }, { id: 'bread1', amount: 49 } ],
+      ingredients: [ { id: 'beef1', amount: 100 }, { id: 'bread1', amount: 2 } ],
       schedule: {
         Monday: { available: true, start: '', end: '' },
         Tuesday: { available: true, start: '', end: '' },
@@ -312,7 +319,49 @@ Meteor.startup(async () => {
       isHalal: false,
       isVegetarian: false,
       isGlutenFree: false,
-      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'bread1', amount: 49 } ],
+      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'bread1', amount: 2 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'burritoBowl',
+      name: 'Burito Bowl',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'rice1', amount: 49 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'scrambledEggs',
+      name: 'Scrambled Eggs',
+      price: 12,
+      menuCategory: 'breakfast',
+      available: true,
+      isHalal: false,
+      isVegetarian: true,
+      isGlutenFree: false,
+      ingredients: [ { id: 'eggs', amount: 1 }, { id: 'bread1', amount: 1 } ],
       schedule: {
         Monday: { available: true, start: '', end: '' },
         Tuesday: { available: true, start: '', end: '' },
@@ -334,6 +383,27 @@ Meteor.startup(async () => {
       isVegetarian: false,
       isGlutenFree: false,
       ingredients: [ { id: 'coffee1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'blackCoffee',
+      name: 'Black Coffee',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee3', amount: 10 }, { id: 'milk1', amount: 10 } ],
       schedule: {
         Monday: { available: true, start: '', end: '' },
         Tuesday: { available: true, start: '', end: '' },
