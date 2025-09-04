@@ -280,7 +280,7 @@ Meteor.startup(async () => {
 
   // menu item json 
 
-  if (nMenuItems === 0) {
+  if (nMenuItems === 1) {
     const defaultMenuItems = [
     {
       _id: 'beefBurger',
