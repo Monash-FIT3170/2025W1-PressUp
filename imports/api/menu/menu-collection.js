@@ -10,7 +10,7 @@ Menu.schema = new SimpleSchema({
     },
 
     price: {
-        type: String,
+        type: Number,
         regEx: /^\d+(\.\d{1,2})?$/,
         label: 'Price of the menu item in dollars etc.'
     },
@@ -20,20 +20,23 @@ Menu.schema = new SimpleSchema({
         label: 'An id of a menu category.'
     },
 
-    // menuSubCategory: {
-    //   type: String,
-    //   regEx: /^[a-fA-F0-9]{24}$/,
-    //   optional: true,
-    //   label: 'An id of a menu sub category.'
-    // },
-
+    // Fixed ingredients schema to match your methods
     ingredients: {
         type: Array,
         optional: true,
-        label: 'A list of ingredient Ids that the item contains.'
+        label: 'A list of ingredients with their amounts.'
     },
     'ingredients.$': {
-        type: String
+        type: Object,
+        label: 'Individual ingredient with id and amount'
+    },
+    'ingredients.$.id': {
+        type: String,
+        label: 'Ingredient ID'
+    },
+    'ingredients.$.amount': {
+        type: Number,
+        label: 'Amount of ingredient'
     },
 
     available: {
@@ -71,12 +74,13 @@ Menu.schema = new SimpleSchema({
         type: String,
         label: 'End time in HH:mm format'
     },
-    seasons:{
+
+    seasons: {
         type: Array,
         optional: true,
         label: 'seasons available'
     },
-    'seasons.$':{
+    'seasons.$': {
         type: String,
         allowedValues: [
             'Summer',

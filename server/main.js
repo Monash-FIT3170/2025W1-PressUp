@@ -1,9 +1,8 @@
 // server/main.js
 import { Meteor } from "meteor/meteor";
 import { WebApp } from "meteor/webapp";
-
+import { MongoInternals } from "meteor/mongo";
 import { MenuCategories } from "/imports/api/menu-categories/menu-categories-collection";
-import '/imports/api/menu-categories/menu-categories-initialise';
 import '/imports/api/menu-categories/menu-categories-publications';
 import '/imports/api/menu-categories/menu-categories-methods';
 
@@ -33,6 +32,22 @@ import { TablesCollection } from '../imports/api/tables/TablesCollection';
 import "../imports/api/tables/TablesMethods";
 import "../imports/api/tables/TablesPublications";
 
+import { EmployeesCollection } from '../imports/api/payroll/employee/employees-collection.js';
+import "../imports/api/payroll/employee/employees-methods.js";
+import "../imports/api/payroll/employee/employees-publications.js";
+
+import { RosterItemsCollection } from '../imports/api/payroll/roster/rosteritem-collection.js';
+import "../imports/api/payroll/roster/rosteritem-methods.js";
+import "../imports/api/payroll/roster/rosteritem-publications.js";
+
+import { DepartmentsCollection } from '../imports/api/payroll/departments/departments-collection.js';
+import "../imports/api/payroll/departments/departments-methods.js";
+import "../imports/api/payroll/departments/departments-publications.js";
+
+import { RolesCollection } from '../imports/api/payroll/roles/roles-collection.js';
+import "../imports/api/payroll/roles/roles-methods.js";
+import "../imports/api/payroll/roles/roles-publications.js";
+
 
 import { EnquiriesCollection } from "../imports/api/enquiries/enquiries-collection";
 import "../imports/api/enquiries/enquiries-methods";
@@ -59,8 +74,17 @@ import '/imports/api/analytics/methods.server.js';
 
 import "/imports/api/finance/finance-methods.js";
 
+import { TrainingModules } from '../imports/api/trainingModules/trainingModuleCollection';
+import '../imports/api/trainingModules/TrainingModulesMethods';
+import '../imports/api/trainingModules/trainingModulePublications';
+
+import {TrainingAssignments} from '../imports/api/TrainingAssignments/TrainingAssignmentsCollection';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsMethods';
+import '../imports/api/TrainingAssignments/TrainingAssignmentsPublications';
+
 
 Meteor.startup(async () => {
+  // delete following after tech demo ??????????????????????????????????????????????????????????????????????????????
   // Testing menu and categories.
   const nCategories = await MenuCategories.find().countAsync();
   const nMenuItems = await Menu.find().countAsync();
@@ -68,6 +92,7 @@ Meteor.startup(async () => {
   const nSuppliers = await SuppliersCollection.find().countAsync();
   const nOrders = await OrdersCollection.find().countAsync();
   const nPromotions = await PromotionsCollection.find().countAsync();
+  const nTrainingModules = await TrainingModules.find().countAsync();
   // Ignore any changes that have been applied.
   const nScheduledChanges = await ScheduledChanges.find({
     applied: { $ne: true } 
@@ -115,6 +140,18 @@ Meteor.startup(async () => {
     }
   });
 
+  if (nCategories === 0) {
+
+    const defaultCategories = [
+    { category: "drinks",     sortOrder: 1, _id: 'drinks' },
+    { category: "breakfast",  sortOrder: 2, _id: 'breakfast' },
+    { category: "lunch",      sortOrder: 3, _id: 'lunch' },
+    { category: "pastries",   sortOrder: 4, _id: 'pastries' },
+    { category: "specials",   sortOrder: 5, _id: 'specials' },
+  ];
+  defaultCategories.forEach(async (cat) => await MenuCategories.insertAsync(cat))
+  }
+
   if (nOrders === 0) {
     console.log("No order items found. Initializing with default items.");
     const defaultItems = [
@@ -142,22 +179,67 @@ Meteor.startup(async () => {
     console.log("No inventory items found. Initializing with default items.");
     const defaultItems = [
       {
+        _id: "coffee1",
         name: "Arabica beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
       },
       {
+        _id: "coffee2",
         name: "Robusta beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
       },
       {
+        _id: "coffee3",
         name: "Liberica beans",
         quantity: 2,
         units: "kg",
         price: "$1.50",
+      },
+      {
+        _id: "beef1",
+        name: "minced beef",
+        quantity: 10,
+        units: "kg",
+        price: "$4.50",
+      },
+      {
+        _id: "chicken1",
+        name: "chicken breast",
+        quantity: 10,
+        units: "kg",
+        price: "$6.50",
+      },
+      {
+        _id: "rice1",
+        name: "white rice",
+        quantity: 3,
+        units: "kg",
+        price: "$2.50",
+      },
+      {
+        _id: "egg1",
+        name: "Eggs",
+        quantity: 3,
+        units: "dozen",
+        price: "$2.50",
+      },
+      {
+        _id: "bread1",
+        name: "brioche bun",
+        quantity: 3,
+        units: "kg",
+        price: "$1.50",
+      },
+      {
+        _id: "milk1",
+        name: "milk",
+        quantity: 3,
+        units: "L",
+        price: "$2.50",
       },
     ];
     defaultItems.forEach(
@@ -204,6 +286,175 @@ Meteor.startup(async () => {
     );
   }
 
+  // menu item json 
+
+  if (nMenuItems === 0) {
+    const defaultMenuItems = [
+    {
+      _id: 'beefBurger',
+      name: 'Beef Burger',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'beef1', amount: 100 }, { id: 'bread1', amount: 2 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'chickenBurger',
+      name: 'Chicken Burger',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'bread1', amount: 2 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'burritoBowl',
+      name: 'Burito Bowl',
+      price: 12,
+      menuCategory: 'lunch',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'chicken1', amount: 100 }, { id: 'rice1', amount: 49 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'scrambledEggs',
+      name: 'Scrambled Eggs',
+      price: 12,
+      menuCategory: 'breakfast',
+      available: true,
+      isHalal: false,
+      isVegetarian: true,
+      isGlutenFree: false,
+      ingredients: [ { id: 'eggs', amount: 1 }, { id: 'bread1', amount: 1 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'espresso',
+      name: 'Espresso',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'blackCoffee',
+      name: 'Black Coffee',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee3', amount: 10 }, { id: 'milk1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+    {
+      _id: 'flatwhite',
+      name: 'Flat White',
+      price: 4,
+      menuCategory: 'drinks',
+      available: true,
+      isHalal: false,
+      isVegetarian: false,
+      isGlutenFree: false,
+      ingredients: [ { id: 'coffee12', amount: 10 }, { id: 'milk1', amount: 10 } ],
+      schedule: {
+        Monday: { available: true, start: '', end: '' },
+        Tuesday: { available: true, start: '', end: '' },
+        Wednesday: { available: true, start: '', end: '' },
+        Thursday: { available: true, start: '', end: '' },
+        Friday: { available: true, start: '', end: '' },
+        Saturday: { available: true, start: '', end: '' },
+        Sunday: { available: true, start: '', end: '' }
+      },
+      seasons: []
+    },
+
+    ];
+    defaultMenuItems.forEach(async (item) => await Menu.insertAsync(item));
+  }
+
+  if (nTrainingModules === 0) {
+    const seed = [
+      { title: 'Food Safety Basics', description: 'Learn essential food safety practices.', duration: 30, link: 'https://example.com/food-safety' },
+      { title: 'Customer Service', description: 'Best practices for customer interactions.', duration: 45, link: 'https://example.com/customer-service' },
+      { title: 'POS System Training', description: 'How to use the Point of Sale system.', duration: 20, link: 'https://example.com/pos' },
+      { title: 'Kitchen Operations', description: 'Overview of kitchen workflows.', duration: 40, link: 'https://example.com/kitchen-ops' },
+      { title: 'Kitchen Cleaning', description: 'Best practices for kitchen cleaning techniques.', duration: 40, link: 'https://example.com/cleaning' },
+    ];
+    seed.forEach(
+      async (doc) => await TrainingModules.insertAsync({ ...doc, createdAt: new Date() })
+    );
+  }
+
   if (nPromotions === 0) {
     PromotionsCollection.insertAsync({
       name: 'Promotion',
@@ -218,6 +469,8 @@ Meteor.startup(async () => {
     });
     console.log('[Server] Inserted test promotion');
   }
+
+
 
   // Clear existing customers and initialize test customers for loyalty points testing
   // await CustomersCollection.removeAsync({});

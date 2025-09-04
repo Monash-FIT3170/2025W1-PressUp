@@ -1,0 +1,87 @@
+/* Main page container */
+.training-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;     /* page itself doesn't scroll; columns will */
+  background: #fff;
+}
+
+/* Header */
+.training-header {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e6e6e6;
+}
+.training-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Optional admin area */
+.training-admin-wrap {
+  flex: 0 0 auto;
+  padding: 0 16px 12px;
+}
+.training-admin-wrap hr { margin-top: 12px; }
+
+/* === 2-COLUMN LAYOUT === */
+.training-columns {
+  flex: 1 1 auto;                 /* fill remaining height */
+  min-height: 0;                  /* allow children to shrink & scroll */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* left: not completed, right: completed */
+  gap: 80px;
+  padding: 0 16px 16px;
+}
+@media (max-width: 1024px) {
+  .training-columns { grid-template-columns: 1fr; }
+}
+
+/* Each column container */
+.training-col {
+  min-width: 0;                   /* fix grid overflow issues */
+  min-height: 0;                  /* 🔑 allow inner list to shrink */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;               /* keep scrollbars inside the list */
+}
+
+.training-col h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  padding-top: 2px;
+}
+
+/* The scrollable list inside each column */
+.training-col-list {
+  flex: 1 1 auto;                 /* 🔑 take all remaining column height */
+  min-height: 0;                  /* 🔑 allow scrolling instead of stretching */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;               /* 🔑 vertical scroll only */
+  overflow-x: hidden;             /* no sideways scroll */
+  padding-right: 12px;            /* room for scrollbar */
+  box-sizing: border-box;
+}
+
+/* Optional: slimmer WebKit scrollbars */
+.training-col-list::-webkit-scrollbar { width: 8px; }
+.training-col-list::-webkit-scrollbar-thumb { background: #d0d0d0; }
+
+/* Empty / loading states */
+.training-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Hide any legacy layouts */
+.training-cards-flex-wrapper { display: none; }
+.training-cards-flex { display: none; }

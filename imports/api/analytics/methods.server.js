@@ -91,7 +91,7 @@ Meteor.methods({
   // This keeps it robust to your schema.
   // Params: { onlyClosed?, start?, end? }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = buildMatch({ onlyClosed, start, end });
 
@@ -110,6 +110,18 @@ Meteor.methods({
               { $ifNull: ['$items.price', 0] },
               { $ifNull: ['$items.quantity', 1] }
             ]
+          },
+          lineGross: {
+            $multiply: [
+              { $ifNull: ['$items.price', 0] },
+              { $ifNull: ['$items.quantity', 1] }
+            ]
+          },
+          lineCost: {
+            $multiply: [
+              { $ifNull: ['$items.cost', 0] },
+              { $ifNull: ['$items.quantity', 1] }
+            ]
           }
         }
       },
@@ -119,7 +131,8 @@ Meteor.methods({
         $group: {
           _id: '$_id',
           orderTotalField: { $max: '$totalField' }, // if 'total' exists, we’ll take it
-          lineRevenue: { $sum: '$lineTotal' }
+          gross: { $sum: '$lineGross' },
+          cost:    { $sum: '$lineCost' }
         }
       },
 
@@ -132,7 +145,10 @@ Meteor.methods({
               '$orderTotalField',
               '$lineRevenue'
             ]
-          }
+          },
+          gross: 1,
+          cost:  1,
+          profit: { $subtract: ['$gross', '$cost'] }
         }
       },
 
@@ -141,7 +157,10 @@ Meteor.methods({
         $group: {
           _id: null,
           orders: { $sum: 1 },
-          revenue: { $sum: { $ifNull: ['$orderRevenue', 0] } }
+          revenue: { $sum: { $ifNull: ['$orderRevenue', 0] } },
+          totalGross:   { $sum: { $ifNull: ['$gross', 0] } },
+          totalCost:    { $sum: { $ifNull: ['$cost', 0] } },
+          totalProfit:  { $sum: { $ifNull: ['$profit', 0] } }
         }
       },
       {
@@ -151,7 +170,10 @@ Meteor.methods({
           revenue: 1,
           avgOrderValue: {
             $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$revenue', '$orders'] }]
-          }
+          },
+          sales: { $round: ['$totalGross', 2] },
+          cost: { $round: ['$totalCost', 2] },
+          profit: { $round: ['$totalProfit', 2] }
         }
       }
     ]).toArray();
@@ -168,7 +190,19 @@ Meteor.methods({
 
     const activeItems = activeItemsAgg[0]?.activeItems ?? 0;
 
-    return { ...kpis, activeItems };
+    let value;
+    switch (metric) {
+      case 'cost': value = kpis.cost; break;
+      case 'profit': value = kpis.profit; break;
+      default: value = kpis.sales;
+    }
+
+    return { 
+      orders: kpis.orders, 
+      value,
+      metric,
+      activeItems
+    };
   },
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -455,7 +489,7 @@ Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
   // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales" } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = {};
     if (onlyClosed) match.status = 'closed';
@@ -478,16 +512,76 @@ Meteor.methods({
               format: '%Y-%m-%d', timezone: TZ
             }
           },
-          gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] }
+          sales: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] },
+          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0] }, { $ifNull: ['$items.quantity', 1] }] }
       }},
 
-      { $group: { _id: '$date', grossSales: { $sum: '$gross' } } },
-      { $project: { _id: 0, date: '$_id', grossSales: { $round: ['$grossSales', 2] } } },
+      {
+        $group: {
+          _id: '$date',
+          sales: { $sum: '$sales' },
+          cost: { $sum: '$cost' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          sales: { $round: ['$sales', 2] },
+          cost: { $round: ['$cost', 2] },
+          profit: { $round: [{ $subtract: ['$sales', '$cost'] }, 2] }
+        }
+      },
       { $sort: { date: 1 } }
     ];
 
     return raw.aggregate(pipeline).toArray();
-  }
+  },
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Peak hours analysis (x = hour of day, y = # of orders)
+  // Respects { start, end, onlyClosed }
+  // ─────────────────────────────────────────────────────────────────────────────
+  async 'analytics.peakHours'({ onlyClosed = false, start = null, end = null } = {}) {
+    const raw = OrdersCollection.rawCollection();
+    const match = {};
+    if (onlyClosed) match.status = 'closed';
+    if (start || end) {
+      match.createdAt = {};
+      if (start) match.createdAt.$gte = new Date(start);
+      if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    const TZ = 'Australia/Melbourne';
+
+    const isDaily = start && end; // if we pass a range, always aggregate daily
+
+    const pipeline = [
+      ...(Object.keys(match).length ? [{ $match: match }] : []),
+      {
+        $project: {
+          label: isDaily
+            ? { $dateToString: { date: "$createdAt", format: "%Y-%m-%d", timezone: TZ } }
+            : { $hour: { date: "$createdAt", timezone: TZ } }
+        }
+      },
+      { $group: { _id: "$label", count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ];
+
+    const result = await raw.aggregate(pipeline).toArray();
+
+    if (isDaily) {
+      return result.map(r => ({
+        date: r._id, // YYYY-MM-DD
+        count: r.count
+      }));
+    } else {
+      return result.map(r => ({
+        hour: r._id, // 0–23
+        count: r.count
+      }));
+    }
+  }
 
 });
