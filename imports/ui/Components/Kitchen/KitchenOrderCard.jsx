@@ -23,7 +23,7 @@ function formatAEST(date) {
   }
 }
 
-const KitchenIngredientCard = ({ingredient}) => {
+const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setModalName}) => {
   const [ingName,setIngName] = useState("");
   const [ingUnit,setIngUnit] = useState("");
   const isLoading = useSubscribe("inventory.id",ingredient.id);
@@ -37,17 +37,20 @@ const KitchenIngredientCard = ({ingredient}) => {
   if (isLoading()) {
     return <></>;
   }
-  
 
   return (
     <>
-      <span className='koc-ing'>{ingName}</span>
+      <span className='koc-ing' onClick={()=>{
+        setShowModal(true);
+        setModalIngredient(completeIngredient);
+        setModalName(ingName)
+      }}>{ingName}</span>
       <span>{ingredient.amount} {ingUnit}</span>
     </>
   )
 }
 
-const KitchenRecipeCard = ({ item }) => {
+const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalName }) => {
     const [ingredients,setIngredients] = useState([]);
     const isLoading = useSubscribe("menuItems.id",item.id);
     const menuItem = useFind(() => Menu.find({_id:item.id}), [item.id]);
@@ -65,11 +68,18 @@ const KitchenRecipeCard = ({ item }) => {
     return (
           <>
           <span className="koc-qty">{item.quantity}&times;</span>
-          <span className="koc-name">{item.menu_item}</span>
+          <span className="koc-name" onClick={()=>{
+        setShowModal(true);
+        setModalIngredient(ingredients);
+        setModalName(item.menu_item)
+      }}>{item.menu_item}</span>
           <ul>{ingredients.map((ing, idx) => (
           <li key={ing.id || idx} className="koc-recipe">
           <KitchenIngredientCard 
             ingredient={ing}
+            setModalIngredient={setModalIngredient}
+            setShowModal={setShowModal}
+            setModalName={setModalName}
           />
           </li>
         ))}</ul>
@@ -77,7 +87,7 @@ const KitchenRecipeCard = ({ item }) => {
     )
 }
 
-const KitchenOrderCard = ({ order }) => {
+const KitchenOrderCard = ({ order, setShowModal, setModalIngredient, setModalName }) => {
   const { _id, table, items = [], createdAt } = order;
 
   return (
@@ -92,6 +102,9 @@ const KitchenOrderCard = ({ order }) => {
           <li key={it.id || idx} className="koc-item">
           <KitchenRecipeCard 
             item = {it}
+            setModalIngredient={setModalIngredient}
+            setShowModal={setShowModal}
+            setModalName={setModalName}
           />
           </li>
         ))}
