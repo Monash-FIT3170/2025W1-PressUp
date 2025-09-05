@@ -33,7 +33,7 @@ export const KitchenRecipeStockCheck = ({onClose,inIngredients,name = 'menu item
         <div className='modal-overlay'>
         <div className='modal'>
         <button className="action-button" onClick={onClose}>X</button>
-        {name}
+        <div className='header'>{name}</div>
         <table className="ingredient-table">
         <thead>
           <tr>
