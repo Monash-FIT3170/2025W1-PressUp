@@ -8,22 +8,15 @@ import { InventoryCollection } from '../../../api/inventory/inventory-collection
 
 export const KitchenRecipeStockCheck = ({onClose,inIngredients,name = 'menu item/ingredient'}) => {
     var ids = [];
-    var ingredients;
-    if (!inIngredients) {
-        onClose();
-        return (<></>)
+    for (const ingredient of inIngredients) {
+        ids.push(ingredient)
     }
-    if (inIngredients[0].id) {
-        for (const ingredient of inIngredients) {
-            ids.push(ingredient.id)
-        }
-        const isLoading = useSubscribe("inventory.ids",ids);
-        ingredients = useFind(() => InventoryCollection.find({_id:{$in:ids}}),[ids]);
-    } else {
-        ingredients = inIngredients
+    const isLoading = useSubscribe("inventory.ids",ids);
+    const ingredients = useFind(() => InventoryCollection.find({_id:{$in:ids}}),[inIngredients]);
+    if (isLoading()) {
+        return <></>
     }
 
-    
 
     const headers = Object.keys(ingredients[0])
     .filter((header) => header !== "_id")

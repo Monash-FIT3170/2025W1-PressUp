@@ -42,7 +42,7 @@ const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setMo
     <>
       <span className='koc-ing' onClick={()=>{
         setShowModal(true);
-        setModalIngredient(completeIngredient);
+        setModalIngredient([completeIngredient[0]._id]);
         setModalName(ingName)
       }}>{ingName}</span>
       <span>{ingredient.amount} {ingUnit}</span>
@@ -52,12 +52,13 @@ const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setMo
 
 const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalName }) => {
     const [ingredients,setIngredients] = useState([]);
+    const [ids,setIds] = useState([]);
     const isLoading = useSubscribe("menuItems.id",item.id);
     const menuItem = useFind(() => Menu.find({_id:item.id}), [item.id]);
     useEffect(() => {
-      if (menuItem.length > 0) {
-        setIngredients(menuItem[0].ingredients);
-      }
+      setIngredients(menuItem[0]?.ingredients || []);
+      const collectedIds = menuItem[0]?.ingredients.map(item => item.id) || [];
+      setIds(collectedIds);
     }, [menuItem]);
     if (isLoading()) {
       return <><span className="koc-qty">{item.quantity}&times;</span>
@@ -70,7 +71,7 @@ const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalNam
           <span className="koc-qty">{item.quantity}&times;</span>
           <span className="koc-name" onClick={()=>{
         setShowModal(true);
-        setModalIngredient(ingredients);
+        setModalIngredient(ids);
         setModalName(item.menu_item)
       }}>{item.menu_item}</span>
           <ul>{ingredients.map((ing, idx) => (
