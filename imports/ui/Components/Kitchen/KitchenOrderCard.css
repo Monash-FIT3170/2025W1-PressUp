@@ -38,16 +38,16 @@
 }
 
 .koc-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   column-gap: 8px;
   font-size: 14px;
   color: #333;
 }
 
 .koc-recipe {
-  font-size: 12px;
+  font-size: 11px;
   color: #333;
 }
 
