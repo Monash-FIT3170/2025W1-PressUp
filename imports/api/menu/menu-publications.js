@@ -15,7 +15,6 @@ Meteor.publish('menu.all', function () {
 Meteor.publish('menu.byCategory', (menuCategory) => {
 	check(menuCategory, String);
 	return Menu.find({ menuCategory: menuCategory }, {
-	return Menu.find({ menuCategory: menuCategory }, {
 		fields: { name: 1, price: 1, available: 1 }
 	});
 });
@@ -49,10 +48,7 @@ Meteor.publish('menu.isCalled', (itemName) => {
 Meteor.publish("menu.nameIncludes", (subString) => {
   if (subString.length > 0) {
 	return Menu.find({
-	return Menu.find({
 	  name: { $regex: subString, $options: "i" },
 	});
   }
-  return Menu.find();
-  return Menu.find();
 });
