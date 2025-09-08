@@ -57,7 +57,7 @@ const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setMo
 const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalName }) => {
     const [ingredients,setIngredients] = useState([]);
     const [ids,setIds] = useState([]);
-    const isLoading = useSubscribe("menuItems.id",item.id);
+    const isLoading = useSubscribe("menu.id",item.id);
     const menuItem = useFind(() => Menu.find({_id:item.id}), [item.id]);
     useEffect(() => {
       setIngredients(menuItem[0]?.ingredients || []);

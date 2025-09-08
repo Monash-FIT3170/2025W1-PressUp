@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import { Menu } from './menu-collection';
-import { Menu } from './menu-collection';
 
 Meteor.publish('menu.all', function () {
 	return Menu.find({}, {
@@ -21,11 +20,11 @@ Meteor.publish('menu.byCategory', (menuCategory) => {
 	});
 });
 
-Meteor.publish("menuItems.id", function(myId) {
+Meteor.publish("menu.id", function(myId) {
 	return Menu.find({_id:myId});
   });
 
-Meteor.publish('menuItems.isCalled', (itemName) => {
+Meteor.publish('menu.isCalled', (itemName) => {
 	if (itemName.length > 0) {
 		return Menu.find({
 		  name: itemName,
@@ -34,11 +33,11 @@ Meteor.publish('menuItems.isCalled', (itemName) => {
 	  return Menu.find();
 });
 
-Meteor.publish("menuItems.id", function(myId) {
+Meteor.publish("menu.id", function(myId) {
 	return Menu.find({_id:myId});
   });
 
-Meteor.publish('menuItems.isCalled', (itemName) => {
+Meteor.publish('menu.isCalled', (itemName) => {
 	if (itemName.length > 0) {
 		return Menu.find({
 		  name: itemName,
