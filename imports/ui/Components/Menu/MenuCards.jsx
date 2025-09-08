@@ -53,11 +53,15 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
         
         deletionQueueRef.current.shift();
         
-        Meteor.call("menu.getAll", (err, result) => {
-          if (!err) {
+        (async () => {
+          try {
+            const result = await Meteor.callAsync("menu.getAll");
             setMenuItems(result);
+          } catch (err) {
+            console.error("Error fetching menu items:", err);
           }
-        });
+        })();
+      
       }
 
       setDeletingItems(prev => {
@@ -70,12 +74,16 @@ export const MenuCards = ({ menuItems, selectedCategory, updateMenuItem, setMenu
     isProcessingRef.current = false;
     console.log('[CLIENT] Deletion queue processing complete');
 
-    Meteor.call("menu.getAll", (error, result) => {
-      if (!error) {
-        console.log('[CLIENT] Final menu refresh, items:', result.length);
+    (async () => {
+      try {
+        const result = await Meteor.callAsync("menu.getAll");
+        console.log("[CLIENT] Final menu refresh, items:", result.length);
         setMenuItems(result);
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
       }
-    });
+    })();
+
   }, [setMenuItems]);
 
   const deleteMenuItem = useCallback((itemId) => {

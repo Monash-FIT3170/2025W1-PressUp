@@ -1,0 +1,469 @@
+.roster-manager {
+  padding: 16px 16px 16px 8px;
+  width: 100%;
+  margin: 0;
+}
+
+.roster-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.roster-manager-header h1 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.add-shift-btn {
+  background-color: #fcd581;
+  color: #000000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-shift-btn:hover {
+  background-color: #fde9bf;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.roster-manager-content {
+  background-color: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-width: 1024px;
+}
+
+.roster-table-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+
+.roster-table-container.hide-scrollbar {
+  scrollbar-color: transparent transparent;
+}
+
+.roster-table-container.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.roster-table-container.show-scrollbar {
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.roster-table-container.show-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+}
+
+/* Webkit scrollbar styling (Chrome, Safari, Edge) */
+.roster-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.roster-table-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.roster-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 1024px;
+}
+
+.roster-header-cell {
+  background-color: #f9f9f9;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.roster-header-cell:first-child {
+  border-left: none;
+}
+
+.roster-header-cell:last-child {
+  border-right: none;
+}
+
+.employee-header {
+  text-align: left;
+  width: 160px;
+}
+
+.day-header {
+  width: calc((100% - 160px) / 7);
+}
+
+.date-display {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.roster-row {
+  transition: background-color 0.2s ease;
+}
+
+.roster-row:hover {
+  background-color: #f8f9fa;
+}
+
+.roster-cell {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  vertical-align: top;
+  height: 64px;
+}
+
+.roster-cell:first-child {
+  border-left: none;
+}
+
+.roster-cell:last-child {
+  border-right: none;
+}
+
+.employee-name-cell {
+  text-align: left;
+  font-weight: 500;
+  color: #1f2937;
+  background-color: #f8f9fa;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  width: 160px;
+}
+
+.day-cell {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.day-cell:hover {
+  background-color: #fde9bf;
+}
+
+.day-cell:active {
+  background-color: #fcd581;
+}
+
+/* Week navigation styles */
+.week-navigation {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.week-nav-btn,
+.current-week-btn {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.week-nav-btn:hover,
+.current-week-btn:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+.current-week-btn {
+  background-color: #fcd581;
+  border-color: #fcd581;
+  color: #000000;
+}
+
+.current-week-btn:hover {
+  background-color: #fde9bf;
+  border-color: #fde9bf;
+}
+
+/* Roster item display styles */
+.roster-item-display {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-height: 40px;
+}
+
+.roster-item {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Shift type specific accent colors */
+.roster-item.normal::before {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+}
+
+.roster-item.annual-leave::before {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+}
+
+.roster-item.personal-leave::before {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+}
+
+.roster-item.long-service-leave::before {
+  background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.roster-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.roster-item:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  border-color: #3b82f6;
+}
+
+.roster-item:hover::after {
+  content: '✏️';
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.shift-time {
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2px;
+  font-size: 0.8rem;
+  letter-spacing: 0.025em;
+}
+
+.shift-duration {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-bottom: 3px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.break-duration {
+  color: #f59e0b;
+  font-weight: 600;
+  font-size: 0.65rem;
+}
+
+.shift-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 3px;
+}
+
+.shift-type {
+  color: #059669;
+  font-weight: 600;
+  font-size: 0.7rem;
+  background-color: rgba(5, 150, 105, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.department {
+  color: #7c3aed;
+  font-weight: 600;
+  font-size: 0.7rem;
+  background-color: rgba(124, 58, 237, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.role {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 0.7rem;
+  background-color: rgba(220, 38, 38, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.shift-status {
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.status-confirmed {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.status-unconfirmed {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-published {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.empty-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 40px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.empty-cell:hover {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border-color: #94a3b8;
+}
+
+.add-shift-hint {
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-style: italic;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: rgba(100, 116, 139, 0.05);
+  transition: all 0.2s ease;
+}
+
+.empty-cell:hover .add-shift-hint {
+  color: #475569;
+  background-color: rgba(100, 116, 139, 0.1);
+}
+
+/* Loading and error states */
+.roster-loading,
+.roster-error {
+  padding: 40px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.roster-error {
+  color: #dc2626;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .roster-manager {
+    padding: 15px;
+  }
+  
+  .roster-manager-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .roster-manager-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .roster-header-cell,
+  .roster-cell {
+    padding: 8px 6px;
+    font-size: 0.9rem;
+  }
+  
+  .roster-table {
+    table-layout: auto;
+  }
+  
+  .employee-header {
+    width: 120px;
+  }
+  
+  .day-header {
+    width: auto;
+  }
+  
+  .employee-name-cell {
+    width: 120px;
+  }
+}

@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
 import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
 import '/imports/api/menu-categories/menu-categories-methods.js';
+import {Menu} from '/imports/api/menu/menu-collection.js';
 import { InventoryCollection } from "../../../api/inventory/inventory-collection.js";
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
@@ -37,14 +38,22 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
   );
   useEffect(() => {
 
-    Meteor.call('menuCategories.getCategories', (error, result) => {
-    if (error) {
-      console.error('Failed to fetch categories:', error);
-    } else {
-      // console.log('Fetched categories:', result);
-      setMenuCategories(result); // assuming result is an array of category strings
+  //   Meteor.call('menuCategories.getCategories', (error, result) => {
+  //   if (error) {
+  //     console.error('Failed to fetch categories:', error);
+  //   } else {
+  //     // console.log('Fetched categories:', result);
+  //     setMenuCategories(result); // assuming result is an array of category strings
+  //   }
+  // });
+  (async () => {
+    try {
+      const result = await Meteor.callAsync("menuCategories.getCategories");
+      setMenuCategories(result);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
     }
-  });
+  })();
 
 
     if (mode === 'update' && existingItem) {
@@ -75,6 +84,16 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       }
   }, [existingItem, mode]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const docs = await Meteor.callAsync('menu.getAll');
+        console.log('[MenuItemPopUp] Menu docs:', docs);
+      } catch (e) {
+        console.error('Failed to load menu:', e);
+      }
+    })();
+  }, []);
   const validateForm = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = 'Item name is required';
@@ -287,6 +306,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                   <input
                     type="number"
                     placeholder="Amount (e.g. 100g)"
+                    step='any'
                     value={ingredientAmounts[ing._id] || ''}
                     min = {0}
                     onChange={(e) =>
