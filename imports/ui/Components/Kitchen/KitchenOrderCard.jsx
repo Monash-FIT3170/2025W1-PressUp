@@ -45,7 +45,11 @@ const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setMo
         setModalIngredient([completeIngredient[0]._id]);
         setModalName(ingName)
       }}>{ingName}</span>
-      <span>{ingredient.amount} {ingUnit}</span>
+      <span onClick={()=>{
+        setShowModal(true);
+        setModalIngredient([completeIngredient[0]._id]);
+        setModalName(ingName)
+      }}>{ingredient.amount} {ingUnit}</span>
     </>
   )
 }
@@ -68,7 +72,11 @@ const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalNam
 
     return (
           <><span>
-          <span className="koc-qty">{item.quantity}&times;</span>
+          <span className="koc-qty" onClick={()=>{
+        setShowModal(true);
+        setModalIngredient(ids);
+        setModalName(item.menu_item)
+      }}>{item.quantity}&times;</span>
           <span className="koc-name" onClick={()=>{
         setShowModal(true);
         setModalIngredient(ids);
