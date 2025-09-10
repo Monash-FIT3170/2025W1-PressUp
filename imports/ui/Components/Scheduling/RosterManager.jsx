@@ -218,6 +218,11 @@ export const RosterManager = () => {
               <tr key={employee._id} className="roster-row">
                 <td className="roster-cell employee-name-cell">
                   {employee.first_name} {employee.last_name}
+                  <div>
+                    <btn className="pay-details-btn">
+                      Pay Details
+                    </btn>
+                  </div>
                 </td>
                 {daysOfWeek.map((day, dayIndex) => {
                   const dayRosterItems = getRosterItemsForEmployeeAndDay(employee._id, dayIndex);
