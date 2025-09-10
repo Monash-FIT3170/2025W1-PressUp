@@ -22,6 +22,8 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
   const [paymentMethods, setPaymentMethods] = useState("cash");
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [showChangeInfo, setShowChangeInfo] = useState(false);
+
+  // split payment states
   const [remainingItems, setRemainingItems] = useState([]);
   const [showSplitModal, setShowSplitModal] = useState(false);
 
@@ -37,14 +39,16 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
       Array.from({ length: item.quantity }, () => ({
         menu_item: item.menu_item,
         price: item.price,
-        id: crypto?.randomUUID ? crypto.randomUUID() : Date.now() + Math.random(),
+        id: crypto?.randomUUID
+          ? crypto.randomUUID()
+          : Date.now() + Math.random(),
       }))
     );
 
     setRemainingItems(flatItems);
   }, [order]);
 
-  // Reset modal & change info only when a NEW orderID is selected
+  // Reset modal & change info when a NEW orderID is selected
   useEffect(() => {
     setShowSplitModal(false);
     setShowChangeInfo(false);
@@ -54,13 +58,26 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
   useEffect(() => {
     if (!order || !order[0]) return;
     const { total } = calculateOrderTotals(order[0]);
-    setPaymentAmount(paymentMethods === "cards" ? total : 0);
+    if (paymentMethods === "cards") {
+      setPaymentAmount(total);
+    } else if (paymentMethods === "cash") {
+      setPaymentAmount(0); // let user input manually
+    }
   }, [paymentMethods, order]);
 
-  const proceedButtonAction = () => setShowChangeInfo(true);
+  function proceedButtonAction() {
+    if (paymentMethods === "cards-failed") {
+      alert(
+        "❌ Payment failed. Please try again or use a different payment method."
+      );
+      return;
+    }
+    setShowChangeInfo(true);
+  }
 
   if (isLoading()) return <LoadingIndicator />;
-  if (!order || !order[0]) return <div className="order-summary">invalid order number.</div>;
+  if (!order || !order[0])
+    return <div className="order-summary">invalid order number.</div>;
 
   const currentOrder = order[0];
   const { gross, GST, total } = calculateOrderTotals(currentOrder);
@@ -98,17 +115,21 @@ export const OrderSummary = ({ orderID, setCheckout }) => {
         <div className="summary-details">
           <SummaryDetail name="Subtotal" value={"$" + gross.toFixed(2)} />
           <SummaryDetail name="GST 10%" value={"$" + GST.toFixed(2)} />
+          {currentOrder.discount && (
+            <SummaryDetail
+              name="Discount"
+              value={"-$" + currentOrder.discount}
+            />
+          )}
+          <SummaryDetail name="Total" value={"$" + total.toFixed(2)} />
         </div>
-        {currentOrder.discount && (
-          <SummaryDetail name="Discount" value={"-$" + currentOrder.discount} />
-        )}
-        <SummaryDetail name="Total" value={"$" + total.toFixed(2)} />
 
         <PaymentMethods
           setPaymentMethods={setPaymentMethods}
           paymentMethods={paymentMethods}
         />
 
+        {/* Split payment option */}
         <SplitPaymentButton setShowSplitModal={setShowSplitModal} />
 
         {showSplitModal && remainingItems.length > 0 && (
@@ -175,6 +196,15 @@ const PaymentMethods = ({ setPaymentMethods, paymentMethods }) => (
       className={`payment-btn ${paymentMethods === "cards" ? "selected" : ""}`}
     >
       <CreditCard size={16} /> Cards
+    </button>
+    <button
+      onClick={() => setPaymentMethods("cards-failed")}
+      className={`payment-btn ${
+        paymentMethods === "cards-failed" ? "selected" : ""
+      }`}
+      id="destructive"
+    >
+      <CreditCard size={16} /> Cards (Failed)
     </button>
   </div>
 );

@@ -306,6 +306,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                   <input
                     type="number"
                     placeholder="Amount (e.g. 100g)"
+                    step='any'
                     value={ingredientAmounts[ing._id] || ''}
                     min = {0}
                     onChange={(e) =>

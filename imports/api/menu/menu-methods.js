@@ -103,7 +103,7 @@ Meteor.methods({
 				'invalid-category', 'The specified category does not exist.'
 			);
 		} */
-		console.log(menuItem)
+		//console.log(menuItem)
 		
 		// Convert to an object with only the keys that were provided.
 		const menuItemDoc = Object.fromEntries(

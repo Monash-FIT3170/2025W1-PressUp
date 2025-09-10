@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { OrdersCollection } from "./orders-collection";
-import { check } from 'meteor/check';
+import { check } from "meteor/check";
 
 Meteor.methods({
   async "orders.insert"(order) {
@@ -42,7 +42,7 @@ Meteor.methods({
     check(endDate, Date);
 
     if (startDate >= endDate) {
-      throw new Meteor.Error('bad-range', 'startDate must be before endDate');
+      throw new Meteor.Error("bad-range", "startDate must be before endDate");
     }
 
     return OrdersCollection.find(
@@ -56,5 +56,5 @@ Meteor.methods({
         sort: { createdAt: 1 },
       }
     ).fetch();
-  }
+  },
 });
