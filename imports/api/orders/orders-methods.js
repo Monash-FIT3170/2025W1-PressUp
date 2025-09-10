@@ -1,6 +1,6 @@
 import { Meteor } from "meteor/meteor";
 import { OrdersCollection } from "./orders-collection";
-import { check, Match } from 'meteor/check';
+import { check } from "meteor/check";
 
 Meteor.methods({
   async "orders.insert"(order) {
@@ -16,45 +16,45 @@ Meteor.methods({
 
   async "orders.remove"(id) {
     return await OrdersCollection.removeAsync({ _id: id });
-    },
-    
-    async 'orders.markClosed'(id) {
-        return await OrdersCollection.updateAsync(
-            { _id: id },
-            { $set: { status: "closed" } }
-        );
-    },
+  },
 
-    async 'orders.markCancelled'(id) {
-        return await OrdersCollection.updateAsync(
-            { _id: id },
-            { $set: { status: "cancelled" } }
-        );
-    },
+  async "orders.markClosed"(id) {
+    return await OrdersCollection.updateAsync(
+      { _id: id },
+      { $set: { status: "closed" } }
+    );
+  },
 
-    async 'orders.getByName'(name) {
-        check(name, String);
-        return await OrdersCollection.findOne({ name });
-    },
+  async "orders.markCancelled"(id) {
+    return await OrdersCollection.updateAsync(
+      { _id: id },
+      { $set: { status: "cancelled" } }
+    );
+  },
 
-    async 'orders.getInRange'(startDate, endDate) {
-        check(startDate, Date);
-        check(endDate, Date);
+  async "orders.getByName"(name) {
+    check(name, String);
+    return await OrdersCollection.findOne({ name });
+  },
 
-        if (startDate >= endDate) {
-            throw new Meteor.Error('bad-range', 'startDate must be before endDate');
-        }
+  async "orders.getInRange"(startDate, endDate) {
+    check(startDate, Date);
+    check(endDate, Date);
 
-        return OrdersCollection.find(
-            {
-            createdAt: {
-                $gte: startDate,
-                $lte: endDate,
-            },
-            },
-            {
-            sort: { createdAt: 1 },
-            }
-        ).fetch();
+    if (startDate >= endDate) {
+      throw new Meteor.Error("bad-range", "startDate must be before endDate");
+    }
+
+    return OrdersCollection.find(
+      {
+        createdAt: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      },
+      {
+        sort: { createdAt: 1 },
+      }
+    ).fetch();
   },
 });
