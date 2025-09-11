@@ -6,7 +6,7 @@ import { RosterItemsCollection } from '../../../api/payroll/roster/rosteritem-co
 import { RolesCollection } from '../../../api/payroll/roles/roles-collection.js';
 import { DepartmentsCollection } from '../../../api/payroll/departments/departments-collection.js';
 import { RosterItemForm } from './RosterItemForm.jsx';
-import { PayDetails } from './Pay Slip Items/PayDetails.jsx';
+import { PayDetails } from './PaySlipItems/PayDetails.jsx';
 import './RosterManager.css';
 
 export const RosterManager = () => {
