@@ -1,19 +1,20 @@
 import React from 'react';
 import './PayDetails.css'; // styling for modal
 
-export const PayDetails = ({ isOpen, onClose, employee }) => {
+export const PayDetails = ({ isOpen, onClose, employee, roleData, departmentName, startDate, endDate, totalHours }) => {
   if (!isOpen || !employee) return null;
 
-  const firstRole = employee.roles[0];
-  // Dummy values for now
+  // Safely get role and department info
   const employmentType = employee.employment_type || 'X';
-  const payPeriod = 'X'; // replace with dynamic week dates later
-  const department = firstRole.department || 'X';
-  const role = employee.roles || 'X';
-  const payRate = employee.pay_rate || 'X'; // per hour
-  const hoursWorked = 'X'; // dummy value
-  const subTotal = 'X'; //(payRate * hoursWorked).toFixed(2)
-  const total = 'X'; // include deductions later if needed
+  const payPeriod = startDate && endDate 
+    ? `${startDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} - ${endDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}`
+    : 'N/A';
+  const role = roleData?.name || 'N/A';
+  const department = departmentName || 'N/A';
+  const payRate = roleData?.hourly_rate || 0; 
+  const hoursWorked = totalHours;
+  const subTotal = (payRate * totalHours).toFixed(2);
+  const total = subTotal; // can add deductions later if needed
 
   return (
     <div className="paydetails-backdrop" onClick={onClose}>
