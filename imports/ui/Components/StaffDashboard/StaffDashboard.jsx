@@ -3,14 +3,13 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { EmployeesCollection } from '/imports/api/payroll/employee/employees-collection.js';
 import { RosterItemsCollection } from '/imports/api/payroll/roster/rosteritem-collection.js';
-import { PayDetails } from '../Scheduling/PaySlipItems/PayDetails.jsx';
+import { PrintPaySlip } from './PrintPaySlip.jsx';
 import './StaffDashboard.css';
 
 const StaffDashboard = ({ sidebarOpen }) => {
   const [email, setEmail] = useState('');
   const [searchEmail, setSearchEmail] = useState('');
 
-  const [showPayDetails, setShowPayDetails] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [selectedRoleData, setSelectedRoleData] = useState(null);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState('N/A');
@@ -31,12 +30,13 @@ const StaffDashboard = ({ sidebarOpen }) => {
 
     const rosterItems = RosterItemsCollection.find({ employee_id: employee._id }).fetch();
 
-    return { staff: [ { employee, rosterItems } ], isLoading: false };
+    return { staff: [{ employee, rosterItems }], isLoading: false };
   }, [searchEmail]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSearchEmail(email.trim());
+    setSelectedEmployee(null); // clear previous selection
   };
 
   const handlePayDetails = ({ employee, rosterItems }) => {
@@ -64,12 +64,11 @@ const StaffDashboard = ({ sidebarOpen }) => {
     setPayStartDate(startDate);
     setPayEndDate(endDate);
     setTotalHours(totalHours);
-    setShowPayDetails(true);
   };
 
   return (
     <div className={`dashboard-page ${sidebarOpen ? 'with-sidebar' : ''}`}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="staff-search-form">
         <label>
           Enter staff email:
           <input
@@ -101,15 +100,13 @@ const StaffDashboard = ({ sidebarOpen }) => {
             return sum + Math.max(0, hours);
           }, 0).toFixed(1)}h</p>
           <button className="pay-details-btn" onClick={() => handlePayDetails(s)}>
-            View Pay Details
+            Generate Pay Slip
           </button>
         </div>
       ))}
 
-      {showPayDetails && selectedEmployee && (
-        <PayDetails
-          isOpen={showPayDetails}
-          onClose={() => setShowPayDetails(false)}
+      {selectedEmployee && (
+        <PrintPaySlip
           employee={selectedEmployee}
           roleData={selectedRoleData}
           departmentName={selectedDepartmentName}
