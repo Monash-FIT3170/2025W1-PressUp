@@ -156,15 +156,6 @@ export const RosterManager = () => {
     setShowPayDetails(true);
   };
 
-  const getShiftHours = (startTime, endTime, breakMinutes = 0) => {
-    if (!startTime || !endTime) return 0;
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    let hours = (end - start) / (1000 * 60 * 60);
-    hours -= (breakMinutes || 0) / 60;
-    return Math.max(0, hours);
-  };
-
   const renderTable = () => {
     if(employeesLoading || rosterLoading) return <div className="roster-loading">Loading roster data...</div>;
     if(employeesError || rosterError) return <div className="roster-error">Error: {employeesError || rosterError}</div>;
