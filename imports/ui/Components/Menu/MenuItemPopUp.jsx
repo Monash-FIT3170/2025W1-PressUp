@@ -166,7 +166,6 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           alert('Failed to add menu item: ' + error.reason);
         } else {
           // alert('Menu item added successfully!');
-          console.log("inserted")
           //addMenuItem(itemData);
           setName('');
           setPrice('');
@@ -174,22 +173,24 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           setIngredients([]);
           onClose();  // Close the popup after successful submission
         }
+        setShowConfirm(false);
+        window.location.reload();
       });
     } else if (mode === 'update') {
       Meteor.call('menu.update', { _id: existingItem._id, menuItem: itemData }, (error, result) => {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
-          console.log("updated")
           // alert('Menu item updated successfully!');
           onUpdate?.(existingItem._id, itemData);
           onClose();
         }
+        setShowConfirm(false);
+        window.location.reload();
       });
     }
 
-    setShowConfirm(false);
-    window.location.reload(); // Reload the page to reflect changes
+     // Reload the page to reflect changes
   };
 
   const handleCancel = () => setShowConfirm(false);
