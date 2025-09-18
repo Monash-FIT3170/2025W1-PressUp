@@ -17,6 +17,7 @@ Meteor.methods({
 	 */
 	async 'menu.insert'({menuItem}) {
 		// Ensure the menu item object is correct.
+		/*
 		check(menuItem, {
 			name: String,
 			price: Number,
@@ -35,6 +36,7 @@ Meteor.methods({
 			schedule: Match.Optional(Object),
 			seasons: Match.Maybe([String]),
 		});
+		*/
 
 		// Ensure the menu category exists, otherwise throw an error.
 		// if (!MenuCategories.findOne(menuItem.menuCategory)) {
@@ -45,17 +47,17 @@ Meteor.methods({
 		// }
 
 		// Convert to an object with only the keys that were provided.
-		const menuItemDoc = Object.fromEntries(
-			Object.entries(menuItem).filter(([key, val]) => 
-				val !== undefined)
-		);
+		//const menuItemDoc = Object.fromEntries(
+			//Object.entries(menuItem).filter(([key, val]) => 
+				//val !== undefined)
+		//);
 
 		// Don't update if there required properties missing.
-		if (!('name' in menuItemDoc) || !('price' in menuItemDoc)) {
-			throw new Meteor.Error(
-				'required-missing', 'Required fields are missing.'
-			);
-		}
+		//if (!('name' in menuItem) || !('price' in menuItem)) {
+			//throw new Meteor.Error(
+				//'required-missing', 'Required fields are missing.'
+			//);
+		//}
 
 		return await Menu.insertAsync(menuItem)
 	},
@@ -74,6 +76,7 @@ Meteor.methods({
 	* }} menuItem
     */
 	async 'menu.update'({ _id, menuItem}) {
+		/*
 		check(_id, String);
 		// Ensure the menu item object is correct.
 		check(menuItem, {
@@ -95,6 +98,7 @@ Meteor.methods({
 			
 			seasons: Match.Maybe([String]),
 		});
+		*/
 		// ERROR IS HERE: saying invalid category even when category already exists (might need to be changed due to new category tree in sprint 2 anyway)
 		// Ensure the menu category exists, otherwise throw an error.
 		/* if (menuItem.menuCategory && !MenuCategories.findOne(menuItem.menuCategory)) {
@@ -106,16 +110,16 @@ Meteor.methods({
 		//console.log(menuItem)
 		
 		// Convert to an object with only the keys that were provided.
-		const menuItemDoc = Object.fromEntries(
-			Object.entries(menuItem).filter(([key, val]) => val !== undefined)
-		);
+		//const menuItemDoc = Object.fromEntries(
+			//Object.entries(menuItem).filter(([key, val]) => val !== undefined)
+		//);
 
 		// Don't update if there are no properties to update.
-		if (Object.keys(menuItemDoc).length === 0) {
-			throw new Meteor.Error(
-				'no-update', 'No fields provided to update.'
-			);
-		}
+		//if (Object.keys(menuItemDoc).length === 0) {
+			//throw new Meteor.Error(
+				//'no-update', 'No fields provided to update.'
+			//);
+		//}
 	    
 		return await Menu.updateAsync({ _id }, { $set: menuItem });
 	},

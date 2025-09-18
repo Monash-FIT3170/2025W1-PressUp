@@ -121,7 +121,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (e) => {
+    e.preventDefault();
     var itemData;
     if (seasonal && seasons.length > 0 && seasons.length < 4) {
         itemData = {
@@ -165,7 +166,8 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
           alert('Failed to add menu item: ' + error.reason);
         } else {
           // alert('Menu item added successfully!');
-          addMenuItem(newMenuItem);
+          console.log("inserted")
+          //addMenuItem(itemData);
           setName('');
           setPrice('');
           setMenuCategory('');
@@ -178,6 +180,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
+          console.log("updated")
           // alert('Menu item updated successfully!');
           onUpdate?.(existingItem._id, itemData);
           onClose();
