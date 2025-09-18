@@ -7,13 +7,7 @@ const ongoingDeletions = new Map();
 Meteor.methods({
 	/**
 	 * Insert a new menu item.
-	 * @param {{ 
-	 * 		name: string 
-	 *   	price: number, 
-	 *   	menuCategory?: string,
-	 *   	available?: boolean,
-	 *   	ingredients?: string[]
-	 * }} menuItem
+	 * 
 	 */
 	async 'menu.insert'(menuItem) {
 		// Ensure the menu item object is correct.
@@ -64,16 +58,6 @@ Meteor.methods({
 
 	/**
 	* Update an existing menu item by Id.
-	* @param {{ 
-	* 		name?: string 
-	*   	price?: number, 
-	*   	menuCategory?: string,
-	*   	available?: boolean,
-	*   	isHalal?: boolean,
-	*   	isVegetarian?: boolean,
-	*   	isGlutenFree?: boolean,
-	*   	ingredients?: string[]
-	* }} menuItem
     */
 	async 'menu.update'( _id, menuItem) {
 		/*
