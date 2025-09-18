@@ -15,7 +15,7 @@ Meteor.methods({
 	 *   	ingredients?: string[]
 	 * }} menuItem
 	 */
-	async 'menu.insert'({menuItem}) {
+	async 'menu.insert'(menuItem) {
 		// Ensure the menu item object is correct.
 		/*
 		check(menuItem, {
@@ -75,7 +75,7 @@ Meteor.methods({
 	*   	ingredients?: string[]
 	* }} menuItem
     */
-	async 'menu.update'({ _id, menuItem}) {
+	async 'menu.update'( _id, menuItem) {
 		/*
 		check(_id, String);
 		// Ensure the menu item object is correct.

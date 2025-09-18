@@ -161,7 +161,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
     }
 
     if (mode === 'create') {
-      Meteor.call('menu.insert', { menuItem: itemData }, (error, result) => {
+      Meteor.call('menu.insert',itemData, (error, result) => {
         if (error) {
           alert('Failed to add menu item: ' + error.reason);
         } else {
@@ -177,7 +177,7 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         window.location.reload();
       });
     } else if (mode === 'update') {
-      Meteor.call('menu.update', { _id: existingItem._id, menuItem: itemData }, (error, result) => {
+      Meteor.call('menu.update',existingItem._id,itemData, (error, result) => {
         if (error) {
           alert('Failed to update menu item: ' + error.reason);
         } else {
