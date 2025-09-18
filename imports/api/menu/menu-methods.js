@@ -57,7 +57,7 @@ Meteor.methods({
 			);
 		}
 
-		return await Menu.insertAsync(menuItemDoc)
+		return await Menu.insertAsync(menuItem)
 	},
 
 	/**
@@ -117,7 +117,7 @@ Meteor.methods({
 			);
 		}
 	    
-		return await Menu.updateAsync({ _id }, { $set: menuItemDoc });
+		return await Menu.updateAsync({ _id }, { $set: menuItem });
 	},
 
 	async 'menu.remove'(_id) {
