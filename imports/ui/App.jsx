@@ -40,6 +40,7 @@ import { InboxViewModeDropdown } from "./Components/CustomerCommunication/InboxV
 import Dashboard from './Components/Analytics/Dashboard.jsx';
 import { Finance } from "./Components/Finance/Finance.jsx";
 import ModulePage from "./Components/Training/ModulePage.jsx";
+import StaffDashboard from "./Components/StaffDashboard/StaffDashboard.jsx";
 
 import { Scheduling } from "./Components/Scheduling/Scheduling.jsx";
 
@@ -368,6 +369,29 @@ useEffect(() => {
                     setIsSidebarOpen={setIsSidebarOpen}
                   />
                   <Finance />
+                </div>
+              </div>
+            }
+          />
+
+          {/* Staff Dashboard route */}
+          <Route
+            path="/Staff-Dashboard"
+            element={
+              <div
+                className={`app-container ${!isSidebarOpen ? "sidebar-closed" : ""}`}
+              >
+                <Sidebar
+                  isOpen={isSidebarOpen}
+                  setIsOpen={setIsSidebarOpen}
+                  isAdmin={user?.isAdmin}
+                />
+                <div className="main-content">
+                  <PageHeader
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                  <StaffDashboard sidebarOpen={isSidebarOpen} />
                 </div>
               </div>
             }

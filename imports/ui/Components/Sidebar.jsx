@@ -134,6 +134,28 @@ export const Sidebar = ({ isOpen, setIsOpen, isAdmin }) => {
                 />
                 Training
               </NavLink>
+
+              {/* Only show these links if user is staff (not admin)*/}
+              {!isAdmin && (
+                <NavLink
+                  to="/Staff-Dashboard"
+                  className={({ isActive }) =>
+                    `sidebar-btn ${isActive ? "active" : ""}`
+                  }
+                >
+                  <img
+                    src="/images/DashboardIcon.png"
+                    alt="Staff Dashboard"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      verticalAlign: "-4px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  Staff Dashboard
+                </NavLink>
+              )}
               
               {/* Only show these links if user is admin */}
               {isAdmin && (

@@ -1,0 +1,23 @@
+/* imports/ui/dashboard/DashboardPage.css */
+.dashboard-page {
+  padding: 20px;
+}
+
+.dashboard-header {
+  margin-bottom: 20px;
+}
+
+.dashboard-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.dashboard-empty {
+  font-size: 1.2em;
+  color: #777;
+}
