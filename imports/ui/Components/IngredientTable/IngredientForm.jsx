@@ -13,6 +13,7 @@ export const IngredientForm = ({
   const [units, setUnits] = useState("");
   const [price, setPrice] = useState("");
   const [suppliers, setSuppliers] = useState("");
+  const [useByDate, setUseByDate] = useState("");
 
   // Error states
   const [errors, setErrors] = useState({});
@@ -30,6 +31,11 @@ export const IngredientForm = ({
           ? existingIngredient.suppliers.join(", ")
           : ""
       );
+      setUseByDate(
+      existingIngredient.useByDate 
+        ? new Date(existingIngredient.useByDate).toISOString().split('T')[0]
+        : ""
+    );
     } else {
       // Reset form for "add" mode or if no existing ingredient
       setName("");
@@ -115,6 +121,7 @@ export const IngredientForm = ({
       units: units.trim(),
       price: Number(price),
       suppliers: suppliersArray,
+      useByDate: useByDate ? new Date(useByDate) : undefined,
     };
 
     try {
@@ -220,6 +227,18 @@ export const IngredientForm = ({
               onChange={(e) => setPrice(e.target.value)}
               min="0"
               step="0.50"
+            />
+          </div>
+          {/* Use by date */}
+          <div className="ingredient-form-input">
+            <div className="Use By Date field"></div>
+            <label>Use By Date</label>
+            <input
+              name="useByDate"
+              type="Date"
+              placeholder="DD/MM/YYYY"
+              value={useByDate}
+              onChange={(e) => setUseByDate(e.target.value)}
             />
           </div>
           {/* Suppliers */}
