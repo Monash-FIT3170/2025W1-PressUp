@@ -19,7 +19,7 @@ export const initializeUsers = async () => {
 
     await EmployeesCollection.insertAsync({
       employee_id: adminEmpId,
-      first_name: "Ada",
+      first_name: "Dumbledore The Wise",
       last_name: "Admin",
       dob: new Date('1990-01-01'),
       address: "1 Admin St",
@@ -32,7 +32,7 @@ export const initializeUsers = async () => {
 
     await EmployeesCollection.insertAsync({
       employee_id: staffEmpId,
-      first_name: "Sam",
+      first_name: "Bilbo the big foot",
       last_name: "Staff",
       dob: new Date('1992-02-02'),
       address: "2 Staff Rd",
