@@ -25,8 +25,8 @@ const ModulePage = () => {
   const { mineReady, myAssignment } = useTracker(() => {
   const subMine = Meteor.subscribe('trainingAssignments.mine');
   const uid = Meteor.userId();
-  const assignment = (subMine.ready() && uid && safeId)
-    ? TrainingAssignments.findOne({ userId: uid, moduleId: safeId })
+  const assignment = (subMine.ready() && safeId)
+    ? TrainingAssignments.findOne({ moduleId: safeId })
     : null;
 
   return { mineReady: subMine.ready(), myAssignment: assignment || null };
