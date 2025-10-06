@@ -73,14 +73,16 @@ const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalNam
     return (
           <><span>
           <span className="koc-qty" onClick={()=>{
+        if (ids.length > 0) {
         setShowModal(true);
         setModalIngredient(ids);
-        setModalName(item.menu_item)
+        setModalName(item.menu_item)}
       }}>{item.quantity}&times;</span>
           <span className="koc-name" onClick={()=>{
+        if (ids.length > 0) {
         setShowModal(true);
         setModalIngredient(ids);
-        setModalName(item.menu_item)
+        setModalName(item.menu_item)}
       }}>{item.menu_item}</span></span>
           <ul>{ingredients.map((ing, idx) => (
           <li key={ing.id || idx} className="koc-recipe">
