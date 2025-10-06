@@ -205,15 +205,15 @@ export const KitchenDisplay = ({ sidebarOpen }) => {
             </div>
           ) : (
             <>
-              <div
-                className="kitchen-rail"
-                style={{ transform: `translateX(-${pageIndex * 100}%)` }}
-              >
-                {showModal && <KitchenRecipeStockCheck
+            {showModal && <KitchenRecipeStockCheck
                   onClose={()=>setShowModal(false)}
                   inIngredients={modalIngredient}
                   name={modalName}
               />}
+              <div
+                className="kitchen-rail"
+                style={{ transform: `translateX(-${pageIndex * 100}%)` }}
+              >
                 {pages.map((page, i) => (
                   <div className="kitchen-page-slot" key={i}>
                     <div className="kitchen-cards-flex">
