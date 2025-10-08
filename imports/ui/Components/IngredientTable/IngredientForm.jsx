@@ -208,12 +208,18 @@ export const IngredientForm = ({
           <div className="ingredient-form-input">
             <div className="Units field"></div>
             <label>Units</label>
-            <input
+            <select
               name="units"
-              placeholder="e.g., kg, liters, pieces"
               value={units}
               onChange={(e) => setUnits(e.target.value)}
-            />
+            >
+              <option value="">Select a unit</option>
+              <option value="kg">Kilograms (kg)</option>
+              <option value="liters">Liters</option>
+              <option value="pieces">Pieces</option>
+              <option value="grams">Grams (g)</option>
+              <option value="milliliters">Milliliters (ml)</option>
+            </select>
           </div>
           {/* Price */}
           <div className="ingredient-form-input">
