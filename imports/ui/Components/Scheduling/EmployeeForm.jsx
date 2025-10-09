@@ -245,7 +245,7 @@ export const EmployeeForm = ({ employee, onClose }) => {
             <button type="button" onClick={() => onClose?.()}>Cancel</button>
             <button type="submit">{employee ? 'Save' : 'Create'}</button>
             {employee && (
-              <button type="button" onClick={() => {removeEmployee(employee._id)
+              <button type="remove" onClick={() => {removeEmployee(employee._id)
                 onClose?.()
               }}>
                 Remove

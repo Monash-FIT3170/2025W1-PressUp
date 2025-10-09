@@ -131,6 +131,15 @@
   background-color: #f9f9f9;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
+.form-actions button[type="remove"] {
+  background-color: #fe3b21;
+  color: #000000;
+}
+
+.form-actions button[type="remove"]:hover {
+  background-color: #a51d1d;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
 
 .employee-form .form-field:has(.roles-checkboxes) {
   margin-bottom: 48px; /* increase/decrease to taste */
