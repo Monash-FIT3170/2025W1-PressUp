@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { TableComponent } from "./TableComponent.jsx";
@@ -7,6 +7,7 @@ import "./TableMap.css"; // ← new import
 
 export default function TableMap({ isAdmin }) {
   const [editMode, setEditMode] = useState(false);
+  const mapRef = useRef(null);
 
   const tables = useTracker(() => {
     const handle = Meteor.subscribe("tables.all");
@@ -48,6 +49,7 @@ export default function TableMap({ isAdmin }) {
 
   return (
     <div
+      ref={mapRef}
       style={{
         position: "relative",
         width: "100%",
@@ -95,6 +97,7 @@ export default function TableMap({ isAdmin }) {
           initialSize={[table.table_width, table.table_height]}
           initialRotation={table.table_rotation || 0}
           editMode={editMode}
+          containerRef = {mapRef}
         />
       ))}
     </div>
