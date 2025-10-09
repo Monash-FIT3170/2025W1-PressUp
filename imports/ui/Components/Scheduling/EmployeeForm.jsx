@@ -65,6 +65,17 @@ export const EmployeeForm = ({ employee, onClose }) => {
       });
     }
   };
+    
+  const removeEmployee = (employeeId) => {
+    Meteor.call('employees.remove', employeeId, (err) => {
+      if (err) {
+        alert(err.reason || err.message);
+      } else {
+        console.log(`Employee ${employeeId} removed`);
+        onClose?.();
+      }
+    });
+  };
 
   return (
     <div className="modal-overlay">
@@ -233,6 +244,13 @@ export const EmployeeForm = ({ employee, onClose }) => {
           <div className="form-actions">
             <button type="button" onClick={() => onClose?.()}>Cancel</button>
             <button type="submit">{employee ? 'Save' : 'Create'}</button>
+            {employee && (
+              <button type="button" onClick={() => {removeEmployee(employee._id)
+                onClose?.()
+              }}>
+                Remove
+              </button>
+            )}
           </div>
         </form>
       </div>
