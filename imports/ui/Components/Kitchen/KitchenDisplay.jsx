@@ -5,6 +5,8 @@ import KitchenOrderCard from './KitchenOrderCard.jsx';
 import { OrdersCollection } from '/imports/api/orders/orders-collection';
 import './KitchenDisplay.css';
 
+import { KitchenRecipeStockCheck } from './KitchenRecipeStockCheck.jsx';
+
 /**
  * Props:
  * - sidebarOpen?: boolean  (optional; nice-to-have)
@@ -13,6 +15,10 @@ export const KitchenDisplay = ({ sidebarOpen }) => {
   const viewportRef = useRef(null);
   const probeGridRef = useRef(null);
   const probeCardRef = useRef(null);
+
+  const [showModal,setShowModal] = useState(false);
+  const [modalIngredient,setModalIngredient] = useState(null);
+  const [modalName, setModalName] = useState('menu item/ingredient')
 
   const [pageSize, setPageSize] = useState(null);
   const [pageIndex, setPageIndex] = useState(0);
@@ -175,7 +181,12 @@ export const KitchenDisplay = ({ sidebarOpen }) => {
           >
             {orders[0] && (
               <div ref={probeCardRef}>
-                <KitchenOrderCard order={orders[0]} />
+                <KitchenOrderCard 
+                order={orders[0]} 
+                setModalIngredient={setModalIngredient}
+                setShowModal={setShowModal}
+                setModalName={setModalName}
+                />
               </div>
             )}
           </div>
@@ -183,11 +194,22 @@ export const KitchenDisplay = ({ sidebarOpen }) => {
           {!pageSize ? (
             <div className="kitchen-cards-flex">
               {orders.slice(0, 12).map((o) => (
-                <KitchenOrderCard key={o._id} order={o} />
+                <KitchenOrderCard 
+                key={o._id} 
+                order={o} 
+                setModalIngredient={setModalIngredient}
+                setShowModal={setShowModal}
+                setModalName={setModalName}
+                />
               ))}
             </div>
           ) : (
             <>
+            {showModal && <KitchenRecipeStockCheck
+                  onClose={()=>setShowModal(false)}
+                  inIngredients={modalIngredient}
+                  name={modalName}
+              />}
               <div
                 className="kitchen-rail"
                 style={{ transform: `translateX(-${pageIndex * 100}%)` }}
@@ -196,7 +218,13 @@ export const KitchenDisplay = ({ sidebarOpen }) => {
                   <div className="kitchen-page-slot" key={i}>
                     <div className="kitchen-cards-flex">
                       {page.map((order) => (
-                        <KitchenOrderCard key={order._id} order={order} />
+                        <KitchenOrderCard 
+                        key={order._id} 
+                        order={order} 
+                        setModalIngredient={setModalIngredient}
+                        setShowModal={setShowModal}
+                        setModalName={setModalName}
+                        />
                       ))}
                     </div>
                   </div>

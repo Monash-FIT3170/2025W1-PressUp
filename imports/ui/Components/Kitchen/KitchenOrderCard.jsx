@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './KitchenOrderCard.css';
 import OrderActionButton from './OrderActionButton.jsx';
+
+import { useFind, useSubscribe } from "meteor/react-meteor-data";
+import { useEffect } from 'react';
+import { Menu } from '../../../api/menu/menu-collection.js';
+import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator.jsx";
+import { InventoryCollection } from '../../../api/inventory/inventory-collection.js';
 
 function formatAEST(date) {
   try {
@@ -17,7 +23,82 @@ function formatAEST(date) {
   }
 }
 
-const KitchenOrderCard = ({ order }) => {
+const KitchenIngredientCard = ({ingredient,setShowModal,setModalIngredient,setModalName}) => {
+  const [ingName,setIngName] = useState("");
+  const [ingUnit,setIngUnit] = useState("");
+  const isLoading = useSubscribe("inventory.id",ingredient.id);
+  var completeIngredient = useFind(() => InventoryCollection.find({_id:ingredient.id}),[ingredient.id]);
+  useEffect(() => {
+    if (completeIngredient.length > 0) {
+      setIngName(completeIngredient[0].name);
+      setIngUnit(completeIngredient[0].units);
+    }
+  }, [completeIngredient]);
+  if (isLoading()) {
+    return <></>;
+  }
+
+  return (
+    <>
+      <span className='koc-ing' onClick={()=>{
+        setShowModal(true);
+        setModalIngredient([completeIngredient[0]._id]);
+        setModalName(ingName)
+      }}>{ingName}</span>
+      <span onClick={()=>{
+        setShowModal(true);
+        setModalIngredient([completeIngredient[0]._id]);
+        setModalName(ingName)
+      }}>{ingredient.amount} {ingUnit}</span>
+    </>
+  )
+}
+
+const KitchenRecipeCard = ({ item, setShowModal, setModalIngredient, setModalName }) => {
+    const [ingredients,setIngredients] = useState([]);
+    const [ids,setIds] = useState([]);
+    const isLoading = useSubscribe("menu.id",item.id);
+    const menuItem = useFind(() => Menu.find({_id:item.id}), [item.id]);
+    useEffect(() => {
+      setIngredients(menuItem[0]?.ingredients || []);
+      const collectedIds = menuItem[0]?.ingredients.map(item => item.id) || [];
+      setIds(collectedIds);
+    }, [menuItem]);
+    if (isLoading()) {
+      return <><span className="koc-qty">{item.quantity}&times;</span>
+          <span className="koc-name">{item.menu_item}</span></>;
+    }
+    
+
+    return (
+          <><span>
+          <span className="koc-qty" onClick={()=>{
+        if (ids.length > 0) {
+        setShowModal(true);
+        setModalIngredient(ids);
+        setModalName(item.menu_item)}
+      }}>{item.quantity}&times;</span>
+          <span className="koc-name" onClick={()=>{
+        if (ids.length > 0) {
+        setShowModal(true);
+        setModalIngredient(ids);
+        setModalName(item.menu_item)}
+      }}>{item.menu_item}</span></span>
+          <ul>{ingredients.map((ing, idx) => (
+          <li key={ing.id || idx} className="koc-recipe">
+          <KitchenIngredientCard 
+            ingredient={ing}
+            setModalIngredient={setModalIngredient}
+            setShowModal={setShowModal}
+            setModalName={setModalName}
+          />
+          </li>
+        ))}</ul>
+          </>
+    )
+}
+
+const KitchenOrderCard = ({ order, setShowModal, setModalIngredient, setModalName }) => {
   const { _id, table, items = [], createdAt } = order;
 
   return (
@@ -30,8 +111,12 @@ const KitchenOrderCard = ({ order }) => {
       <ul className="koc-items">
         {items.map((it, idx) => (
           <li key={it.id || idx} className="koc-item">
-            <span className="koc-qty">{it.quantity}&times;</span>
-            <span className="koc-name">{it.menu_item}</span>
+          <KitchenRecipeCard 
+            item = {it}
+            setModalIngredient={setModalIngredient}
+            setShowModal={setShowModal}
+            setModalName={setModalName}
+          />
           </li>
         ))}
       </ul>
