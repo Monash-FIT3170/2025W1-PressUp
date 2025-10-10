@@ -24,7 +24,7 @@ export default function TableMap({ isAdmin }) {
   while (existingNumbers.includes(newTableNumber)) {
     newTableNumber++;
   }
-
+ 
   Meteor.call(
     "tables.insert",
     {
