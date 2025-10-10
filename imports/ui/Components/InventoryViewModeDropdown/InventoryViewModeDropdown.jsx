@@ -4,14 +4,8 @@ import "./InventoryViewModeDropdown.css";
 export const InventoryViewModeDropdown = ({ viewMode, setViewMode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const viewModes = [
-    {
-      label: "Ingredients",
-      icon: "/images/IngredientIcon.svg",
-    },
-    {
-      label: "Suppliers",
-      icon: "/images/SupplierIcon.svg",
-    },
+    { label: "Ingredients", icon: "/images/IngredientIcon.svg" },
+    { label: "Suppliers", icon: "/images/SupplierIcon.svg" },
   ];
 
   const sortedViewModes = [
@@ -20,23 +14,27 @@ export const InventoryViewModeDropdown = ({ viewMode, setViewMode }) => {
   ];
 
   return (
-    <button
-      className="view-mode-dropdown"
-      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-    >
-      <img
-        src={sortedViewModes[0].icon}
-        alt={sortedViewModes[0].label}
-        className="view-icon"
-      />
-      {sortedViewModes[0].label}
-      <img src="/images/ExpandIcon.svg" alt="Expand" className="view-icon" />
+    <div className="view-mode-dropdown-wrapper" style={{ position: "relative", display: "inline-block" }}>
+      <button
+        type="button"
+        className="view-mode-dropdown"
+        onClick={() => setIsDropdownOpen((open) => !open)}
+      >
+        <img
+          src={sortedViewModes[0].icon}
+          alt={sortedViewModes[0].label}
+          className="view-icon"
+        />
+        {sortedViewModes[0].label}
+        <img src="/images/ExpandIcon.svg" alt="Expand" className="view-icon" />
+      </button>
 
       {isDropdownOpen && (
         <div className="view-mode-dropdown-menu">
           {sortedViewModes.map((mode) => (
             <button
               key={mode.label}
+              type="button"
               className="view-mode-dropdown-menu-item"
               onClick={() => {
                 setViewMode(mode.label);
@@ -56,6 +54,6 @@ export const InventoryViewModeDropdown = ({ viewMode, setViewMode }) => {
           ))}
         </div>
       )}
-    </button>
+    </div>
   );
 };
