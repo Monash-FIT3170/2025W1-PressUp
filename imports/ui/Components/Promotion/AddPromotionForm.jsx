@@ -38,6 +38,12 @@ export const AddPromotionForm = ({ onClose }) => {
       expiresAt: new Date(form.expiresAt),
     };
 
+    if (type === 'percentage' && (data.amount <= 0 || data.amount > 100)) {
+      return alert('Percentage amount must be between 0 and 100.');
+    }
+    if (type === 'flat' && (data.amount <= 0 || data.amount > 1000)) {
+      return alert('Flat discounts must be between 0 and 1,000.');
+    }
     try {
       await Meteor.callAsync('promotions.insert', data);
       alert('Promotion added!');
@@ -87,6 +93,9 @@ export const AddPromotionForm = ({ onClose }) => {
         value={form.amount}
         onChange={handleChange}
         required
+        min={form.type === 'percentage' ? 1 : 0}
+        max={form.type === 'percentage' ? 100 : 1000}
+        step="0.01"
       />
 
       <label>Scope Type:</label>
