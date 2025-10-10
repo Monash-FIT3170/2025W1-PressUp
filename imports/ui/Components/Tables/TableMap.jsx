@@ -18,24 +18,30 @@ export default function TableMap({ isAdmin }) {
   const toggleEditMode = () => setEditMode((m) => !m);
 
   const createNewTable = () => {
-    const newTableNumber = tables.length + 1;
-    Meteor.call(
-      "tables.insert",
-      {
-        table_number: newTableNumber,
-        table_capacity: 4,
-        table_width: 100,
-        table_height: 100,
-        table_xpos: 50,
-        table_ypos: 50,
-        table_rotation: 0,
-        table_status: "available",
-      },
-      (error) => {
-        if (error) alert("Insert failed: " + error.reason);
-      }
-    );
-  };
+  // Find the first available number by checking existing table numbers
+  const existingNumbers = tables.map(table => table.table_number);
+  let newTableNumber = 1;
+  while (existingNumbers.includes(newTableNumber)) {
+    newTableNumber++;
+  }
+ 
+  Meteor.call(
+    "tables.insert",
+    {
+      table_number: newTableNumber,
+      table_capacity: 4,
+      table_width: 100,
+      table_height: 100,
+      table_xpos: 50,
+      table_ypos: 50,
+      table_rotation: 0,
+      table_status: "available",
+    },
+    (error) => {
+      if (error) alert("Insert failed: " + error.reason);
+    }
+  );
+};
 
   {
     /* Keeping track of current table status's. LETS GOO*/
