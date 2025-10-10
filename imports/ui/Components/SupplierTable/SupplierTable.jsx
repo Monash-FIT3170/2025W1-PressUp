@@ -73,22 +73,10 @@ export const SupplierTable = ({
 
         return (
           <div className="supplier-block" key={supplier._id}> 
-            <div className="supplier-name">{supplier.name}</div>
-            <table className="supplier-table">
-              <thead>
-                <tr>
-                  <th>ABN</th>
-                  <th>Products</th>
-                  <th>Contact</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Notes</th>
-                  <th></th> {/* Actions column */}
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
+              <div className="supplier-name">{supplier.name}</div>
+              <table className="supplier-table">
+                <thead><tr><th>ABN</th><th>Products</th><th>Contact</th><th>Email</th><th>Phone</th><th>Address</th><th>Notes</th><th></th></tr></thead>
+                <tbody><tr>
                   <td>{supplier.abn}</td>
                   <td>
                     <div
@@ -137,16 +125,10 @@ export const SupplierTable = ({
                           )
                         }
                       >
-                        <img
-                          src="/images/MoreIcon.svg"
-                          alt="More button"
-                        />
+                        <img src="/images/MoreIcon.svg" alt="More button" />
                       </button>
                       {openOverlay === `supplier-${supplier._id}` && (
-                        <div
-                          ref={el => { if (el && overlayRef) overlayRef.current = el; }} 
-                          style={{ overflow: 'visible' }}
-                        >
+                        <div ref={el => { if (el && overlayRef) overlayRef.current = el; }} style={{ overflow: 'visible' }}>
                           <SupplierEditOverlay
                             id={supplier._id}
                             onClose={() => setOpenOverlay(null)}
@@ -156,10 +138,9 @@ export const SupplierTable = ({
                       )}
                     </div>
                   </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                </tr></tbody>
+              </table>
+            </div>
         );
       })}
 
