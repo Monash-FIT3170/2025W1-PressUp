@@ -24,7 +24,7 @@ export const OrderPanel = ({
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
-  const [staffName, setStaffName] = useState('');
+  const [staffId, setStaffId] = useState('');
   
   // Customer lookup state
   const [customerPhone, setCustomerPhone] = useState("");
@@ -218,8 +218,8 @@ export const OrderPanel = ({
 		return;
 	}
 
-  if (!staffName.trim()) {
-    setCheckoutError("Please enter staff name");
+  if (!staffId.trim()) {
+    setCheckoutError("Please enter a Staff Member");
     setTimeout(() => setCheckoutError(null), 3000);
     return;
   }
@@ -228,7 +228,7 @@ export const OrderPanel = ({
 
     // Format order data according to the schema
     console.log("Discounted Items:", discountedItems);
-
+  
     const orderData = {
       table: tableNumber,
       status: "open",
@@ -266,7 +266,7 @@ export const OrderPanel = ({
       }),
       createdAt: new Date(),
       recievedPayment: 0, 
-      staffName: staffName.trim(),
+      employee_id: staffId,
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -373,15 +373,15 @@ export const OrderPanel = ({
           <label htmlFor="staff-name"><h3>Staff:</h3></label>
           <select
             id="staff-name"
-            value={staffName}
-            onChange={(e) => setStaffName(e.target.value)}
+            value={staffId}
+            onChange={(e) => setStaffId(e.target.value)}
             className="staff-dropdown"
           >
             <option value="">-</option>
             {employees.map((emp) => (
               <option
                 key={emp._id}
-                value={`${emp.first_name} ${emp.last_name}`}
+                value={emp.employee_id}
               >
                 {emp.first_name} {emp.last_name}
               </option>

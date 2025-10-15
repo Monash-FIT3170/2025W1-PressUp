@@ -91,10 +91,14 @@ Meteor.methods({
   // This keeps it robust to your schema.
   // Params: { onlyClosed?, start?, end? }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales' } = {}) {
+  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales', staff = 'all' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = buildMatch({ onlyClosed, start, end });
 
+    // Filter by staff if not "all"
+    if (staff && staff !== 'all') {
+      match.employee_id = staff;
+    }
     // Per-order revenue + overall aggregation
     const kpiAgg = await raw.aggregate([
       ...(Object.keys(match).length ? [{ $match: match }] : []),
