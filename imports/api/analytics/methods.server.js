@@ -493,7 +493,7 @@ Meteor.methods({
   // ─────────────────────────────────────────────────────────────────────────────
   // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales" } = {}) {
+  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales", staff = 'all' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = {};
     if (onlyClosed) match.status = 'closed';
@@ -501,6 +501,11 @@ Meteor.methods({
       match.createdAt = {};
       if (start) match.createdAt.$gte = new Date(start);
       if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    // Filter by staff if not "all"
+    if (staff && staff !== 'all') {
+      match.employee_id = staff;
     }
 
     const TZ = 'Australia/Melbourne';

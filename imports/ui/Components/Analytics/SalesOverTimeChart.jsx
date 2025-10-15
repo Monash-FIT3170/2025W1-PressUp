@@ -6,14 +6,14 @@ function moneyTick(v) {
   return `$${Number(v).toLocaleString()}`;
 }
 
-export default function SalesOverTimeChart({ onlyClosed = false, start = null, end = null, metric = "sales" }) {
+export default function SalesOverTimeChart({ onlyClosed = false, start = null, end = null, metric = "sales", staff = "all" }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    Meteor.call('analytics.salesOverTime', { onlyClosed, start, end, metric }, (err, res) => {
+    Meteor.call('analytics.salesOverTime', { onlyClosed, start, end, metric, staff }, (err, res) => {
       setData(err ? [] : (res || []));
     });
-  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.(), metric]);
+  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.(), metric, staff]);
 
   return (
     <div style={{ width:'100%', height: '100%' }}>
