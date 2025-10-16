@@ -11,6 +11,7 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (mode === 'edit' && existingSupplier) {
@@ -34,8 +35,39 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
     }
   }, [mode, existingSupplier]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // needed for <form>
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (/\d/.test(name)) {
+      newErrors.name = 'Name cannot contain numbers';
+    }
+    if (!abn.trim()) {
+      newErrors.abn = 'ABN is required';
+    } else {
+      // Remove spaces for validation
+      const abnDigits = abn.replace(/\s+/g, '');
+      if (!/^\d{11}$/.test(abnDigits)) {
+        newErrors.abn = 'ABN must be 11 digits';
+      }
+    }
+    if (!contact.trim()) newErrors.contact = 'Contact is required';
+    if (!phone.trim()) {
+      newErrors.phone = 'Phone is required';
+    } else if (!/^\+?[0-9\s\-()]{7,15}$/.test(phone.trim())) {
+      newErrors.phone = 'Invalid phone number';
+    }
+    if (!address.trim()) newErrors.address = 'Address is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
 
     const notesArray = notes.split(',').map(n => n.trim()).filter(Boolean);
     const productsArray = products.split(',').map(p => p.trim()).filter(Boolean);
@@ -76,122 +108,97 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
           <div className="title">{mode === 'edit' ? 'Edit Supplier' : 'Add New Supplier'}</div>
         </div>
 
-        {/* Wrap fields in a real form to enable native "required" validation */}
         <form className="supplier-form-input-container" onSubmit={handleSubmit}>
+
           {/* Name */}
           <div className="supplier-form-input">
-            <div className="Name field"></div>
-            <img src="/images/icon.svg" alt="Name" className="w-5 h-5" />
             <label htmlFor="name">Name</label>
             <input
               id="name"
-              name="name"
               placeholder="Name"
               value={name}
               onChange={e => setName(e.target.value)}
-              required
             />
+            {errors.name && <span className="error">{errors.name}</span>}
           </div>
 
           {/* ABN */}
           <div className="supplier-form-input">
-            <div className="ABN field"></div>
-            <img src="/images/Credit card.svg" alt="ABN" className="w-5 h-5" />
             <label htmlFor="abn">ABN</label>
             <input
               id="abn"
-              name="abn"
               placeholder="ABN"
               value={abn}
               onChange={e => setAbn(e.target.value)}
-              required
             />
+            {errors.abn && <span className="error">{errors.abn}</span>}
           </div>
 
           {/* Products */}
           <div className="supplier-form-input">
-            <div className="Products field"></div>
-            <img src="/images/Package.svg" alt="Products" className="w-5 h-5" />
             <label htmlFor="products">Products</label>
             <input
               id="products"
-              name="products"
               placeholder="Products (comma-separated)"
               value={products}
               onChange={e => setProducts(e.target.value)}
-              required
             />
           </div>
 
           {/* Contact */}
           <div className="supplier-form-input">
-            <div className="Contact field"></div>
-            <img src="/images/icon.svg" alt="Contact" className="w-5 h-5" />
             <label htmlFor="contact">Contact</label>
             <input
               id="contact"
-              name="contact"
               placeholder="Contact"
               value={contact}
               onChange={e => setContact(e.target.value)}
-              required
             />
+            {errors.contact && <span className="error">{errors.contact}</span>}
           </div>
 
           {/* Email */}
           <div className="supplier-form-input">
-            <div className="Mail field"></div>
-            <img src="/images/Mail.svg" alt="Email" className="w-5 h-5" />
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              name="email"
               type="email"
               placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              required
             />
           </div>
 
           {/* Phone */}
           <div className="supplier-form-input">
-            <div className="Phone field"></div>
-            <img src="/images/Phone.svg" alt="Phone" className="w-5 h-5" />
             <label htmlFor="phone">Phone</label>
             <input
               id="phone"
-              name="phone"
               type="tel"
               placeholder="Phone"
               value={phone}
               onChange={e => setPhone(e.target.value)}
             />
+            {errors.phone && <span className="error">{errors.phone}</span>}
           </div>
 
           {/* Address */}
           <div className="supplier-form-input">
-            <div className="Home field"></div>
-            <img src="/images/Home.svg" alt="Address" className="w-5 h-5" />
             <label htmlFor="address">Address</label>
             <input
               id="address"
-              name="address"
               placeholder="Address"
               value={address}
               onChange={e => setAddress(e.target.value)}
-              required
             />
+            {errors.address && <span className="error">{errors.address}</span>}
           </div>
 
           {/* Notes */}
           <div className="supplier-form-input">
-            <div className="Notes field"></div>
-            <img src="/images/File text.svg" alt="Notes" className="w-5 h-5" />
             <label htmlFor="notes">Notes</label>
             <input
               id="notes"
-              name="notes"
               placeholder="Notes (comma-separated)"
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -199,18 +206,10 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
           </div>
 
           <div className="supplier-form-buttons">
-            <button
-              type="button"
-              className="supplier-form-button cancel"
-              onClick={onClose}
-            >
+            <button type="button" className="supplier-form-button cancel" onClick={onClose}>
               <div className="button-text">Cancel</div>
             </button>
-
-            <button
-              type="submit"
-              className="supplier-form-button done"
-            >
+            <button type="submit" className="supplier-form-button done">
               <div className="button-text">{mode === 'edit' ? 'Save Changes' : 'Add'}</div>
             </button>
           </div>
