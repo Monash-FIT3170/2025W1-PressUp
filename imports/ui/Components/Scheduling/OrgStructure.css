@@ -4,8 +4,8 @@
 }
 
 .org-structure-btn {
-  background-color: #3b82f6;
-  color: white;
+  background-color: #fcd581;
+  color: black;
   border: none;
   padding: 12px 24px;
   border-radius: 16px;
@@ -17,7 +17,7 @@
 }
 
 .org-structure-btn:hover {
-  background-color: #2563eb;
+  background-color: #fde9bf;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
