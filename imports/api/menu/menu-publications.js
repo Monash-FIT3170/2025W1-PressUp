@@ -19,11 +19,36 @@ Meteor.publish('menu.byCategory', (menuCategory) => {
 	});
 });
 
+Meteor.publish("menu.id", function(myId) {
+	return Menu.find({_id:myId});
+  });
+
+Meteor.publish('menu.isCalled', (itemName) => {
+	if (itemName.length > 0) {
+		return Menu.find({
+		  name: itemName,
+		});
+	  }
+	  return Menu.find();
+});
+
+Meteor.publish("menu.id", function(myId) {
+	return Menu.find({_id:myId});
+  });
+
+Meteor.publish('menu.isCalled', (itemName) => {
+	if (itemName.length > 0) {
+		return Menu.find({
+		  name: itemName,
+		});
+	  }
+	  return Menu.find();
+});
+
 Meteor.publish("menu.nameIncludes", (subString) => {
   if (subString.length > 0) {
 	return Menu.find({
 	  name: { $regex: subString, $options: "i" },
 	});
   }
-  return Menu.find();
 });
