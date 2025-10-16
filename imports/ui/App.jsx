@@ -228,11 +228,16 @@ useEffect(() => {
 
   // Function to update the quantity of an item in the order
   const updateQuantity = (itemId, newQuantity) => {
-    setOrderItems((prevItems) =>
+    if (newQuantity <= 0) {
+      removeFromOrder(itemId)
+    } else {
+      setOrderItems((prevItems) =>
       prevItems.map((item) =>
         item._id === itemId ? { ...item, quantity: newQuantity } : item
       )
     );
+    }
+    
   };
 
   // Function to clear the entire order
