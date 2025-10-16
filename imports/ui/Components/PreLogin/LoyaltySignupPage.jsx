@@ -50,6 +50,18 @@ export const LoyaltySignupPage = () => {
       }
     }
 
+    // Phone validation if provided
+    if (formData.phone.trim()) {
+      // Accepts formats like 0412345678, 0412 345 678, +61412345678, +61 412 345 678
+      const phoneRegex = /^(?:\+?61|0)4\d{8}$/;
+      const cleanedPhone = formData.phone.replace(/\s+/g, '');
+      if (!phoneRegex.test(cleanedPhone)) {
+        setMessage({ type: 'error', text: 'Please enter a valid Australian mobile number (e.g. 0412 345 678)' });
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     try {
       // Check if email already exists (if email provided)
       if (formData.email.trim()) {
@@ -90,7 +102,7 @@ export const LoyaltySignupPage = () => {
       // Redirect back to homepage after delay
       setTimeout(() => {
         navigate('/');
-      }, 3000);
+      }, 4500);
 
     } catch (error) {
       console.error('Signup error:', error);
