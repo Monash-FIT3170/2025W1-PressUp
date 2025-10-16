@@ -33,9 +33,12 @@ Meteor.methods({
     const mod = await TrainingModules.findOneAsync(moduleId);
     if (!mod) throw new Meteor.Error('not-found', 'Module not found');
 
-    // Avoid duplicate "assigned" entries for same employee/module combo
-    const existing = await TrainingAssignments.findOneAsync({ employeeId, moduleId, status: 'assigned' });
-    if (existing) return existing._id;
+    const existingAnyStatus = await TrainingAssignments.findOneAsync({ employeeId, moduleId });
+    if (existingAnyStatus) {
+
+      // return existingAnyStatus._id;
+      throw new Meteor.Error('duplicate-assignment', 'This employee already has this module (assigned or completed).');
+    }
 
     return await TrainingAssignments.insertAsync({
       employeeId,

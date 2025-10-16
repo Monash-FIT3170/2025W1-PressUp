@@ -1,4 +1,3 @@
-// imports/ui/Components/SupplierTable/SupplierForm.jsx
 import React, { useState, useEffect } from 'react';
 import './SupplierForm.css';
 import { Meteor } from 'meteor/meteor';
@@ -24,7 +23,6 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
       setAddress(existingSupplier.address || '');
       setNotes(existingSupplier.notes ? existingSupplier.notes.join(', ') : '');
     } else {
-      // Reset form for "add" mode or if no existing supplier
       setName('');
       setAbn('');
       setProducts('');
@@ -37,164 +35,187 @@ export const SupplierForm = ({ onClose, mode = 'add', existingSupplier = null, o
   }, [mode, existingSupplier]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // needed for <form>
 
-    const notesArray = notes.split(',').map(note => note.trim()).filter(note => note);
-    const productsArray = products.split(',').map(product => product.trim()).filter(product => product);
+    const notesArray = notes.split(',').map(n => n.trim()).filter(Boolean);
+    const productsArray = products.split(',').map(p => p.trim()).filter(Boolean);
+
     const supplierData = {
       name: name.trim(),
       abn: abn.trim(),
-      products: productsArray, 
+      products: productsArray,
       contact: contact.trim(),
       email: email.trim(),
       phone: phone.trim(),
       address: address.trim(),
-      notes: notesArray, 
+      notes: notesArray,
     };
 
     try {
       if (mode === 'edit' && existingSupplier?._id) {
         await Meteor.callAsync("suppliers.update", existingSupplier._id, supplierData);
         alert('Supplier updated successfully!');
-        if (onSupplierUpdated) onSupplierUpdated(); 
+        onSupplierUpdated?.();
       } else {
         await Meteor.callAsync("suppliers.insert", supplierData);
         alert('Supplier added successfully!');
-        setName('');
-        setAbn('');
-        setProducts('');
-        setContact('');
-        setEmail('');
-        setPhone('');
-        setAddress('');
-        setNotes('');
+        setName(''); setAbn(''); setProducts(''); setContact('');
+        setEmail(''); setPhone(''); setAddress(''); setNotes('');
       }
-      onClose(); 
+      onClose();
     } catch (error) {
       alert(`Error: ${error.message}`);
       console.error("Error processing supplier:", error);
     }
   };
 
-  return (// implement the pop-up functionality in a lil-bit
+  return (
     <div className="modal-overlay">
       <div className="modal-content supplier-form-container">
         <div className="supplier-form-header">
           <div className="title">{mode === 'edit' ? 'Edit Supplier' : 'Add New Supplier'}</div>
         </div>
-        <div className="supplier-form-input-container">
+
+        {/* Wrap fields in a real form to enable native "required" validation */}
+        <form className="supplier-form-input-container" onSubmit={handleSubmit}>
           {/* Name */}
           <div className="supplier-form-input">
             <div className="Name field"></div>
             <img src="/images/icon.svg" alt="Name" className="w-5 h-5" />
-            <label>Name</label>
+            <label htmlFor="name">Name</label>
             <input
+              id="name"
               name="name"
               placeholder="Name"
               value={name}
               onChange={e => setName(e.target.value)}
+              required
             />
           </div>
+
           {/* ABN */}
           <div className="supplier-form-input">
             <div className="ABN field"></div>
             <img src="/images/Credit card.svg" alt="ABN" className="w-5 h-5" />
-            <label>ABN</label>
+            <label htmlFor="abn">ABN</label>
             <input
+              id="abn"
               name="abn"
               placeholder="ABN"
               value={abn}
               onChange={e => setAbn(e.target.value)}
+              required
             />
           </div>
+
           {/* Products */}
           <div className="supplier-form-input">
             <div className="Products field"></div>
             <img src="/images/Package.svg" alt="Products" className="w-5 h-5" />
-            <label>Products</label>
+            <label htmlFor="products">Products</label>
             <input
+              id="products"
               name="products"
               placeholder="Products (comma-separated)"
               value={products}
               onChange={e => setProducts(e.target.value)}
+              required
             />
           </div>
+
           {/* Contact */}
           <div className="supplier-form-input">
             <div className="Contact field"></div>
             <img src="/images/icon.svg" alt="Contact" className="w-5 h-5" />
-            <label>Contact</label>
+            <label htmlFor="contact">Contact</label>
             <input
+              id="contact"
               name="contact"
               placeholder="Contact"
               value={contact}
               onChange={e => setContact(e.target.value)}
+              required
             />
           </div>
+
           {/* Email */}
           <div className="supplier-form-input">
             <div className="Mail field"></div>
             <img src="/images/Mail.svg" alt="Email" className="w-5 h-5" />
-            <label>Email</label>
+            <label htmlFor="email">Email</label>
             <input
+              id="email"
               name="email"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              required
             />
           </div>
+
           {/* Phone */}
           <div className="supplier-form-input">
             <div className="Phone field"></div>
             <img src="/images/Phone.svg" alt="Phone" className="w-5 h-5" />
-            <label>Phone</label>
+            <label htmlFor="phone">Phone</label>
             <input
+              id="phone"
               name="phone"
+              type="tel"
               placeholder="Phone"
               value={phone}
               onChange={e => setPhone(e.target.value)}
             />
           </div>
+
           {/* Address */}
           <div className="supplier-form-input">
             <div className="Home field"></div>
             <img src="/images/Home.svg" alt="Address" className="w-5 h-5" />
-            <label>Address</label>
+            <label htmlFor="address">Address</label>
             <input
+              id="address"
               name="address"
               placeholder="Address"
               value={address}
               onChange={e => setAddress(e.target.value)}
+              required
             />
           </div>
+
           {/* Notes */}
           <div className="supplier-form-input">
             <div className="Notes field"></div>
             <img src="/images/File text.svg" alt="Notes" className="w-5 h-5" />
-            <label>Notes</label>
+            <label htmlFor="notes">Notes</label>
             <input
+              id="notes"
               name="notes"
               placeholder="Notes (comma-separated)"
               value={notes}
               onChange={e => setNotes(e.target.value)}
             />
           </div>
-        </div>
-        <div className="supplier-form-buttons">
-          <div
-            className="supplier-form-button cancel"
-            onClick={onClose}
-          >
-            <div className="button-text">Cancel</div>
+
+          <div className="supplier-form-buttons">
+            <button
+              type="button"
+              className="supplier-form-button cancel"
+              onClick={onClose}
+            >
+              <div className="button-text">Cancel</div>
+            </button>
+
+            <button
+              type="submit"
+              className="supplier-form-button done"
+            >
+              <div className="button-text">{mode === 'edit' ? 'Save Changes' : 'Add'}</div>
+            </button>
           </div>
-          <div
-            className="supplier-form-button done"
-            onClick={handleSubmit}
-          >
-            <div className="button-text">{mode === 'edit' ? 'Save Changes' : 'Add'}</div>
-          </div>
-        </div>
+        </form>
       </div>
-    // </div> // pop up functionality
+    </div>
   );
 };

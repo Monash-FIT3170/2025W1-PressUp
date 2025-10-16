@@ -52,9 +52,10 @@ export const OrderPanel = ({
 
     if (!handle.ready()) return [];
 
-    return TablesCollection.find({
-      table_status: { $eq: "available" },
-    }).fetch();
+    return TablesCollection.find(
+      { table_status: { $eq: "available" } },
+      { sort: { table_number: 1 } }  // Sort by table_number in ascending order
+    ).fetch();
   }, []);
 
   // Customer search subscription

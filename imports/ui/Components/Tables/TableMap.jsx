@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useTracker } from "meteor/react-meteor-data";
 import { Meteor } from "meteor/meteor";
 import { TableComponent } from "./TableComponent.jsx";
@@ -7,6 +7,7 @@ import "./TableMap.css"; // ← new import
 
 export default function TableMap({ isAdmin }) {
   const [editMode, setEditMode] = useState(false);
+  const mapRef = useRef(null);
 
   const tables = useTracker(() => {
     const handle = Meteor.subscribe("tables.all");
@@ -17,24 +18,30 @@ export default function TableMap({ isAdmin }) {
   const toggleEditMode = () => setEditMode((m) => !m);
 
   const createNewTable = () => {
-    const newTableNumber = tables.length + 1;
-    Meteor.call(
-      "tables.insert",
-      {
-        table_number: newTableNumber,
-        table_capacity: 4,
-        table_width: 100,
-        table_height: 100,
-        table_xpos: 50,
-        table_ypos: 50,
-        table_rotation: 0,
-        table_status: "available",
-      },
-      (error) => {
-        if (error) alert("Insert failed: " + error.reason);
-      }
-    );
-  };
+  // Find the first available number by checking existing table numbers
+  const existingNumbers = tables.map(table => table.table_number);
+  let newTableNumber = 1;
+  while (existingNumbers.includes(newTableNumber)) {
+    newTableNumber++;
+  }
+ 
+  Meteor.call(
+    "tables.insert",
+    {
+      table_number: newTableNumber,
+      table_capacity: 4,
+      table_width: 100,
+      table_height: 100,
+      table_xpos: 50,
+      table_ypos: 50,
+      table_rotation: 0,
+      table_status: "available",
+    },
+    (error) => {
+      if (error) alert("Insert failed: " + error.reason);
+    }
+  );
+};
 
   {
     /* Keeping track of current table status's. LETS GOO*/
@@ -48,6 +55,7 @@ export default function TableMap({ isAdmin }) {
 
   return (
     <div
+      ref={mapRef}
       style={{
         position: "relative",
         width: "100%",
@@ -95,6 +103,7 @@ export default function TableMap({ isAdmin }) {
           initialSize={[table.table_width, table.table_height]}
           initialRotation={table.table_rotation || 0}
           editMode={editMode}
+          containerRef = {mapRef}
         />
       ))}
     </div>

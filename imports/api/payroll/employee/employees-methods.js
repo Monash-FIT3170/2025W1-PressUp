@@ -185,13 +185,33 @@ Meteor.methods({
 
   async 'employees.remove'(employeeId) {
     if (!this.userId) throw new Meteor.Error('not-authorized');
+
     const me = await Meteor.users.findOneAsync(this.userId, { fields: { isAdmin: 1 } });
     if (!me?.isAdmin) throw new Meteor.Error('not-authorized');
 
     check(employeeId, String);
 
+    // Find the employee being removed
     const existing = await EmployeesCollection.findOneAsync(employeeId);
     if (!existing) throw new Meteor.Error('not-found', 'Employee not found');
+
+    // Check if this employee is an admin
+    const isAdminEmployee = existing.roles?.includes('Admin') || existing.roles?.includes('admin');
+
+    if (isAdminEmployee) {
+      // Count how many admin employees exist in the system
+      const adminCount = await EmployeesCollection.find({
+        roles: { $in: ['Admin', 'admin'] }
+      }).countAsync();
+
+      // If there's only one admin and we're trying to remove them, block it
+      if (adminCount <= 1) {
+        throw new Meteor.Error(
+          'cannot-remove-last-admin',
+          'You cannot remove the last admin user from the system.'
+        );
+      }
+    }
 
     // Unlink but do NOT delete users (keeps your initial users)
     const linkedUser = await Meteor.users.findOneAsync(
