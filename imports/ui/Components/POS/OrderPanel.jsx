@@ -422,7 +422,7 @@ export const OrderPanel = ({
                     onClick={() =>
                       updateQuantity(
                         item._id || index,
-                        Math.max(1, item.quantity - 1)
+                        item.quantity - 1
                       )
                     }
                   >
