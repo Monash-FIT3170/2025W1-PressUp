@@ -3,59 +3,52 @@ import './MenuItemPopUp.css';
 import { useFind, useSubscribe } from "meteor/react-meteor-data";
 import { Meteor } from 'meteor/meteor';
 import { ConfirmPopup } from './ConfirmPopup.jsx';
-import '/imports/api/menu/menu-methods.js'; // Ensure this is imported to use Meteor methods
+import '/imports/api/menu/menu-methods.js';
 import '/imports/api/menu-categories/menu-categories-methods.js';
-import {Menu} from '/imports/api/menu/menu-collection.js';
 import { InventoryCollection } from "../../../api/inventory/inventory-collection.js";
+
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {}, onUpdate }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [menuCategory, setMenuCategory] = useState('');
-  const [menuCategories, setMenuCategories] = useState([]);   // this is for the categories table
+  const [menuCategories, setMenuCategories] = useState([]);
   const [available, setAvailable] = useState(true);
   const [ingredients, setIngredients] = useState([]);
-  const [seasons, setSeasons] = useState([]);
+  const [ingredientAmounts, setIngredientAmounts] = useState({});
   const [seasonal, setSeasonal] = useState(false);
+  const [seasons, setSeasons] = useState([]);
   const [isHalal, setIsHalal] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
   const [isGlutenFree, setIsGlutenFree] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [showConfirm, setShowConfirm] = useState(false);
-  const searchTerm = "";
-  const isInventoryReady  = useSubscribe("inventory.nameIncludes", searchTerm);
-  const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
-  const [ingredientAmounts, setIngredientAmounts] = useState({});
-
-  
-  // const findIngredients = useFind(() => InventoryCollection.find({}));
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const [schedule, setSchedule] = useState(
     daysOfWeek.reduce((acc, day) => {
       acc[day] = { available: false, start: '', end: '' };
       return acc;
     }, {})
   );
+  const [errors, setErrors] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const searchTerm = "";
+  useSubscribe("inventory.nameIncludes", searchTerm);
+  const findIngredients = useFind(() => InventoryCollection.find(), [searchTerm]);
+
+  // Load menu categories
   useEffect(() => {
+    (async () => {
+      try {
+        const result = await Meteor.callAsync("menuCategories.getCategories");
+        setMenuCategories(result);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    })();
+  }, []);
 
-  //   Meteor.call('menuCategories.getCategories', (error, result) => {
-  //   if (error) {
-  //     console.error('Failed to fetch categories:', error);
-  //   } else {
-  //     // console.log('Fetched categories:', result);
-  //     setMenuCategories(result); // assuming result is an array of category strings
-  //   }
-  // });
-  (async () => {
-    try {
-      const result = await Meteor.callAsync("menuCategories.getCategories");
-      setMenuCategories(result);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-    }
-  })();
-
-
+  // Populate existing item data when updating
+  useEffect(() => {
     if (mode === 'update' && existingItem) {
       setName(existingItem.name || '');
       setPrice(existingItem.price || '');
@@ -64,41 +57,31 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       setIsHalal(existingItem.isHalal || false);
       setIsVegetarian(existingItem.isVegetarian || false);
       setIsGlutenFree(existingItem.isGlutenFree || false);
-      // setIngredients(existingItem.ingredients || []);
-      if (existingItem.seasons && existingItem.seasons.length > 0) {
-        setSeasonal(true)
-        setSeasons(existingItem.seasons)
-      }
-      setIngredients((existingItem.ingredients || []).map(ing => ing.id));
-      setIngredientAmounts((existingItem.ingredients || []).reduce((acc, ing) => {
-          acc[ing.id] = ing.amount;
-          return acc;
-        }, {}));
 
-        if (existingItem.schedule) {
-          setSchedule(prev => ({
-            ...prev,
-            ...existingItem.schedule
-          }));
-        }
+      if (existingItem.seasons?.length > 0) {
+        setSeasonal(true);
+        setSeasons(existingItem.seasons);
       }
+
+      setIngredients((existingItem.ingredients || []).map(i => i.id));
+      setIngredientAmounts((existingItem.ingredients || []).reduce((acc, i) => {
+        acc[i.id] = i.amount;
+        return acc;
+      }, {}));
+
+      if (existingItem.schedule) {
+        setSchedule(prev => ({ ...prev, ...existingItem.schedule }));
+      }
+    }
   }, [existingItem, mode]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const docs = await Meteor.callAsync('menu.getAll');
-        console.log('[MenuItemPopUp] Menu docs:', docs);
-      } catch (e) {
-        console.error('Failed to load menu:', e);
-      }
-    })();
-  }, []);
   const validateForm = () => {
     const newErrors = {};
+
     if (!name.trim()) newErrors.name = 'Item name is required';
     if (!price || isNaN(price) || parseFloat(price) <= 0) newErrors.price = 'Please enter a valid price greater than 0';
     if (!menuCategory.trim()) newErrors.menuCategory = 'Menu category is required';
+
     if (!Array.isArray(ingredients) || ingredients.length === 0) {
       newErrors.ingredients = 'Please select at least one ingredient';
     }
@@ -109,102 +92,73 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
       }
     });
 
+    // Schedule validation: end time must be after start time
+    daysOfWeek.forEach(day => {
+      const { available, start, end } = schedule[day];
+      if (available) {
+        if (!start || !end) {
+          newErrors.schedule = 'Please provide both start and end times for all available days';
+        } else {
+          const startTime = new Date(`1970-01-01T${start}`);
+          const endTime = new Date(`1970-01-01T${end}`);
+          if (endTime <= startTime) {
+            newErrors.schedule = 'End time must be after the start time for each available day';
+          }
+        }
+      }
+    });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      setShowConfirm(true);
-    }
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (validateForm()) setShowConfirm(true);
   };
 
-  const handleConfirm = (e) => {
+  const handleConfirm = e => {
     e.preventDefault();
-    var itemData;
-    if (seasonal && seasons.length > 0 && seasons.length < 4) {
-        itemData = {
-          name,
-          price: parseFloat(price),
-          menuCategory,
-          available,
-          isHalal,
-          isVegetarian,
-          isGlutenFree,
-          // ingredients,
-          ingredients: ingredients.map(id => ({
-            id,
-            amount: parseFloat(ingredientAmounts[id]) || 0
-          })),
-          schedule,
-          seasons,
-        };
-    } else {
-      itemData = {
-        name,
-        price: parseFloat(price),
-        menuCategory,
-        available,
-        isHalal,
-        isVegetarian,
-        isGlutenFree,
-        // ingredients,
-        ingredients: ingredients.map(id => ({
-          id,
-          amount: parseFloat(ingredientAmounts[id]) || 0
-        })),
-        schedule,
-        'seasons':[],
-      };
-    }
 
-    if (mode === 'create') {
-      Meteor.call('menu.insert',itemData, (error, result) => {
-        if (error) {
-          alert('Failed to add menu item: ' + error.reason);
-        } else {
-          // alert('Menu item added successfully!');
-          //addMenuItem(itemData);
+    const itemData = {
+      name,
+      price: parseFloat(price),
+      menuCategory,
+      available,
+      isHalal,
+      isVegetarian,
+      isGlutenFree,
+      ingredients: ingredients.map(id => ({ id, amount: parseFloat(ingredientAmounts[id]) || 0 })),
+      schedule,
+      seasons: seasonal ? seasons : []
+    };
+
+    const callback = (error, result) => {
+      if (error) {
+        alert('Operation failed: ' + error.reason);
+      } else {
+        if (mode === 'create') {
           setName('');
           setPrice('');
           setMenuCategory('');
           setIngredients([]);
-          onClose();  // Close the popup after successful submission
         }
-        setShowConfirm(false);
-        window.location.reload();
-      });
-    } else if (mode === 'update') {
-      Meteor.call('menu.update',existingItem._id,itemData, (error, result) => {
-        if (error) {
-          alert('Failed to update menu item: ' + error.reason);
-        } else {
-          // alert('Menu item updated successfully!');
-          onUpdate?.(existingItem._id, itemData);
-          onClose();
-        }
-        setShowConfirm(false);
-        window.location.reload();
-      });
-    }
+        onUpdate?.(existingItem._id, itemData);
+        onClose();
+      }
+      setShowConfirm(false);
+      window.location.reload();
+    };
 
-     // Reload the page to reflect changes
+    if (mode === 'create') {
+      Meteor.call('menu.insert', itemData, callback);
+    } else {
+      Meteor.call('menu.update', existingItem._id, itemData, callback);
+    }
   };
 
   const handleCancel = () => setShowConfirm(false);
 
-  const resetForm = () => {
-    setName('');
-    setPrice('');
-    setMenuCategory('');
-    setIngredients('');
-    setAvailable(true);
-    setIsHalal(false);
-    setIsVegetarian(false);
-    setIsGlutenFree(false);
-  };  
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -214,146 +168,79 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
         <form onSubmit={handleSubmit}>
           <div>
             <label>Item Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" value={name} onChange={e => setName(e.target.value)} />
             {errors.name && <span className="error">{errors.name}</span>}
           </div>
 
           <div>
             <label>Price</label>
-            <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
             {errors.price && <span className="error">{errors.price}</span>}
           </div>
 
           <div>
             <label>Menu Category</label>
-            {/* <input type="text" value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)} /> */}
-            <select value={menuCategory} onChange={(e) => setMenuCategory(e.target.value)}>
-            <option value="">-- Select a category --</option>
-            {
-            // console.log('menuCategories:', menuCategories)
-            menuCategories.map((cat, index) => (
-              // <option key={index} value={cat}>{cat}</option>
-              <option key={cat._id} value={cat._id}>{cat.category}</option>
-            ))
-            }
-          </select>
+            <select value={menuCategory} onChange={e => setMenuCategory(e.target.value)}>
+              <option value="">-- Select a category --</option>
+              {menuCategories.map(cat => <option key={cat._id} value={cat._id}>{cat.category}</option>)}
+            </select>
             {errors.menuCategory && <span className="error">{errors.menuCategory}</span>}
           </div>
 
           <div className="checkbox-row">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={available}
-                onChange={(e) => setAvailable(e.target.checked)}
-              />
-              Available
-            </label>
-
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={isVegetarian}
-                onChange={(e) => setIsVegetarian(e.target.checked)}
-              />
-              Vegetarian
-            </label>
-
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={isHalal}
-                onChange={(e) => setIsHalal(e.target.checked)}
-              />
-              Halal
-            </label>
-
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={isGlutenFree}
-                onChange={(e) => setIsGlutenFree(e.target.checked)}
-              />
-              Gluten Free
-            </label>
+            <label><input type="checkbox" checked={available} onChange={e => setAvailable(e.target.checked)} /> Available</label>
+            <label><input type="checkbox" checked={isVegetarian} onChange={e => setIsVegetarian(e.target.checked)} /> Vegetarian</label>
+            <label><input type="checkbox" checked={isHalal} onChange={e => setIsHalal(e.target.checked)} /> Halal</label>
+            <label><input type="checkbox" checked={isGlutenFree} onChange={e => setIsGlutenFree(e.target.checked)} /> Gluten Free</label>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-            {findIngredients.map((ing) => (
+            {findIngredients.map(ing => (
               <div key={ing._id} style={{ display: 'flex', gap: '10px' }}>
                 <label style={{ display: 'flex', gap: '5px' }}>
                   <input
                     type="checkbox"
                     value={ing._id}
                     checked={ingredients.includes(ing._id)}
-                    onChange={(e) => {
+                    onChange={e => {
                       const checked = e.target.checked;
                       const newIngredients = checked
                         ? [...ingredients, ing._id]
                         : ingredients.filter(id => id !== ing._id);
-
-                      // Clean up amount if unchecked
                       if (!checked) {
                         const updatedAmounts = { ...ingredientAmounts };
                         delete updatedAmounts[ing._id];
                         setIngredientAmounts(updatedAmounts);
                       }
-
                       setIngredients(newIngredients);
                     }}
                   />
                   {ing.name} ({ing.units})
                 </label>
-
-                {/* Show input for amount if checked */}
                 {ingredients.includes(ing._id) && (
                   <input
                     type="number"
                     placeholder={`Insert amount in ${ing.units}`}
-                    step='any'
+                    step="any"
+                    min={0}
                     value={ingredientAmounts[ing._id] || ''}
-                    min = {0}
-                    onChange={(e) =>
-                      setIngredientAmounts({
-                        ...ingredientAmounts,
-                        [ing._id]: e.target.value
-                      })
-                    }
-                    onBlur={(e) => {
-                      if (e.target.value && e.target.value <= 0) {
-                        e.target.value = null;
-                        setIngredientAmounts({
-                          ...ingredientAmounts,
-                          [ing._id]: e.target.value
-                        })
-                      }
-                    }}
+                    onChange={e => setIngredientAmounts({ ...ingredientAmounts, [ing._id]: e.target.value })}
                   />
                 )}
               </div>
             ))}
-
-          {errors.ingredients && <span className="error">{errors.ingredients}</span>}
+            {errors.ingredients && <span className="error">{errors.ingredients}</span>}
           </div>
-
 
           <div className="schedule-section">
             <h4>Availability Schedule</h4>
-            {daysOfWeek.map((day) => (
+            {daysOfWeek.map(day => (
               <div key={day} className="schedule-row">
                 <label>
                   <input
                     type="checkbox"
                     checked={schedule[day].available}
-                    onChange={(e) =>
-                      setSchedule({
-                        ...schedule,
-                        [day]: {
-                          ...schedule[day],
-                          available: e.target.checked
-                        }
-                      })
-                    }
+                    onChange={e => setSchedule({ ...schedule, [day]: { ...schedule[day], available: e.target.checked } })}
                   />
                   {day}
                 </label>
@@ -362,117 +249,41 @@ const MenuItemPopUp = ({ onClose, addMenuItem, mode = 'create', existingItem = {
                     <input
                       type="time"
                       value={schedule[day].start}
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          [day]: {
-                            ...schedule[day],
-                            start: e.target.value
-                          }
-                        })
-                      }
+                      onChange={e => setSchedule({ ...schedule, [day]: { ...schedule[day], start: e.target.value } })}
                     />
                     <input
                       type="time"
                       value={schedule[day].end}
-                      onChange={(e) =>
-                        setSchedule({
-                          ...schedule,
-                          [day]: {
-                            ...schedule[day],
-                            end: e.target.value
-                          }
-                        })
-                      }
+                      onChange={e => setSchedule({ ...schedule, [day]: { ...schedule[day], end: e.target.value } })}
                     />
                   </>
                 )}
               </div>
             ))}
-            <h4>Seasonal Availability</h4>
-            <div className="schedule-row">
-            <label>
-            <input 
-              type='checkbox'
-              checked = {seasonal}
-              onChange={(e)=>{
-                setSeasonal(e.target.checked)
-              }}
-            />
-            Seasonal Item
-            </label>
-            </div>
-            {seasonal && (<><h5>Available In:</h5><label className="schedule-row">
-                  <input
-                    type="checkbox"
-                    value='Summer'
-                    checked={seasons.includes('Summer')}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const newSeasons = checked
-                        ? [...seasons, 'Summer']
-                        : seasons.filter(season => season !== 'Summer');
-
-
-                      setSeasons(newSeasons);
-                    }}
-                  />
-                  Summer
-                </label>
-                <label className="schedule-row">
-                  <input
-                    type="checkbox"
-                    value='Autumn'
-                    checked={seasons.includes('Autumn')}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const newSeasons = checked
-                        ? [...seasons, 'Autumn']
-                        : seasons.filter(season => season !== 'Autumn');
-
-
-                      setSeasons(newSeasons);
-                    }}
-                  />
-                  Autumn
-                </label>
-                <label className="schedule-row">
-                  <input
-                    type="checkbox"
-                    value='Winter'
-                    checked={seasons.includes('Winter')}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const newSeasons = checked
-                        ? [...seasons, 'Winter']
-                        : seasons.filter(season => season !== 'Winter');
-
-
-                      setSeasons(newSeasons);
-                    }}
-                  />
-                  Winter
-                </label>
-                <label className="schedule-row">
-                  <input
-                    type="checkbox"
-                    value='Summer'
-                    checked={seasons.includes('Spring')}
-                    onChange={(e) => {
-                      const checked = e.target.checked;
-                      const newSeasons = checked
-                        ? [...seasons, 'Spring']
-                        : seasons.filter(season => season !== 'Spring');
-
-
-                      setSeasons(newSeasons);
-                    }}
-                  />
-                  Spring
-                </label>
-              
-                </>)}
+            {errors.schedule && <span className="error">{errors.schedule}</span>}
           </div>
+
+          <h4>Seasonal Availability</h4>
+          <label className="schedule-row">
+            <input type="checkbox" checked={seasonal} onChange={e => setSeasonal(e.target.checked)} /> Seasonal Item
+          </label>
+          {seasonal && ['Summer', 'Autumn', 'Winter', 'Spring'].map(season => (
+            <label key={season} className="schedule-row">
+              <input
+                type="checkbox"
+                value={season}
+                checked={seasons.includes(season)}
+                onChange={e => {
+                  const checked = e.target.checked;
+                  const newSeasons = checked
+                    ? [...seasons, season]
+                    : seasons.filter(s => s !== season);
+                  setSeasons(newSeasons);
+                }}
+              />
+              {season}
+            </label>
+          ))}
 
           <button type="submit">{mode === 'update' ? 'Update Menu Item' : 'Add Menu Item'}</button>
         </form>
