@@ -423,18 +423,22 @@ Meteor.methods({
 // Sales by Product (qty, gross $, net $)  — respects { start, end, onlyClosed }
 // ─────────────────────────────────────────────────────────────────────────────
 
-  async 'analytics.salesByProduct'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.salesByProduct'({ onlyClosed = false, start = null, end = null, metric, staff } = {}) {
     const raw = OrdersCollection.rawCollection();
-    const match = (function buildMatch({ onlyClosed, start, end }) {
+
+    const match = (function buildMatch({ onlyClosed, start, end, staff }) {
       const m = {};
       if (onlyClosed) m.status = 'closed';
+      if (staff && staff !== 'all') {
+        m.employee_id = staff;
+      }
       if (start || end) {
         m.createdAt = {};
         if (start) m.createdAt.$gte = new Date(start);
         if (end)   m.createdAt.$lte = new Date(end);
       }
       return m;
-    })({ onlyClosed, start, end });
+    })({ onlyClosed, start, end, staff });
 
     const pipeline = [
       ...(Object.keys(match).length ? [{ $match: match }] : []),
@@ -452,7 +456,7 @@ Meteor.methods({
             { $match: { $expr: { $or: [
               { $eq: [{ $toString: '$_id' }, '$$catKey'] },
               { $eq: ['$category', '$$catKey'] }
-            ]}}},
+            ]}} },
             { $project: { _id: 0, category: 1 } }
           ],
           as: 'cat'
@@ -464,7 +468,7 @@ Meteor.methods({
           category: { $ifNull: [{ $first: '$cat.category' }, null] },
           qty: { $ifNull: ['$items.quantity', 1] },
           gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] },
-          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0]  }, { $ifNull: ['$items.quantity', 1] }] }
+          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0] }, { $ifNull: ['$items.quantity', 1] }] }
       }},
 
       { $group: {
@@ -488,7 +492,7 @@ Meteor.methods({
     ];
 
     return raw.aggregate(pipeline).toArray();
-  },
+},
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }

@@ -220,7 +220,7 @@ export default function Dashboard() {
         </section>
 
         <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
-          <SalesByProductTable onlyClosed={false} start={filter.start} end={filter.end} />
+          <SalesByProductTable onlyClosed={false} start={filter.start} end={filter.end} staff={filter.staff} />
         </section>
 
         {/* Big charts (all receive same filter) */}
