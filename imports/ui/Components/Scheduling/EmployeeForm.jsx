@@ -18,6 +18,7 @@ export const EmployeeForm = ({ employee, onClose }) => {
     password: '',
     isAdmin: false,
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (employee) {
@@ -32,9 +33,37 @@ export const EmployeeForm = ({ employee, onClose }) => {
     }
   }, [employee]);
 
+  const validateDates = (dob, startDate) => {
+    if (dob && startDate) {
+      const dobDate = new Date(dob);
+      const startDateObj = new Date(startDate);
+      if (startDateObj < dobDate) {
+        return 'Start date cannot be before birth date';
+      }
+    }
+    return null;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    const newFormData = { ...formData, [name]: type === 'checkbox' ? checked : value };
+    setFormData(newFormData);
+
+    // Clear previous errors for this field
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+
+    // Validate dates when either dob or start_date changes
+    if (name === 'dob' || name === 'start_date') {
+      const dateError = validateDates(
+        name === 'dob' ? value : newFormData.dob,
+        name === 'start_date' ? value : newFormData.start_date
+      );
+      if (dateError) {
+        setErrors(prev => ({ ...prev, [name]: dateError }));
+      }
+    }
   };
 
   const handleRoleChange = (e) => {
@@ -47,6 +76,17 @@ export const EmployeeForm = ({ employee, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Final validation before submission
+    const dateError = validateDates(formData.dob, formData.start_date);
+    if (dateError) {
+      setErrors(prev => ({ ...prev, start_date: dateError }));
+      return;
+    }
+
+    // Clear any existing errors
+    setErrors({});
+
     const dataToSubmit = {
       ...formData,
       dob: formData.dob ? new Date(formData.dob) : null,
@@ -55,13 +95,27 @@ export const EmployeeForm = ({ employee, onClose }) => {
 
     if (employee) {
       Meteor.call('employees.update', employee._id, dataToSubmit, (err) => {
-        if (err) alert(err.reason || err.message);
-        else onClose?.();
+        if (err) {
+          if (err.error === 'invalid-dates') {
+            setErrors({ start_date: err.reason });
+          } else {
+            alert(err.reason || err.message);
+          }
+        } else {
+          onClose?.();
+        }
       });
     } else {
       Meteor.call('employees.insert', dataToSubmit, (err) => {
-        if (err) alert(err.reason || err.message);
-        else onClose?.();
+        if (err) {
+          if (err.error === 'invalid-dates') {
+            setErrors({ start_date: err.reason });
+          } else {
+            alert(err.reason || err.message);
+          }
+        } else {
+          onClose?.();
+        }
       });
     }
   };
@@ -142,6 +196,7 @@ export const EmployeeForm = ({ employee, onClose }) => {
               onChange={handleChange}
               required
             />
+            {errors.dob && <div className="error-message">{errors.dob}</div>}
           </div>
 
           <div className="form-field">
@@ -166,6 +221,7 @@ export const EmployeeForm = ({ employee, onClose }) => {
               onChange={handleChange}
               required
             />
+            {errors.start_date && <div className="error-message">{errors.start_date}</div>}
           </div>
 
           <div className="form-field">

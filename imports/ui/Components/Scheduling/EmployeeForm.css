@@ -144,3 +144,10 @@
 .employee-form .form-field:has(.roles-checkboxes) {
   margin-bottom: 48px; /* increase/decrease to taste */
 }
+
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
