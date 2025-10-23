@@ -30,6 +30,11 @@ Meteor.methods({
       isAdmin: Match.Optional(Boolean),
     });
 
+    // Validate that start_date is not before dob
+    if (data.dob && data.start_date && data.start_date < data.dob) {
+      throw new Meteor.Error('invalid-dates', 'Start date cannot be before birth date');
+    }
+
     // Normalize employment type -> collection key is "employement_type"
     const employement_type = data.employment_type || 'Full-time';
 
@@ -131,6 +136,13 @@ Meteor.methods({
 
     const existing = await EmployeesCollection.findOneAsync(employeeId);
     if (!existing) throw new Meteor.Error('not-found', 'Employee not found');
+
+    // Validate that start_date is not before dob
+    const dob = updates.dob !== undefined ? updates.dob : existing.dob;
+    const start_date = updates.start_date !== undefined ? updates.start_date : existing.start_date;
+    if (dob && start_date && start_date < dob) {
+      throw new Meteor.Error('invalid-dates', 'Start date cannot be before birth date');
+    }
 
     const setFields = { ...updates, updatedAt: new Date() };
     if (updates?.employment_type) {
