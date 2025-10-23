@@ -1,5 +1,6 @@
 // ui/Components/Analytics/Dashboard.jsx
 import React, { useMemo, useState, useEffect } from 'react';
+import { useTracker } from 'meteor/react-meteor-data';
 import dayjs from 'dayjs';
 import { Meteor } from 'meteor/meteor';
 
@@ -11,6 +12,7 @@ import StatsCard from './StatsCard';
 import SalesByProductTable from './SalesByProductTable';
 import SalesOverTimeChart from './SalesOverTimeChart';
 import PeakHourChart from './PeakHourAnalysisChart';
+import { EmployeesCollection } from "/imports/api/payroll/employee/employees-collection.js";
 
 const cardStyle = {
   background: '#fff',
@@ -48,6 +50,13 @@ function FilterBar({ range, onChange }) {
     start: range.start ? new Date(range.start) : null,
     end: range.end ? new Date(range.end) : null,
   }), [range]);
+
+  // Get employee names for staff input
+  const employees = useTracker(() => {
+    const handle = Meteor.subscribe('Employees');
+    if (!handle.ready()) return [];
+    return EmployeesCollection.find({}, { sort: { first_name: 1 } }).fetch();
+  }, []);
 
   return (
     <div style={{
@@ -98,6 +107,25 @@ function FilterBar({ range, onChange }) {
           <option value="cost">Cost</option>
           <option value="profit">Profit</option>
         </select>
+        <label style={{ fontSize: 12, color: '#374151' }}>Staff</label>
+        <select
+          value={range.staff || 'all'}
+          onChange={(e) => onChange({ ...range, staff: e.target.value })}
+          style={{
+            padding: 6,
+            borderRadius: 6,
+            border: '1px solid #ddd',
+            background: '#fff',
+            fontSize: 14
+          }}
+        >
+          <option value="all">All Staff</option>
+          {employees.map((e) => (
+            <option key={e._id} value={e.employee_id}>
+              {e.first_name} {e.last_name}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );
@@ -105,7 +133,7 @@ function FilterBar({ range, onChange }) {
 
 // --- KPIs loader --------------------------------------------------------------
 function useKpis(filter) {
-  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: 'sales' });
+  const [kpis, setKpis] = useState({ orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: 'sales', staff: 'all' });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -113,26 +141,27 @@ function useKpis(filter) {
     setLoading(true);
     Meteor.call('analytics.kpis', filter, (err, res) => {
       if (!cancelled) {
-        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: filter.metric } : (res || {}));
+        setKpis(err ? { orders: 0, revenue: 0, avgOrderValue: 0, activeItems: 0, metric: filter.metric, staff: filter.staff } : (res || {}));
         setLoading(false);
       }
     });
     return () => { cancelled = true; };
-  }, [filter?.start?.valueOf?.(), filter?.end?.valueOf?.(), filter?.metric]); // re-run when date or data type changes
+  }, [filter?.start?.valueOf?.(), filter?.end?.valueOf?.(), filter?.metric, filter?.staff]); // re-run when date or data type changes
 
   return { kpis, loading };
 }
 
 export default function Dashboard() {
   // Single source of truth for time filter:
-  const [range, setRange] = useState({ start: null, end: null, metric: 'sales' });
+  const [range, setRange] = useState({ start: null, end: null, metric: 'sales', staff: 'all' });
 
   // Build the filter object we pass to all calls/components
   const filter = useMemo(() => ({
     onlyClosed: false,
     start: range.start ? new Date(range.start) : null,
     end: range.end ? new Date(range.end) : null,
-    metric: range.metric
+    metric: range.metric,
+    staff: range.staff
   }), [range]);
 
   const { kpis } = useKpis(filter);
@@ -186,11 +215,12 @@ export default function Dashboard() {
           onlyClosed={false} 
           start={filter.start} 
           end={filter.end}
-          metric={filter.metric} /> 
+          metric={filter.metric}
+          staff={filter.staff} /> 
         </section>
 
         <section style={{ ...cardStyle, gridColumn: 'span 6' }}>
-          <SalesByProductTable onlyClosed={false} start={filter.start} end={filter.end} />
+          <SalesByProductTable onlyClosed={false} start={filter.start} end={filter.end} staff={filter.staff} />
         </section>
 
         {/* Big charts (all receive same filter) */}

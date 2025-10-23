@@ -6,6 +6,7 @@ import { useTracker } from "meteor/react-meteor-data";
 import { InventoryCollection } from "/imports/api/inventory/inventory-collection.js";
 import { TablesCollection } from "../../../api/tables/TablesCollection";
 import { CustomersCollection } from "/imports/api/customers/customers-collection.js";
+import { EmployeesCollection } from "/imports/api/payroll/employee/employees-collection.js";
 
 export const OrderPanel = ({
   orderItems,
@@ -23,7 +24,7 @@ export const OrderPanel = ({
   const [discountedItems, setDiscountedItems] = useState({});
   const [promoCode, setPromoCode] = useState("");
   const [appliedPromoCode, setAppliedPromoCode] = useState("");
-  const [staffName, setStaffName] = useState('');
+  const [staffId, setStaffId] = useState('');
   
   // Customer lookup state
   const [customerPhone, setCustomerPhone] = useState("");
@@ -218,8 +219,8 @@ export const OrderPanel = ({
 		return;
 	}
 
-  if (!staffName.trim()) {
-    setCheckoutError("Please enter staff name");
+  if (!staffId.trim()) {
+    setCheckoutError("Please enter a Staff Member");
     setTimeout(() => setCheckoutError(null), 3000);
     return;
   }
@@ -228,7 +229,7 @@ export const OrderPanel = ({
 
     // Format order data according to the schema
     console.log("Discounted Items:", discountedItems);
-
+  
     const orderData = {
       table: tableNumber,
       status: "open",
@@ -266,7 +267,7 @@ export const OrderPanel = ({
       }),
       createdAt: new Date(),
       recievedPayment: 0, 
-      staffName: staffName.trim(),
+      employee_id: staffId,
     };
 
     console.log("Order Data being submitted:", orderData);
@@ -358,19 +359,35 @@ export const OrderPanel = ({
 
   const nextTierInfo = getNextTierInfo();
 
+  // Get employee names for staff input
+  const employees = useTracker(() => {
+    const handle = Meteor.subscribe("Employees");
+
+    const docs = EmployeesCollection.find({}, { sort: { first_name: 1 } }).fetch();
+    return docs;
+  }, []);
+
   return (
     <div className="order-panel">
       <div className="order-panel-header">
         <div className="staff-name-input">
           <label htmlFor="staff-name"><h3>Staff:</h3></label>
-          <input 
+          <select
             id="staff-name"
-            type="text"
-            value={staffName}
-            onChange={(e) => setStaffName(e.target.value)}
-            className="staff-name-input"
-            placeholder="Enter name"
-          />
+            value={staffId}
+            onChange={(e) => setStaffId(e.target.value)}
+            className="staff-dropdown"
+          >
+            <option value="">-</option>
+            {employees.map((emp) => (
+              <option
+                key={emp._id}
+                value={emp.employee_id}
+              >
+                {emp.first_name} {emp.last_name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="table-selector">

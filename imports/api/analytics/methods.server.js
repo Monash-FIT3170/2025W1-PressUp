@@ -91,10 +91,14 @@ Meteor.methods({
   // This keeps it robust to your schema.
   // Params: { onlyClosed?, start?, end? }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales' } = {}) {
+  async 'analytics.kpis'({ onlyClosed = false, start = null, end = null, metric = 'sales', staff = 'all' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = buildMatch({ onlyClosed, start, end });
 
+    // Filter by staff if not "all"
+    if (staff && staff !== 'all') {
+      match.employee_id = staff;
+    }
     // Per-order revenue + overall aggregation
     const kpiAgg = await raw.aggregate([
       ...(Object.keys(match).length ? [{ $match: match }] : []),
@@ -169,7 +173,7 @@ Meteor.methods({
           orders: 1,
           revenue: 1,
           avgOrderValue: {
-            $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$revenue', '$orders'] }]
+            $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$totalGross', '$orders'] }]
           },
           sales: { $round: ['$totalGross', 2] },
           cost: { $round: ['$totalCost', 2] },
@@ -196,12 +200,15 @@ Meteor.methods({
       case 'profit': value = kpis.profit; break;
       default: value = kpis.sales;
     }
-
+    // const kpis = kpiAgg[0] ?? { orders: 0, revenue: 0, avgOrderValue: 0 };
+    // console.log('✅ [analytics.kpis] KPI Summary:', kpis);
+  
     return { 
       orders: kpis.orders, 
       value,
       metric,
-      activeItems
+      activeItems,
+      avgOrderValue: kpis.avgOrderValue
     };
   },
 
@@ -419,18 +426,22 @@ Meteor.methods({
 // Sales by Product (qty, gross $, net $)  — respects { start, end, onlyClosed }
 // ─────────────────────────────────────────────────────────────────────────────
 
-  async 'analytics.salesByProduct'({ onlyClosed = false, start = null, end = null } = {}) {
+  async 'analytics.salesByProduct'({ onlyClosed = false, start = null, end = null, metric, staff } = {}) {
     const raw = OrdersCollection.rawCollection();
-    const match = (function buildMatch({ onlyClosed, start, end }) {
+
+    const match = (function buildMatch({ onlyClosed, start, end, staff }) {
       const m = {};
       if (onlyClosed) m.status = 'closed';
+      if (staff && staff !== 'all') {
+        m.employee_id = staff;
+      }
       if (start || end) {
         m.createdAt = {};
         if (start) m.createdAt.$gte = new Date(start);
         if (end)   m.createdAt.$lte = new Date(end);
       }
       return m;
-    })({ onlyClosed, start, end });
+    })({ onlyClosed, start, end, staff });
 
     const pipeline = [
       ...(Object.keys(match).length ? [{ $match: match }] : []),
@@ -448,7 +459,7 @@ Meteor.methods({
             { $match: { $expr: { $or: [
               { $eq: [{ $toString: '$_id' }, '$$catKey'] },
               { $eq: ['$category', '$$catKey'] }
-            ]}}},
+            ]}} },
             { $project: { _id: 0, category: 1 } }
           ],
           as: 'cat'
@@ -460,7 +471,7 @@ Meteor.methods({
           category: { $ifNull: [{ $first: '$cat.category' }, null] },
           qty: { $ifNull: ['$items.quantity', 1] },
           gross: { $multiply: [{ $ifNull: ['$items.price', 0] }, { $ifNull: ['$items.quantity', 1] }] },
-          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0]  }, { $ifNull: ['$items.quantity', 1] }] }
+          cost:  { $multiply: [{ $ifNull: ['$items.cost', 0] }, { $ifNull: ['$items.quantity', 1] }] }
       }},
 
       { $group: {
@@ -484,12 +495,12 @@ Meteor.methods({
     ];
 
     return raw.aggregate(pipeline).toArray();
-  },
+},
 
   // ─────────────────────────────────────────────────────────────────────────────
   // Sales over Time (gross $ per day) — respects { start, end, onlyClosed }
   // ─────────────────────────────────────────────────────────────────────────────
-  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales" } = {}) {
+  async 'analytics.salesOverTime'({ onlyClosed = false, start = null, end = null, metric = "sales", staff = 'all' } = {}) {
     const raw = OrdersCollection.rawCollection();
     const match = {};
     if (onlyClosed) match.status = 'closed';
@@ -497,6 +508,11 @@ Meteor.methods({
       match.createdAt = {};
       if (start) match.createdAt.$gte = new Date(start);
       if (end)   match.createdAt.$lte = new Date(end);
+    }
+
+    // Filter by staff if not "all"
+    if (staff && staff !== 'all') {
+      match.employee_id = staff;
     }
 
     const TZ = 'Australia/Melbourne';

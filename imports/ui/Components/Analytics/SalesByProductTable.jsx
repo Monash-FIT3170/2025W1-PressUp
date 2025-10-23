@@ -5,14 +5,14 @@ function money(n) {
   return `$${(Number(n) || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-export default function SalesByProductTable({ onlyClosed = false, start = null, end = null }) {
+export default function SalesByProductTable({ onlyClosed = false, start = null, end = null, staff="all" }) {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    Meteor.call('analytics.salesByProduct', { onlyClosed, start, end }, (err, res) => {
+    Meteor.call('analytics.salesByProduct', { onlyClosed, start, end, staff }, (err, res) => {
       setRows(err ? [] : (res || []));
     });
-  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.()]);
+  }, [onlyClosed, start?.valueOf?.(), end?.valueOf?.(), staff]);
 
   const csv = useMemo(() => {
     const header = ['Name','Category','Qty Sold','Gross Sales','Net Profit'].join(',');
