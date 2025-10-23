@@ -173,7 +173,7 @@ Meteor.methods({
           orders: 1,
           revenue: 1,
           avgOrderValue: {
-            $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$revenue', '$orders'] }]
+            $cond: [{ $eq: ['$orders', 0] }, 0, { $divide: ['$totalGross', '$orders'] }]
           },
           sales: { $round: ['$totalGross', 2] },
           cost: { $round: ['$totalCost', 2] },
@@ -200,12 +200,15 @@ Meteor.methods({
       case 'profit': value = kpis.profit; break;
       default: value = kpis.sales;
     }
-
+    // const kpis = kpiAgg[0] ?? { orders: 0, revenue: 0, avgOrderValue: 0 };
+    // console.log('✅ [analytics.kpis] KPI Summary:', kpis);
+  
     return { 
       orders: kpis.orders, 
       value,
       metric,
-      activeItems
+      activeItems,
+      avgOrderValue: kpis.avgOrderValue
     };
   },
 
